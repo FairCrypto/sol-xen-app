@@ -32,10 +32,20 @@ body {
   #background-image-overlay {
     opacity: 0.4;
   }
-  @media (prefers-color-scheme: dark) {
+  [data-theme="dark"],
+  [data-theme="synthwave"],
+  [data-theme="aqua"],
+  [data-theme="black"],
+  [data-theme="luxury"],
+  [data-theme="dracula"],
+  [data-theme="business"],
+  [data-theme="night"],
+  [data-theme="coffee"],
+  [data-theme="dim"],
+  [data-theme="sunset"],
+  [data-theme="halloween"] {
     #background-image-overlay {
-      opacity: 0.16;
-
+      opacity: 0.15;
     }
   }
 }
@@ -60,10 +70,10 @@ body {
 }
 
 .fade-in {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out;
 }
 
-.fade-in.show {
-  opacity: 1;
+#solxen-stats {
+  height: 208px
 }

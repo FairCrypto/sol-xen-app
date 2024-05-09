@@ -181,87 +181,87 @@ export default function Home() {
 
         <div className="overflow-x-auto">
           { data && data.length != 0 ? (
-          <table className="table table-fixed md:table-auto table-lg table-zebra">
-            <thead>
-            <tr>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
-                <span>Rank</span>
-              </th>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <span>Account</span>
-              </th>
-              <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <span>Hashes</span>
-              </th>
-              <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <span>Super Hashes</span>
-              </th>
-              {!showEthAccount ? (
-                <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <span>solXEN</span>
+            <table className="table table-fixed md:table-auto table-lg table-zebra">
+              <thead>
+              <tr>
+                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
+                  <span>Rank</span>
                 </th>
-              ) : null}
-            </tr>
-            </thead>
-            <tbody>
-            {data.map(
-              (
-                {rank, solAccount, ethAccount, hashes, superHashes, points},
-                index,
-              ) => {
-                return (
-                  <tr key={rank} className={`animate-table-row`}>
-                    <td className="p-4 pr-0 border-b border-blue-gray-50">
+                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                  <span>Account</span>
+                </th>
+                <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                  <span>Hashes</span>
+                </th>
+                <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                  <span>Super Hashes</span>
+                </th>
+                {!showEthAccount ? (
+                  <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <span>solXEN</span>
+                  </th>
+                ) : null}
+              </tr>
+              </thead>
+              <tbody>
+              {data.map(
+                (
+                  {rank, solAccount, ethAccount, hashes, superHashes, points},
+                  index,
+                ) => {
+                  return (
+                    <tr key={rank} className={`animate-table-row`}>
+                      <td className="p-4 pr-0 border-b border-blue-gray-50">
                         <span color="blue-gray" className="font-bold">
                           {rank}
                         </span>
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
-                      <span>{showEthAccount ? ethAccount : solAccount}</span>
+                      </td>
+                      <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
+                        <span>{showEthAccount ? ethAccount : solAccount}</span>
 
-                      <dl className="md:hidden font-normal mt-2">
-                        <div className="flex justify-between">
-                          <dt className="text-sm text-gray-400 mt-1 font-medium">
-                            Hashes
-                          </dt>
-                          <dd className="text-gray-400 text-sm mt-1">
-                            {Intl.NumberFormat("en-US").format(hashes)}
-                          </dd>
-                        </div>
-                        <div className="flex justify-between">
-                          <dt className="text-gray-400 text-sm mt-1 font-medium">
-                            Super Hashes
-                          </dt>
-                          <dd className="text-gray-400 text-sm mt-1">
-                            {Intl.NumberFormat("en-US").format(superHashes)}
-                          </dd>
-                        </div>
-                        {!showEthAccount ? (
+                        <dl className="md:hidden font-normal mt-2">
                           <div className="flex justify-between">
-                            <dt className="text-gray-400 text-sm mt-1 font-medium">
-                              solXEN
+                            <dt className="text-sm text-gray-400 mt-1 font-medium">
+                              Hashes
                             </dt>
                             <dd className="text-gray-400 text-sm mt-1">
-                              {Intl.NumberFormat("en-US").format(
-                                points / 1_000_000_000,
-                              )}
+                              {Intl.NumberFormat("en-US").format(hashes)}
                             </dd>
                           </div>
-                        ) : null}
-                      </dl>
-                    </td>
-                    <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                          <div className="flex justify-between">
+                            <dt className="text-gray-400 text-sm mt-1 font-medium">
+                              Super Hashes
+                            </dt>
+                            <dd className="text-gray-400 text-sm mt-1">
+                              {Intl.NumberFormat("en-US").format(superHashes)}
+                            </dd>
+                          </div>
+                          {!showEthAccount ? (
+                            <div className="flex justify-between">
+                              <dt className="text-gray-400 text-sm mt-1 font-medium">
+                                solXEN
+                              </dt>
+                              <dd className="text-gray-400 text-sm mt-1">
+                                {Intl.NumberFormat("en-US").format(
+                                  points / 1_000_000_000,
+                                )}
+                              </dd>
+                            </div>
+                          ) : null}
+                        </dl>
+                      </td>
+                      <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
                         <span className="font-normal">
                           {Intl.NumberFormat("en-US").format(hashes)}
                         </span>
-                    </td>
-                    <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                      </td>
+                      <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
                         <span className="font-normal">
                           {Intl.NumberFormat("en-US").format(superHashes)}
                         </span>
-                    </td>
-                    {!showEthAccount ? (
-                      <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                      </td>
+                      {!showEthAccount ? (
+                        <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
                           <span className="font-normal">
                             {Intl.NumberFormat("en-US").format(
                               points / 1_000_000_000,
@@ -272,14 +272,14 @@ export default function Home() {
                               </small>
                             ) : null}
                           </span>
-                      </td>
-                    ) : null}
-                  </tr>
-                );
-              },
-            )}
-            </tbody>
-          </table>): null}
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                },
+              )}
+              </tbody>
+            </table>): null}
         </div>
       </div>
     </main>
