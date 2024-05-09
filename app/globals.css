@@ -16,6 +16,10 @@
   }
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -31,6 +35,7 @@ body {
   @media (prefers-color-scheme: dark) {
     #background-image-overlay {
       opacity: 0.16;
+
     }
   }
 }
@@ -52,4 +57,13 @@ body {
 .animate-table-row.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in.show {
+  opacity: 1;
 }

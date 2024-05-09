@@ -73,6 +73,16 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Set env vars from vars context JSON
+        run: |
+          # Pipe the JSON string into jq
+          echo "$VARS_CONTEXT" | 
+          # Convert JSON object into an array of key-value pairs
+          jq -r 'to_entries | 
+          # Map over each key-value pair
+          .[] | 
+          # Format each pair as "KEY=VALUE" and append it all to the environment file
+          "\(.key)=\(.value)"' >> .env
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
