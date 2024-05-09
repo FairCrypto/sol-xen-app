@@ -74,6 +74,8 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Set env vars from vars context JSON
+        env:
+          VARS_CONTEXT: ${{ toJson(vars) }}
         run: |
           # Pipe the JSON string into jq
           echo "$VARS_CONTEXT" | 
