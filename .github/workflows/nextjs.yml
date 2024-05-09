@@ -84,7 +84,7 @@ jobs:
           # Format each pair as "KEY=VALUE" and append it all to the environment file
           "\(.key)=\(.value)"' >> .env
       - name: print .env
-        run: cat .env
+        run: cat .env >> $GITHUB_OUTPUT
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
