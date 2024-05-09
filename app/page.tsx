@@ -37,7 +37,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const leaderboardResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/v1/solxen/leaderboard_by_eth`,
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/v1/xolxen/leaderboard`,
       );
       const leaderboardData = await leaderboardResponse.json();
 
