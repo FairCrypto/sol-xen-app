@@ -10,8 +10,10 @@ export const NavBar = () => {
   const {changeTheme} = React.useContext(ThemeContext);
 
   return (
-    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 mb-3 flex justify-between z-[1]">
-      <a className="btn btn-ghost text-lg" href="/">solXEN</a>
+    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[1]">
+      <a className="btn btn-ghost text-lg" href="/">
+        <img src="/solxen-black.png" alt="solXEN Logo" className="h-10"/>
+      </a>
 
       <a className=" ml-auto" href="https://github.com/FairCrypto/sol-xen">
         <button className="btn btn-outline btn-accent">

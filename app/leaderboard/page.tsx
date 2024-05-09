@@ -14,7 +14,7 @@ interface DataItem {
   points: number;
 }
 
-export default function Home() {
+export default function Leaderboard() {
   const [data, setData] = useState<DataItem[]>([]);
   const [totalSupply, setTotalSupply]: [any, any] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,7 +22,7 @@ export default function Home() {
   const [showEthAccount, setShowEthAccount] = useState(() => searchParams.get("account") === "ethereum");
 
   const percentOfTotalSupply = (points: number) => {
-    return Math.floor((points / 1_000_000_000 / totalSupply.uiAmount) * 100);
+    return Math.floor((points / totalSupply.points) * 100);
   };
 
   useEffect(() => {
