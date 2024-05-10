@@ -1,18 +1,16 @@
 "use client";
 import React, {
-  useCallback,
   useEffect,
   useState,
-  Suspense,
-  createContext,
 } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { NavBar } from "@/app/components/NavBar";
-import { AccountSelector } from "@/app/components/AccountSelector";
+import {useSearchParams} from "next/navigation";
+import {NavBar} from "@/app/components/NavBar";
+import {AccountSelector} from "@/app/components/AccountSelector";
 import Footer from "@/app/components/Footer";
+import StateStats from "@/app/leaderboard/StateStats";
 
-interface DataItem {
+export interface LeaderboardEntry {
   rank: number;
   solAccount: string;
   ethAccount: string;
@@ -21,101 +19,69 @@ interface DataItem {
   points: number;
 }
 
-export default function Leaderboard() {
-  const [data, setData] = useState<DataItem[]>([]);
-  const [totalSupply, setTotalSupply]: [any, any] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const searchParams = useSearchParams();
+export interface State {
+  points: number;
+  hashes: number;
+  superHashes: number;
+  txs: number;
+  amp: number;
+  lastAmpSlot: number;
+}
 
-  const [showEthAccount, setShowEthAccount] = useState(
-    () => searchParams.get("account") === "ethereum",
+enum AccountType {
+  Ethereum = "ethereum",
+  Solana = "solana",
+}
+
+async function fetchLeaderboardData(accountType: AccountType) {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}`,
   );
 
-  const percentOfTotalSupply = (points: number) => {
-    return Math.floor((points / totalSupply.points) * 100);
-  };
+  if (!data.ok) {
+    throw new Error("Error fetching leaderboard data");
+  }
+
+  return data.json();
+}
+
+async function fetchStateData() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`,
+  );
+
+  if (!data.ok) {
+    throw new Error("Error fetching leaderboard data");
+  }
+
+  return data.json();
+}
+
+function getAccountTypeFromSearchParams(searchParams: URLSearchParams): AccountType {
+  return searchParams.get("account") === AccountType.Ethereum ? AccountType.Ethereum : AccountType.Solana;
+}
+
+export default function Leaderboard() {
+  const searchParams = useSearchParams();
+  const [accountType, setAccountType] = useState(getAccountTypeFromSearchParams(searchParams));
+  const [leaderboardData, setLeaderboardData]: [LeaderboardEntry[], any] = useState<LeaderboardEntry[]>([]);
+  const [stateData, setStateData]: [any, any] = useState<State>();
 
   useEffect(() => {
-    const useEthAccount = searchParams.get("account") === "ethereum";
-    setShowEthAccount(useEthAccount);
+    setAccountType(getAccountTypeFromSearchParams(searchParams))
 
     const fetchData = async () => {
-      try {
-        const accountType = useEthAccount ? "ethereum" : "solana";
-        const leaderboardResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}`,
-        );
-        if (!leaderboardResponse.ok) {
-          throw new Error("Error fetching leaderboard data");
-        }
-        const leaderboardData = await leaderboardResponse.json();
-        setData(leaderboardData);
-
-        const totalSupplyResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`,
-        );
-        if (!totalSupplyResponse.ok) {
-          throw new Error("Error fetching total supply data");
-        }
-        const totalSupplyData = await totalSupplyResponse.json();
-        setTotalSupply(totalSupplyData);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error(error);
-        // Here you can handle the error, for example, by setting an error state and displaying an error message in your component
-      }
+      fetchLeaderboardData(accountType).then(setLeaderboardData);
+      fetchStateData().then(setStateData);
     };
 
-    // Call fetchData immediately and then every 30 seconds
     fetchData().then();
     const intervalId = setInterval(fetchData, 30000);
-
-    // Clear the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [searchParams]);
+  }, [accountType, searchParams]);
 
-  const totalSupplyValue = () => {
-    if (isNaN(totalSupply?.points)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(
-      totalSupply?.points / 1_000_000_000,
-    );
-  };
-
-  const totalHashesValue = () => {
-    if (isNaN(totalSupply?.hashes)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(totalSupply?.hashes);
-  };
-
-  const totalSuperHashesValue = () => {
-    if (isNaN(totalSupply?.superHashes)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(totalSupply?.superHashes);
-  };
-
-  const txsValue = () => {
-    if (isNaN(totalSupply?.txs)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(totalSupply?.txs);
-  };
-
-  const ampValue = () => {
-    if (isNaN(totalSupply?.amp)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(totalSupply?.amp);
-  };
-
-  const lastAmpSlotValue = () => {
-    if (isNaN(totalSupply?.lastAmpSlot)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(totalSupply?.lastAmpSlot);
+  const percentOfState = (points: number) => {
+    return Math.floor((points / stateData?.points) * 100);
   };
 
   return (
@@ -141,74 +107,29 @@ export default function Leaderboard() {
         />
       </div>
 
-      <NavBar />
+      <NavBar/>
 
-      <div className="card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 shadow-xl opacity-85 md:mt-5 sm:mb-8">
+      <div
+        className="card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 shadow-xl opacity-85 md:mt-5 sm:mb-8">
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-        <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
-          <div></div>
-          <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4">
-            <h1 className="text-3xl md:text-5xl">Leaderboard</h1>
-          </div>
-          <div className="flex justify-end">
+          <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
+            <div></div>
+            <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4">
+              <h1 className="text-3xl md:text-5xl">Leaderboard</h1>
+            </div>
+            <div className="flex justify-end">
             <span className="">
-              <AccountSelector />
+              <AccountSelector/>
             </span>
+            </div>
           </div>
-        </div>
 
-        <div
-          id="solxen-stats"
-          className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${isLoaded ? "fade-in" : ""}`}
-        >
-          <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">
-              <span className="hidden sm:inline">Total</span> solXEN
-            </div>
-            <div className="stat-value text-sm md:text-2xl">
-              {totalSupplyValue()}
-            </div>
-          </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">
-              <span className="hidden sm:inline">Total</span> Hashes
-            </div>
-            <div className="stat-value text-sm md:text-2xl">
-              {totalHashesValue()}
-            </div>
-          </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">
-              <span className="hidden sm:inline">Total</span> Super Hashes
-            </div>
-            <div className="stat-value text-sm md:text-2xl">
-              {totalSuperHashesValue()}
-            </div>
-          </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">AMP</div>
-            <div className="stat-value text-sm md:text-2xl">{ampValue()}</div>
-          </div>
-          <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">
-              <span className="hidden sm:inline">Last</span> AMP Slot
-            </div>
-            <div className="stat-value text-sm md:text-2xl">
-              {lastAmpSlotValue()}
-            </div>
-          </div>
-          <div className="stat  hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-            <div className="stat-title">
-              <span className="hidden sm:inline">Total</span> TXs
-            </div>
-            <div className="stat-value text-sm md:text-2xl">{txsValue()}</div>
-          </div>
-        </div>
+          <StateStats state={stateData}/>
 
-        <div className="overflow-x-auto">
-          {data && data.length != 0 ? (
-            <table className="table table-fixed md:table-auto table-lg table-zebra">
-              <thead>
+          <div className="overflow-x-auto">
+            {leaderboardData && leaderboardData.length != 0 ? (
+              <table className="table table-fixed md:table-auto table-lg table-zebra">
+                <thead>
                 <tr>
                   <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
                     <span>Rank</span>
@@ -222,15 +143,15 @@ export default function Leaderboard() {
                   <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                     <span>Super Hashes</span>
                   </th>
-                  {!showEthAccount ? (
+                  {accountType == AccountType.Solana ? (
                     <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                       <span>solXEN</span>
                     </th>
                   ) : null}
                 </tr>
-              </thead>
-              <tbody>
-                {data.map(
+                </thead>
+                <tbody>
+                {leaderboardData.map(
                   (
                     {
                       rank,
@@ -251,7 +172,7 @@ export default function Leaderboard() {
                         </td>
                         <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
                           <span>
-                            {showEthAccount ? ethAccount : solAccount}
+                            {accountType == 'solana' ? solAccount : ethAccount}
                           </span>
 
                           <dl className="md:hidden font-normal mt-2">
@@ -271,15 +192,15 @@ export default function Leaderboard() {
                                 {Intl.NumberFormat("en-US").format(superHashes)}
                               </dd>
                             </div>
-                            {!showEthAccount ? (
+                            {accountType == AccountType.Solana ? (
                               <div className="flex justify-between">
                                 <dt className="text-gray-400 text-sm mt-1 font-medium">
                                   solXEN
                                 </dt>
                                 <dd className="text-gray-400 text-sm mt-1">
-                                  {percentOfTotalSupply(points) > 0 ? (
+                                  {percentOfState(points) > 0 ? (
                                     <div className="badge badge-sm badge-success badge-outline mr-2">
-                                      {percentOfTotalSupply(points)}%
+                                      {percentOfState(points)}%
                                     </div>
                                   ) : null}
                                   {Intl.NumberFormat("en-US").format(
@@ -300,15 +221,15 @@ export default function Leaderboard() {
                             {Intl.NumberFormat("en-US").format(superHashes)}
                           </span>
                         </td>
-                        {!showEthAccount ? (
+                        {accountType == AccountType.Solana ? (
                           <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
                             <span className="font-normal">
                               {Intl.NumberFormat("en-US").format(
                                 points / 1_000_000_000,
                               )}
-                              {percentOfTotalSupply(points) > 0 ? (
-                                  <div className="badge badge-sm badge-success badge-outline ml-2">
-                                  {percentOfTotalSupply(points)}%
+                              {percentOfState(points) > 0 ? (
+                                <div className="badge badge-sm badge-success badge-outline ml-2">
+                                  {percentOfState(points)}%
                                 </div>
                               ) : null}
                             </span>
@@ -318,14 +239,14 @@ export default function Leaderboard() {
                     );
                   },
                 )}
-              </tbody>
-            </table>
-          ) : null}
-        </div>
+                </tbody>
+              </table>
+            ) : null}
+          </div>
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </main>
   );
 }
