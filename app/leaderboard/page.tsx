@@ -306,9 +306,9 @@ export default function Leaderboard() {
                                 points / 1_000_000_000,
                               )}
                               {percentOfTotalSupply(points) > 0 ? (
-                                <small className="text-accent ml-1">
-                                  ({percentOfTotalSupply(points)}%)
-                                </small>
+                                  <div className="badge badge-sm badge-secondary badge-outline ml-2">
+                                  {percentOfTotalSupply(points)}%
+                                </div>
                               ) : null}
                             </span>
                           </td>
