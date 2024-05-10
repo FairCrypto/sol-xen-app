@@ -39,7 +39,7 @@ export default function Home() {
       </div>
 
       <div className="container my-6 max-w-4xl mx-auto">
-        <div className="card">
+        <div className="card mx-8 lg:mx-2">
           <Zoom>
             <img alt="A diagram of mining solXEN" src="/mining.jpeg" />
           </Zoom>
