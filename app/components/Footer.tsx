@@ -3,7 +3,7 @@ export default function Footer() {
   <footer className="footer footer-center mt-auto p-5 text-accent-content shadow-xl bg-accent text-gray-700">
     <aside>
       <p className="font-bold">
-        solXEL
+        solXEN
       </p>
       <p>Copyright © 2024 - All right reserved</p>
     </aside>
