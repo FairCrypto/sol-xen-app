@@ -26,6 +26,7 @@ export default function Leaderboard() {
   const [totalSupply, setTotalSupply]: [any, any] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const searchParams = useSearchParams();
+
   const [showEthAccount, setShowEthAccount] = useState(
     () => searchParams.get("account") === "ethereum",
   );
@@ -48,15 +49,7 @@ export default function Leaderboard() {
           throw new Error("Error fetching leaderboard data");
         }
         const leaderboardData = await leaderboardResponse.json();
-
         setData(leaderboardData);
-
-        const rows = document.querySelectorAll(".animate-table-row");
-        for (let i = 0; i < rows.length; i++) {
-          setTimeout(() => {
-            rows[i].classList.add("show");
-          }, i * 25);
-        }
 
         const totalSupplyResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`,
@@ -250,7 +243,7 @@ export default function Leaderboard() {
                     index,
                   ) => {
                     return (
-                      <tr key={rank} className={`animate-table-row`}>
+                      <tr key={rank} className={``}>
                         <td className="p-4 pr-0 border-b border-blue-gray-50">
                           <span color="blue-gray" className="font-bold">
                             {rank}
