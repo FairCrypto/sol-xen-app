@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { NavBar } from "@/app/components/NavBar";
 import { AccountSelector } from "@/app/components/AccountSelector";
+import Footer from "@/app/components/Footer";
 
 interface DataItem {
   rank: number;
@@ -322,6 +323,8 @@ export default function Leaderboard() {
           ) : null}
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }

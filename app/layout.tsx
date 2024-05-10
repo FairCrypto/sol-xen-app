@@ -29,7 +29,6 @@ export default function RootLayout({
         <ThemeProvider>
           <ClientThemeWrapper>
             {children}
-            <Footer />
           </ClientThemeWrapper>
         </ThemeProvider>
       </body>

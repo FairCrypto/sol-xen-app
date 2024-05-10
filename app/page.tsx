@@ -5,10 +5,11 @@ import React from "react";
 import Link from "next/link";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
+import Footer from "@/app/components/Footer";
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center min-h-screen mg:-mb-14">
+    <main className="flex flex-col min-h-screen">
       <NavBar />
 
       <div className="hero h-[500px] bg-base-200">
@@ -54,6 +55,8 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      <Footer />
     </main>
   );
 }
