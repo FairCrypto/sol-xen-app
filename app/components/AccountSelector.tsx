@@ -1,12 +1,15 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface AccountSelectorProps {
-  initialAccount?: 'solana' | 'ethereum';
-  onAccountChange?: (account: 'solana' | 'ethereum') => void;
+  initialAccount?: "solana" | "ethereum";
+  onAccountChange?: (account: "solana" | "ethereum") => void;
 }
 
-export const AccountSelector: React.FC<AccountSelectorProps> = ({ initialAccount = 'solana', onAccountChange }) => {
+export const AccountSelector: React.FC<AccountSelectorProps> = ({
+  initialAccount = "solana",
+  onAccountChange,
+}) => {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
 
@@ -14,16 +17,19 @@ export const AccountSelector: React.FC<AccountSelectorProps> = ({ initialAccount
     searchParams.get("account") || "solana",
   );
 
-  const handleAccountChange = useCallback((account: 'solana' | 'ethereum') => {
-    setAccount(account);
-    const url = new URL(window.location.href);
-    url.searchParams.set("account", account);
-    replace(url.toString());
+  const handleAccountChange = useCallback(
+    (account: "solana" | "ethereum") => {
+      setAccount(account);
+      const url = new URL(window.location.href);
+      url.searchParams.set("account", account);
+      replace(url.toString());
 
-    if (onAccountChange) {
-      onAccountChange(account);
-    }
-  }, [onAccountChange, replace]);
+      if (onAccountChange) {
+        onAccountChange(account);
+      }
+    },
+    [onAccountChange, replace],
+  );
 
   // const setAccount = useCallback(
   //   (account: string) => {
@@ -38,21 +44,21 @@ export const AccountSelector: React.FC<AccountSelectorProps> = ({ initialAccount
     <div className="flex items-center justify-end m-4">
       <div className="join">
         <input
-          onClick={() => handleAccountChange('solana')}
+          onClick={() => handleAccountChange("solana")}
           className="join-item btn btn-sm"
           type="radio"
           name="options"
           aria-label="Solana"
-          checked={account === 'solana'}
+          checked={account === "solana"}
           readOnly
         />
         <input
-          onClick={() => handleAccountChange('ethereum')}
+          onClick={() => handleAccountChange("ethereum")}
           className="join-item btn btn-sm"
           type="radio"
           name="options"
           aria-label="Ethereum"
-          checked={account === 'ethereum'}
+          checked={account === "ethereum"}
           readOnly
         />
       </div>

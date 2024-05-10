@@ -1,9 +1,15 @@
 "use client";
-import React, {useCallback, useEffect, useState, Suspense, createContext} from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  Suspense,
+  createContext,
+} from "react";
 import Image from "next/image";
-import {useSearchParams} from "next/navigation";
-import {NavBar} from "@/app/components/NavBar";
-import {AccountSelector} from "@/app/components/AccountSelector";
+import { useSearchParams } from "next/navigation";
+import { NavBar } from "@/app/components/NavBar";
+import { AccountSelector } from "@/app/components/AccountSelector";
 
 interface DataItem {
   rank: number;
@@ -19,7 +25,9 @@ export default function Leaderboard() {
   const [totalSupply, setTotalSupply]: [any, any] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const searchParams = useSearchParams();
-  const [showEthAccount, setShowEthAccount] = useState(() => searchParams.get("account") === "ethereum");
+  const [showEthAccount, setShowEthAccount] = useState(
+    () => searchParams.get("account") === "ethereum",
+  );
 
   const percentOfTotalSupply = (points: number) => {
     return Math.floor((points / totalSupply.points) * 100);
@@ -36,7 +44,7 @@ export default function Leaderboard() {
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}`,
         );
         if (!leaderboardResponse.ok) {
-          throw new Error('Error fetching leaderboard data');
+          throw new Error("Error fetching leaderboard data");
         }
         const leaderboardData = await leaderboardResponse.json();
 
@@ -52,7 +60,7 @@ export default function Leaderboard() {
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`,
         );
         if (!totalSupplyResponse.ok) {
-          throw new Error('Error fetching total supply data');
+          throw new Error("Error fetching total supply data");
         }
         const totalSupplyData = await totalSupplyResponse.json();
         setTotalSupply(totalSupplyData);
@@ -75,43 +83,45 @@ export default function Leaderboard() {
     if (!totalSupply?.points) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.points / 1_000_000_000)
-  }
+    return Intl.NumberFormat("en-US").format(
+      totalSupply?.points / 1_000_000_000,
+    );
+  };
 
   const totalHashesValue = () => {
     if (!totalSupply?.hashes) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.hashes)
-  }
+    return Intl.NumberFormat("en-US").format(totalSupply?.hashes);
+  };
 
   const totalSuperHashesValue = () => {
     if (!totalSupply?.superHashes) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.superHashes)
-  }
+    return Intl.NumberFormat("en-US").format(totalSupply?.superHashes);
+  };
 
   const txsValue = () => {
     if (!totalSupply?.txs) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.txs)
-  }
+    return Intl.NumberFormat("en-US").format(totalSupply?.txs);
+  };
 
   const ampValue = () => {
     if (!totalSupply?.amp) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.amp)
-  }
+    return Intl.NumberFormat("en-US").format(totalSupply?.amp);
+  };
 
   const lastAmpSlotValue = () => {
     if (!totalSupply?.lastAmpSlot) {
       return null;
     }
-    return Intl.NumberFormat("en-US").format(totalSupply?.lastAmpSlot)
-  }
+    return Intl.NumberFormat("en-US").format(totalSupply?.lastAmpSlot);
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center">
@@ -136,7 +146,7 @@ export default function Leaderboard() {
         />
       </div>
 
-      <NavBar/>
+      <NavBar />
 
       <div className="card w-full md:max-w-screen-xl bg-base-100 shadow-xl opacity-85 md:mt-5 mb-8">
         <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
@@ -146,140 +156,170 @@ export default function Leaderboard() {
           </div>
           <div className="flex justify-end">
             <span className="">
-              <AccountSelector/>
+              <AccountSelector />
             </span>
           </div>
         </div>
 
-        <div id="solxen-stats"
-             className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${isLoaded ? 'fade-in' : ''}`}>
+        <div
+          id="solxen-stats"
+          className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${isLoaded ? "fade-in" : ""}`}
+        >
           <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow trx">
-            <div className="stat-title"><span className="hidden sm:inline">Total</span> solXEN</div>
-            <div className="stat-value text-sm md:text-2xl">{totalSupplyValue()}</div>
+            <div className="stat-title">
+              <span className="hidden sm:inline">Total</span> solXEN
+            </div>
+            <div className="stat-value text-sm md:text-2xl">
+              {totalSupplyValue()}
+            </div>
           </div>
           <div className="stat bg-accent-content/10 rounded-md shadow">
-            <div className="stat-title"><span className="hidden sm:inline">Total</span> Hashes</div>
-            <div className="stat-value text-sm md:text-2xl">{totalHashesValue()}</div>
+            <div className="stat-title">
+              <span className="hidden sm:inline">Total</span> Hashes
+            </div>
+            <div className="stat-value text-sm md:text-2xl">
+              {totalHashesValue()}
+            </div>
           </div>
           <div className="stat bg-accent-content/10 rounded-md shadow">
-            <div className="stat-title"><span className="hidden sm:inline">Total</span> Super Hashes</div>
-            <div className="stat-value text-sm md:text-2xl">{totalSuperHashesValue()}</div>
+            <div className="stat-title">
+              <span className="hidden sm:inline">Total</span> Super Hashes
+            </div>
+            <div className="stat-value text-sm md:text-2xl">
+              {totalSuperHashesValue()}
+            </div>
           </div>
           <div className="stat bg-accent-content/10 rounded-md shadow">
             <div className="stat-title">AMP</div>
             <div className="stat-value text-sm md:text-2xl">{ampValue()}</div>
           </div>
           <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow">
-            <div className="stat-title"><span className="hidden sm:inline">Last</span> AMP Slot</div>
-            <div className="stat-value text-sm md:text-2xl">{lastAmpSlotValue()}</div>
+            <div className="stat-title">
+              <span className="hidden sm:inline">Last</span> AMP Slot
+            </div>
+            <div className="stat-value text-sm md:text-2xl">
+              {lastAmpSlotValue()}
+            </div>
           </div>
           <div className="stat  hidden sm:block bg-accent-content/10 rounded-md shadow">
-            <div className="stat-title"><span className="hidden sm:inline">Total</span> TXs</div>
+            <div className="stat-title">
+              <span className="hidden sm:inline">Total</span> TXs
+            </div>
             <div className="stat-value text-sm md:text-2xl">{txsValue()}</div>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          { data && data.length != 0 ? (
+          {data && data.length != 0 ? (
             <table className="table table-fixed md:table-auto table-lg table-zebra">
               <thead>
-              <tr>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
-                  <span>Rank</span>
-                </th>
-                <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <span>Account</span>
-                </th>
-                <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <span>Hashes</span>
-                </th>
-                <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                  <span>Super Hashes</span>
-                </th>
-                {!showEthAccount ? (
-                  <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    <span>solXEN</span>
+                <tr>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
+                    <span>Rank</span>
                   </th>
-                ) : null}
-              </tr>
+                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <span>Account</span>
+                  </th>
+                  <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <span>Hashes</span>
+                  </th>
+                  <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <span>Super Hashes</span>
+                  </th>
+                  {!showEthAccount ? (
+                    <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      <span>solXEN</span>
+                    </th>
+                  ) : null}
+                </tr>
               </thead>
               <tbody>
-              {data.map(
-                (
-                  {rank, solAccount, ethAccount, hashes, superHashes, points},
-                  index,
-                ) => {
-                  return (
-                    <tr key={rank} className={`animate-table-row`}>
-                      <td className="p-4 pr-0 border-b border-blue-gray-50">
-                        <span color="blue-gray" className="font-bold">
-                          {rank}
-                        </span>
-                      </td>
-                      <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
-                        <span>{showEthAccount ? ethAccount : solAccount}</span>
-
-                        <dl className="md:hidden font-normal mt-2">
-                          <div className="flex justify-between">
-                            <dt className="text-sm text-gray-400 mt-1 font-medium">
-                              Hashes
-                            </dt>
-                            <dd className="text-gray-400 text-sm mt-1">
-                              {Intl.NumberFormat("en-US").format(hashes)}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between">
-                            <dt className="text-gray-400 text-sm mt-1 font-medium">
-                              Super Hashes
-                            </dt>
-                            <dd className="text-gray-400 text-sm mt-1">
-                              {Intl.NumberFormat("en-US").format(superHashes)}
-                            </dd>
-                          </div>
-                          {!showEthAccount ? (
-                            <div className="flex justify-between">
-                              <dt className="text-gray-400 text-sm mt-1 font-medium">
-                                solXEN
-                              </dt>
-                              <dd className="text-gray-400 text-sm mt-1">
-                                {Intl.NumberFormat("en-US").format(
-                                  points / 1_000_000_000,
-                                )}
-                              </dd>
-                            </div>
-                          ) : null}
-                        </dl>
-                      </td>
-                      <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                        <span className="font-normal">
-                          {Intl.NumberFormat("en-US").format(hashes)}
-                        </span>
-                      </td>
-                      <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                        <span className="font-normal">
-                          {Intl.NumberFormat("en-US").format(superHashes)}
-                        </span>
-                      </td>
-                      {!showEthAccount ? (
-                        <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                          <span className="font-normal">
-                            {Intl.NumberFormat("en-US").format(
-                              points / 1_000_000_000,
-                            )}
-                            {percentOfTotalSupply(points) > 0 ? (
-                              <small className="text-accent ml-1">
-                                ({percentOfTotalSupply(points)}%)
-                              </small>
-                            ) : null}
+                {data.map(
+                  (
+                    {
+                      rank,
+                      solAccount,
+                      ethAccount,
+                      hashes,
+                      superHashes,
+                      points,
+                    },
+                    index,
+                  ) => {
+                    return (
+                      <tr key={rank} className={`animate-table-row`}>
+                        <td className="p-4 pr-0 border-b border-blue-gray-50">
+                          <span color="blue-gray" className="font-bold">
+                            {rank}
                           </span>
                         </td>
-                      ) : null}
-                    </tr>
-                  );
-                },
-              )}
+                        <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
+                          <span>
+                            {showEthAccount ? ethAccount : solAccount}
+                          </span>
+
+                          <dl className="md:hidden font-normal mt-2">
+                            <div className="flex justify-between">
+                              <dt className="text-sm text-gray-400 mt-1 font-medium">
+                                Hashes
+                              </dt>
+                              <dd className="text-gray-400 text-sm mt-1">
+                                {Intl.NumberFormat("en-US").format(hashes)}
+                              </dd>
+                            </div>
+                            <div className="flex justify-between">
+                              <dt className="text-gray-400 text-sm mt-1 font-medium">
+                                Super Hashes
+                              </dt>
+                              <dd className="text-gray-400 text-sm mt-1">
+                                {Intl.NumberFormat("en-US").format(superHashes)}
+                              </dd>
+                            </div>
+                            {!showEthAccount ? (
+                              <div className="flex justify-between">
+                                <dt className="text-gray-400 text-sm mt-1 font-medium">
+                                  solXEN
+                                </dt>
+                                <dd className="text-gray-400 text-sm mt-1">
+                                  {Intl.NumberFormat("en-US").format(
+                                    points / 1_000_000_000,
+                                  )}
+                                </dd>
+                              </div>
+                            ) : null}
+                          </dl>
+                        </td>
+                        <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                          <span className="font-normal">
+                            {Intl.NumberFormat("en-US").format(hashes)}
+                          </span>
+                        </td>
+                        <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                          <span className="font-normal">
+                            {Intl.NumberFormat("en-US").format(superHashes)}
+                          </span>
+                        </td>
+                        {!showEthAccount ? (
+                          <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
+                            <span className="font-normal">
+                              {Intl.NumberFormat("en-US").format(
+                                points / 1_000_000_000,
+                              )}
+                              {percentOfTotalSupply(points) > 0 ? (
+                                <small className="text-accent ml-1">
+                                  ({percentOfTotalSupply(points)}%)
+                                </small>
+                              ) : null}
+                            </span>
+                          </td>
+                        ) : null}
+                      </tr>
+                    );
+                  },
+                )}
               </tbody>
-            </table>): null}
+            </table>
+          ) : null}
         </div>
       </div>
     </main>

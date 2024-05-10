@@ -13,7 +13,10 @@ export const ThemeProvider = ({ children }: any) => {
 
   useEffect(() => {
     let defaultTheme = "light";
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
       defaultTheme = "dark";
     }
     setIsMounted(true);
@@ -32,4 +35,4 @@ export const ThemeProvider = ({ children }: any) => {
       {children}
     </ThemeContext.Provider>
   );
-}
+};
