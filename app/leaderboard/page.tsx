@@ -51,11 +51,12 @@ export default function Leaderboard() {
 
         setData(leaderboardData);
 
-        // Add the 'show' class to the rows after the data is set
-        setTimeout(() => {
-          const rows = document.querySelectorAll(".animate-table-row");
-          rows.forEach((row) => row.classList.add("show"));
-        }, 100);
+        const rows = document.querySelectorAll(".animate-table-row");
+        for (let i = 0; i < rows.length; i++) {
+          setTimeout(() => {
+            rows[i].classList.add("show");
+          }, i * 25);
+        }
 
         const totalSupplyResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`,
@@ -149,11 +150,12 @@ export default function Leaderboard() {
 
       <NavBar />
 
-      <div className="card w-full md:max-w-screen-xl bg-base-100 shadow-xl opacity-85 md:mt-5 mb-8">
+      <div className="card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 shadow-xl opacity-85 md:mt-5 sm:mb-8">
+        <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
         <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
           <div></div>
           <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4">
-            <h1 className="text-3xl md:text-5xl mt-3">Leaderboard</h1>
+            <h1 className="text-3xl md:text-5xl">Leaderboard</h1>
           </div>
           <div className="flex justify-end">
             <span className="">
@@ -166,7 +168,7 @@ export default function Leaderboard() {
           id="solxen-stats"
           className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${isLoaded ? "fade-in" : ""}`}
         >
-          <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow trx">
+          <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">
               <span className="hidden sm:inline">Total</span> solXEN
             </div>
@@ -174,7 +176,7 @@ export default function Leaderboard() {
               {totalSupplyValue()}
             </div>
           </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow">
+          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">
               <span className="hidden sm:inline">Total</span> Hashes
             </div>
@@ -182,7 +184,7 @@ export default function Leaderboard() {
               {totalHashesValue()}
             </div>
           </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow">
+          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">
               <span className="hidden sm:inline">Total</span> Super Hashes
             </div>
@@ -190,11 +192,11 @@ export default function Leaderboard() {
               {totalSuperHashesValue()}
             </div>
           </div>
-          <div className="stat bg-accent-content/10 rounded-md shadow">
+          <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">AMP</div>
             <div className="stat-value text-sm md:text-2xl">{ampValue()}</div>
           </div>
-          <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow">
+          <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">
               <span className="hidden sm:inline">Last</span> AMP Slot
             </div>
@@ -202,7 +204,7 @@ export default function Leaderboard() {
               {lastAmpSlotValue()}
             </div>
           </div>
-          <div className="stat  hidden sm:block bg-accent-content/10 rounded-md shadow">
+          <div className="stat  hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
             <div className="stat-title">
               <span className="hidden sm:inline">Total</span> TXs
             </div>
@@ -282,6 +284,11 @@ export default function Leaderboard() {
                                   solXEN
                                 </dt>
                                 <dd className="text-gray-400 text-sm mt-1">
+                                  {percentOfTotalSupply(points) > 0 ? (
+                                    <div className="badge badge-sm badge-success badge-outline mr-2">
+                                      {percentOfTotalSupply(points)}%
+                                    </div>
+                                  ) : null}
                                   {Intl.NumberFormat("en-US").format(
                                     points / 1_000_000_000,
                                   )}
@@ -307,7 +314,7 @@ export default function Leaderboard() {
                                 points / 1_000_000_000,
                               )}
                               {percentOfTotalSupply(points) > 0 ? (
-                                  <div className="badge badge-sm badge-secondary badge-outline ml-2">
+                                  <div className="badge badge-sm badge-success badge-outline ml-2">
                                   {percentOfTotalSupply(points)}%
                                 </div>
                               ) : null}
@@ -321,6 +328,7 @@ export default function Leaderboard() {
               </tbody>
             </table>
           ) : null}
+        </div>
         </div>
       </div>
 

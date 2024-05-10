@@ -21,7 +21,7 @@ export default function Home() {
             <div className="divider"></div>
             <p className="mb-5 mx-auto max-w-lg">
               solXEN is a fairly distributed 1st principles community token
-              earned through PoW mining on the Solana
+              earned through PoW<br className="sm:hidden"/> mining on the Solana blockchain.
             </p>
             <Link href="./leaderboard">
               <button className="btn btn-primary">Leaderboard</button>
@@ -38,12 +38,10 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container my-6 max-w-4xl mx-auto">
+      <div className="container my-14 max-w-4xl mx-auto">
         <div className="card mx-8 lg:mx-2">
-          <Zoom>
-            <img alt="A diagram of mining solXEN" src="/mining.jpeg" />
-          </Zoom>
-          <p className="mt-8">
+          <h2 className="text-2xl mb-2">How does it work?</h2>
+          <p className="my-8">
             Mining for 420 hashes involves sending a transaction using the
             SolXen miner script. If the priority fee is high enough the Solana
             leader as well as the rest of the validator cluster will then run
@@ -53,10 +51,13 @@ export default function Home() {
             miner is rewarded with solXEN, as well as becoming eligible for XN
             airdrop via included ethereum address.
           </p>
+          <Zoom>
+            <img alt="A diagram of mining solXEN" src="/mining.jpeg"/>
+          </Zoom>
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </main>
   );
 }
