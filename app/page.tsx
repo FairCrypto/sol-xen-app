@@ -30,7 +30,7 @@ export default function Home() {
             </a>
             <a href="https://t.me/+Z5kEez70pyQ5NTAz">
               <button className="ml-2 btn btn-accent">
-                Hashhead Community
+                Hashhead <div className="hidden sm:inline">Community</div>
               </button>
             </a>
           </div>
