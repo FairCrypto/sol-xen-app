@@ -8,7 +8,7 @@ import "react-medium-image-zoom/dist/styles.css";
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center min-h-screen -mb-14">
+    <main className="flex flex-col items-center min-h-screen mg:-mb-14">
       <NavBar />
 
       <div className="hero h-[500px] bg-base-200">

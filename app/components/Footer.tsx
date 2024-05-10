@@ -4,7 +4,7 @@ export default function Footer() {
       <aside className="items-center grid-flow-col">
         <p>Copyright © 2024 solxen.io - All Rights Reserved.</p>
       </aside>
-      <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+      <nav className="grid-flow-col gap-4 place-self-center md:place-self-center md:justify-self-end">
         <a href="https://www.twitter.com/mrJackLevin">
           <svg
             xmlns="http://www.w3.org/2000/svg"
