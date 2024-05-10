@@ -81,7 +81,7 @@ export default function Leaderboard() {
   }, [searchParams]);
 
   const totalSupplyValue = () => {
-    if (!totalSupply?.points) {
+    if (isNaN(totalSupply?.points)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(
@@ -90,35 +90,35 @@ export default function Leaderboard() {
   };
 
   const totalHashesValue = () => {
-    if (!totalSupply?.hashes) {
+    if (isNaN(totalSupply?.hashes)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(totalSupply?.hashes);
   };
 
   const totalSuperHashesValue = () => {
-    if (!totalSupply?.superHashes) {
+    if (isNaN(totalSupply?.superHashes)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(totalSupply?.superHashes);
   };
 
   const txsValue = () => {
-    if (!totalSupply?.txs) {
+    if (isNaN(totalSupply?.txs)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(totalSupply?.txs);
   };
 
   const ampValue = () => {
-    if (!totalSupply?.amp) {
+    if (isNaN(totalSupply?.amp)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(totalSupply?.amp);
   };
 
   const lastAmpSlotValue = () => {
-    if (!totalSupply?.lastAmpSlot) {
+    if (isNaN(totalSupply?.lastAmpSlot)) {
       return null;
     }
     return Intl.NumberFormat("en-US").format(totalSupply?.lastAmpSlot);
