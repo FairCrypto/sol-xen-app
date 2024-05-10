@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-  <footer className="footer footer-center mt-auto p-5 bg-base-100 text-accent/90 shadow-xl opacity-85 text-primary-content">
+  <footer className="footer footer-center mt-auto p-5 text-accent-content shadow-xl bg-accent text-gray-700">
     <aside>
       <p className="font-bold">
         solXEL
