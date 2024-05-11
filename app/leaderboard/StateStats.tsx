@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, {useEffect, useState} from "react";
+import {useSearchParams} from "next/navigation";
 
-export interface State {
-  points: bigint;
+interface State {
+  points: number;
   hashes: number;
   superHashes: number;
   txs: number;
   amp: number;
-  lastAmpSlot: bigint;
+  lastAmpSlot: number;
 }
 
-export default function StateStats({ state }: { state: State }) {
+export default function StateStats({state}: { state: State }) {
   const isLoading = () => state?.points === undefined;
 
   const totalSupplyValue = () => {
+    if (isNaN(state?.points)) {
+      return null;
+    }
     return Intl.NumberFormat("en-US").format(
-      parseInt(String(state.points / 1_000_000_000n)),
+      state?.points / 1_000_000_000,
     );
   };
 
@@ -48,6 +51,9 @@ export default function StateStats({ state }: { state: State }) {
   };
 
   const lastAmpSlotValue = () => {
+    if (isNaN(state?.lastAmpSlot)) {
+      return null;
+    }
     return Intl.NumberFormat("en-US").format(state?.lastAmpSlot);
   };
 
@@ -99,5 +105,6 @@ export default function StateStats({ state }: { state: State }) {
         <div className="stat-value text-sm md:text-2xl">{txsValue()}</div>
       </div>
     </div>
+
   );
 }
