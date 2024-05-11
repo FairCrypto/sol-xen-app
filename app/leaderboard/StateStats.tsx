@@ -1,66 +1,52 @@
-import React, {useEffect, useState} from "react";
-import {useSearchParams} from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-interface State {
-  points: number;
+export interface State {
+  points: bigint;
   hashes: number;
   superHashes: number;
   txs: number;
   amp: number;
-  lastAmpSlot: number;
+  lastAmpSlot: bigint;
 }
 
-export default function StateStats({state}: { state: State }) {
-  const isLoading = () => state?.points === undefined;
-
+export default function StateStats({
+  state,
+  isLoadingStats,
+}: {
+  state: State;
+  isLoadingStats: boolean;
+}) {
   const totalSupplyValue = () => {
-    if (isNaN(state?.points)) {
-      return null;
-    }
     return Intl.NumberFormat("en-US").format(
-      state?.points / 1_000_000_000,
+      Number(state.points / 1_000_000_000n),
     );
   };
 
   const totalHashesValue = () => {
-    if (isNaN(state?.hashes)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(state?.hashes);
+    return Intl.NumberFormat("en-US").format(state.hashes);
   };
 
   const totalSuperHashesValue = () => {
-    if (isNaN(state?.superHashes)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(state?.superHashes);
+    return Intl.NumberFormat("en-US").format(state.superHashes);
   };
 
   const txsValue = () => {
-    if (isNaN(state?.txs)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(state?.txs);
+    return Intl.NumberFormat("en-US").format(state.txs);
   };
 
   const ampValue = () => {
-    if (isNaN(state?.amp)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(state?.amp);
+    return Intl.NumberFormat("en-US").format(state.amp);
   };
 
   const lastAmpSlotValue = () => {
-    if (isNaN(state?.lastAmpSlot)) {
-      return null;
-    }
-    return Intl.NumberFormat("en-US").format(state?.lastAmpSlot);
+    return Intl.NumberFormat("en-US").format(state.lastAmpSlot);
   };
 
   return (
     <div
       id="solxen-stats"
-      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${!isLoading() ? "fade-in" : ""}`}
+      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
     >
       <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
         <div className="stat-title">
@@ -105,6 +91,5 @@ export default function StateStats({state}: { state: State }) {
         <div className="stat-value text-sm md:text-2xl">{txsValue()}</div>
       </div>
     </div>
-
   );
 }
