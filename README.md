@@ -28,4 +28,3 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 ## Deploy on Github Pages
 
 Just push your code to the `main` branch and it will be automatically deployed to Github Pages.
-
