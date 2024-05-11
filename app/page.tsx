@@ -21,7 +21,8 @@ export default function Home() {
             <div className="divider"></div>
             <p className="mb-5 mx-auto max-w-lg">
               solXEN is a fairly distributed 1st principles community token
-              earned through PoW<br className="sm:hidden"/> mining on the Solana blockchain.
+              earned through PoW
+              <br className="sm:hidden" /> mining on the Solana blockchain.
             </p>
             <Link href="./leaderboard">
               <button className="btn btn-primary">Leaderboard</button>
@@ -52,12 +53,12 @@ export default function Home() {
             airdrop via included ethereum address.
           </p>
           <Zoom>
-            <img alt="A diagram of mining solXEN" src="/mining.jpeg"/>
+            <img alt="A diagram of mining solXEN" src="/mining.jpeg" />
           </Zoom>
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </main>
   );
 }
