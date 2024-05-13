@@ -27,9 +27,9 @@ export default function TimeTo({
             {days > 0 && (
               <>
                 <div className="mx-2">
-                  <div className="font-mono ">
+                  <div className="font-mono">
                     <div>{days}</div>
-                    <div className="text-sm font-thin -mt-1">days</div>
+                    <div className="text-xs font-thin -mt-1">days</div>
                   </div>
                 </div>
               </>
@@ -40,7 +40,7 @@ export default function TimeTo({
                 <div className="mx-2">
                   <div className="font-mono">
                     {String(hours).padStart(2, "0")}
-                    <div className="text-sm font-thin -mt-1">hours</div>
+                    <div className="text-xs font-thin -mt-1">hours</div>
                   </div>
                 </div>
               </>
@@ -51,7 +51,7 @@ export default function TimeTo({
                 <div className="mx-2">
                   <div className="font-mono">
                     <div>{String(minutes).padStart(2, "0")}</div>
-                    <div className="text-sm font-thin -mt-1">mins</div>
+                    <div className="text-xs font-light -mt-1">mins</div>
                   </div>
                 </div>
               </>
@@ -62,7 +62,7 @@ export default function TimeTo({
                 <div className="mx-2">
                   <div className="font-mono">
                     <div>{String(seconds).padStart(2, "0")}</div>
-                    <div className="text-sm font-thin -mt-1">secs</div>
+                    <div className="text-xs font-thin -mt-1">secs</div>
                   </div>
                 </div>
               </>

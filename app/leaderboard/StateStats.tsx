@@ -101,20 +101,20 @@ export default function StateStats({
 
         <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
           <div className="stat-title">Zero AMP ETA</div>
-          <div className="stat-value text-xs sm:text-sm md:text-2xl">
+          <div className="stat-value text-sm sm:text-sm md:text-2xl">
             <CountDown endDate={new Date(state.zeroAmpEta)} />
           </div>
         </div>
 
-        <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
+        <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
           <div className="stat-title">Next AMP ETA</div>
-          <div className="stat-value text-xs sm:text-sm md:text-2xl">
+          <div className="stat-value text-sm sm:text-sm md:text-2xl">
             <CountDown endDate={new Date(state.nextAmpEta)} />
           </div>
         </div>
 
-        <div className="stat hidden sm:block sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">Avg AMP Time</div>
+        <div className="stat hidden sm:block sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
+          <div className="stat-title">Average AMP Time</div>
           <div className="stat-value text-sm md:text-2xl">
             <>
               <CountDown

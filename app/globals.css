@@ -76,11 +76,17 @@ body {
 }
 
 #solxen-stats {
-  height: 336px;
+  min-height: 336px;
+}
+
+@media (max-width: 1024px) {
+  #solxen-stats {
+    min-height: 296px;
+  }
 }
 
 @media (max-width: 768px) {
   #solxen-stats {
-    height: 232px;
+    min-height: 232px;
   }
 }
