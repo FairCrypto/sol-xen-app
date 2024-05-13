@@ -111,6 +111,9 @@ export default function Leaderboard() {
     txs: 0,
     amp: 0,
     lastAmpSlot: 0n,
+    zeroAmpEta: new Date(),
+    nextAmpEta: new Date(),
+    avgAmpSecs: 0,
   });
 
   useEffect(() => {
@@ -151,7 +154,6 @@ export default function Leaderboard() {
     stateData.hashes += eventHash.hashes;
     stateData.superHashes += eventHash.superhashes;
     stateData.txs += 1;
-    stateData.lastAmpSlot = eventHash.slot;
     if (
       leaderboardIndex[account] &&
       (eventHash.hashes > 0 ||
