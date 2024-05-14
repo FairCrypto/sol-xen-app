@@ -249,14 +249,14 @@ export default function Leaderboard() {
                     <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                       <span>Account</span>
                     </th>
-                    <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                       <span>Hashes</span>
                     </th>
-                    <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                    <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                       <span>Super Hashes</span>
                     </th>
                     {accountType == AccountType.Solana ? (
-                      <th className="hidden md:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                      <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                         <span>solXEN</span>
                       </th>
                     ) : null}
@@ -282,24 +282,24 @@ export default function Leaderboard() {
                               {rank}
                             </span>
                           </td>
-                          <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base truncate">
+                          <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base font-mono truncate">
                             <span>
                               {accountType == "solana"
                                 ? solAccount
                                 : ethAccount}
                             </span>
 
-                            <dl className="md:hidden font-normal mt-2">
+                            <dl className="lg:hidden font-normal mt-2">
                               <div className="flex justify-between">
-                                <dt className="text-sm text-gray-400 mt-1 font-medium">
+                                <dt className="text-sm text-gray-400 mt-1 font-mono">
                                   Hashes
                                 </dt>
-                                <dd className="text-gray-400 text-sm mt-1">
+                                <dd className="text-gray-400 text-sm mt-1 font-mono">
                                   {Intl.NumberFormat("en-US").format(hashes)}
                                 </dd>
                               </div>
                               <div className="flex justify-between">
-                                <dt className="text-gray-400 text-sm mt-1 font-medium">
+                                <dt className="text-gray-400 text-sm mt-1 font-mono">
                                   Super Hashes
                                 </dt>
                                 <dd className="text-gray-400 text-sm mt-1">
@@ -313,7 +313,7 @@ export default function Leaderboard() {
                                   <dt className="text-gray-400 text-sm mt-1 font-medium">
                                     solXEN
                                   </dt>
-                                  <dd className="text-gray-400 text-sm mt-1">
+                                  <dd className="text-gray-400 text-sm mt-1  font-mono">
                                     {percentOfState(points) > 0 ? (
                                       <div className="badge badge-sm badge-success badge-outline mr-2">
                                         {percentOfState(points)}%
@@ -327,19 +327,19 @@ export default function Leaderboard() {
                               ) : null}
                             </dl>
                           </td>
-                          <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                            <span className="font-normal">
+                          <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
+                            <span className="font-mono">
                               {Intl.NumberFormat("en-US").format(hashes)}
                             </span>
                           </td>
-                          <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                            <span className="font-normal">
+                          <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
+                            <span className="font-mono">
                               {Intl.NumberFormat("en-US").format(superHashes)}
                             </span>
                           </td>
                           {accountType == AccountType.Solana ? (
-                            <td className="hidden md:table-cell p-4 border-b border-blue-gray-50">
-                              <span className="font-normal">
+                            <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
+                              <span className="font-mono">
                                 {Intl.NumberFormat("en-US").format(
                                   points / 1_000_000_000n,
                                 )}
