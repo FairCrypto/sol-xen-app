@@ -16,6 +16,7 @@ export interface State {
   nextAmpEta: Date;
   avgAmpSecs: number;
   createdAt: Date;
+  avgPriorityFee: number;
 }
 
 async function fetchStateHistory() {
@@ -72,6 +73,10 @@ export default function StateStats({
     return Intl.NumberFormat("en-US").format(state.lastAmpSlot);
   };
 
+  const avgPriorityFeeValue = () => {
+    return Intl.NumberFormat("en-US").format(state.avgPriorityFee);
+  };
+
   useEffect(() => {
     fetchStateHistory().then((data) => {
       setStateHistory(data);
@@ -81,7 +86,7 @@ export default function StateStats({
   return (
     <div
       id="solxen-stats"
-      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 h-[10rem] sm:h-[10rem] md:h-[13rem] ${!isLoadingStats ? "fade-in" : ""}`}
+      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
     >
       <StateStat
         name="solXen"
@@ -97,6 +102,7 @@ export default function StateStats({
       >
         {totalHashesValue()}
       </StateStat>
+
       <StateStat
         name="superHashes"
         title="Total Super Hashes"
@@ -104,6 +110,15 @@ export default function StateStats({
       >
         {totalSuperHashesValue()}
       </StateStat>
+
+      <StateStat
+        name="txs"
+        title="Total TXs"
+        stateHistory={stateHistory.map((entry) => entry.txs)}
+      >
+        {txsValue()}
+      </StateStat>
+
       <StateStat
         name="amp"
         title="AMP"
@@ -111,21 +126,22 @@ export default function StateStats({
       >
         {ampValue()}
       </StateStat>
+
+      {/*<StateStat*/}
+      {/*  name="lastAmpSlot"*/}
+      {/*  title="Last AMP Slot"*/}
+      {/*  extraClassName="hidden sm:inline"*/}
+      {/*  stateHistory={stateHistory.map((entry) => Number(entry.lastAmpSlot))}*/}
+      {/*>*/}
+      {/*  {lastAmpSlotValue()}*/}
+      {/*</StateStat>*/}
+
       <StateStat
-        name="lastAmpSlot"
-        title="Last AMP Slot"
-        extraClassName="hidden sm:inline"
-        stateHistory={stateHistory.map((entry) => Number(entry.lastAmpSlot))}
+        name="avgPriorityFee"
+        title="Avg Priority Fee"
+        stateHistory={stateHistory.map((entry) => entry.avgPriorityFee)}
       >
-        {lastAmpSlotValue()}
-      </StateStat>
-      <StateStat
-        name="txs"
-        title="Total TXs"
-        stateHistory={stateHistory.map((entry) => entry.txs)}
-        extraClassName="hidden sm:inline"
-      >
-        {txsValue()}
+        {avgPriorityFeeValue()}
       </StateStat>
     </div>
   );

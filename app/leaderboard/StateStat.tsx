@@ -80,7 +80,7 @@ export default function StateStat({
         options={options}
         className="absolute -z-10 opacity-50"
       />
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <div className="stat-title">{title}</div>
         <div className="stat-value text-sm md:text-2xl">{children}</div>
       </div>
