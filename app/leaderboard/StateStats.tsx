@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import CountDown from "@/app/components/CountDown";
 import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";

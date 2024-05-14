@@ -15,9 +15,7 @@ import {
   web3,
 } from "@coral-xyz/anchor";
 import { Connection } from "@solana/web3.js";
-import StateStat from "@/app/leaderboard/StateStat";
 import CountDown from "@/app/components/CountDown";
-import { state } from "sucrase/dist/types/parser/traverser/base";
 
 export interface LeaderboardEntry {
   rank: number;
@@ -109,6 +107,7 @@ export default function Leaderboard() {
   const [isLeaderboardLoading, setIsLeaderboardLoading] = useState(true);
   const [isStatsLoadingStats, setIsStatsLoadingStats] = useState(true);
   const [stateData, setStateData]: [State, any] = useState<State>({
+    avgPriorityFee: 0,
     createdAt: new Date(),
     points: 0n,
     solXen: 0,
@@ -119,7 +118,7 @@ export default function Leaderboard() {
     lastAmpSlot: 0n,
     zeroAmpEta: new Date(),
     nextAmpEta: new Date(),
-    avgAmpSecs: 0,
+    avgAmpSecs: 0
   });
 
   const somethingIsLoading = isLeaderboardLoading || isStatsLoadingStats;
