@@ -122,12 +122,13 @@ export default function Leaderboard() {
     setAccountType(getAccountTypeFromSearchParams(searchParams));
 
     const fetchData = async () => {
+      setIsLeaderboardLoading(true);
+
       fetchStateData().then((data) => {
         setStateData(data);
         setIsStatsLoadingStats(false);
       });
 
-      setIsLeaderboardLoading(true);
       fetchLeaderboardData(accountType).then((data: LeaderboardEntry[]) => {
         const idxData = generateLeaderboardIndex(data, accountType);
         setLeaderboardData(data);
