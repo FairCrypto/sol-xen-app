@@ -74,19 +74,3 @@ body {
   opacity: 1;
   transition: opacity 0.8s ease-in-out;
 }
-
-#solxen-stats {
-  min-height: 308px;
-}
-
-@media (max-width: 1024px) {
-  #solxen-stats {
-    min-height: 272px;
-  }
-}
-
-@media (max-width: 768px) {
-  #solxen-stats {
-    min-height: 256px;
-  }
-}

@@ -159,7 +159,7 @@ export default function StateStats({
   return (
     <div
       id="solxen-stats"
-      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 h-3/4 ${!isLoadingStats ? "fade-in" : ""}`}
+      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 h-[16rem] sm:h-[17rem] md:h-[19rem] ${!isLoadingStats ? "fade-in" : ""}`}
     >
       {stat("solXen", "Total solXEN", totalSupplyValue())}
       {stat("hashes", "Total Hashes", totalSupplyValue())}
