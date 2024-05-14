@@ -42,7 +42,7 @@ export default function CountDown({
         clearInterval(timer);
       };
     }
-  }, [dontRun, endDate]);
+  }, [dontRun, endDate, showSeconds]);
 
   return (
     <TimeTo

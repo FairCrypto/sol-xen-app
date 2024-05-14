@@ -41,7 +41,7 @@ export const AccountSelector: React.FC<AccountSelectorProps> = ({
   // );
 
   return (
-    <div className="flex items-center justify-end m-4">
+    <div className="flex items-center justify-end m-2 sm:m-4">
       <div className="join">
         <input
           onClick={() => handleAccountChange("solana")}

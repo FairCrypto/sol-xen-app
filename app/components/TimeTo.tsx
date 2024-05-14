@@ -18,58 +18,60 @@ export default function TimeTo({
   };
 
   return (
-    <div className="grid grid-flow-col text-center auto-cols-max justify-center">
-      <div className="flex flex-row">
-        {isSoon() ? (
-          "Soon"
-        ) : (
-          <>
-            {days > 0 && (
-              <>
-                <div className="mx-2">
-                  <div className="font-mono">
-                    <div>{days}</div>
-                    <div className="text-xs font-thin -mt-1">days</div>
-                  </div>
-                </div>
-              </>
-            )}
+    <span className="countdown font-mono">
+      {isSoon() ? (
+        "Soon"
+      ) : (
+        <>
+          {days > 0 && (
+            <>
+              <span
+                style={{
+                  // @ts-ignore
+                  "--value": days,
+                }}
+              ></span>
+              d
+            </>
+          )}
 
-            {hours > 0 && (
-              <>
-                <div className="mx-2">
-                  <div className="font-mono">
-                    {String(hours).padStart(2, "0")}
-                    <div className="text-xs font-thin -mt-1">hours</div>
-                  </div>
-                </div>
-              </>
-            )}
+          {(hours > 0 || days > 0) && (
+            <>
+              <span
+                style={{
+                  // @ts-ignore
+                  "--value": hours,
+                }}
+              ></span>
+              h
+            </>
+          )}
 
-            {minutes > 0 && (
-              <>
-                <div className="mx-2">
-                  <div className="font-mono">
-                    <div>{String(minutes).padStart(2, "0")}</div>
-                    <div className="text-xs font-light -mt-1">mins</div>
-                  </div>
-                </div>
-              </>
-            )}
+          {(hours > 0 || minutes > 0) && (
+            <>
+              <span
+                style={{
+                  // @ts-ignore
+                  "--value": minutes,
+                }}
+              ></span>
+              m
+            </>
+          )}
 
-            {seconds > 0 && (
-              <>
-                <div className="mx-2">
-                  <div className="font-mono">
-                    <div>{String(seconds).padStart(2, "0")}</div>
-                    <div className="text-xs font-thin -mt-1">secs</div>
-                  </div>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+          {seconds > 0 && (
+            <>
+              <span
+                style={{
+                  // @ts-ignore
+                  "--value": seconds,
+                }}
+              ></span>
+              h
+            </>
+          )}
+        </>
+      )}
+    </span>
   );
 }

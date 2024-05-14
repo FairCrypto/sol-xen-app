@@ -15,6 +15,9 @@ import {
   web3,
 } from "@coral-xyz/anchor";
 import { Connection } from "@solana/web3.js";
+import StateStat from "@/app/leaderboard/StateStat";
+import CountDown from "@/app/components/CountDown";
+import { state } from "sucrase/dist/types/parser/traverser/base";
 
 export interface LeaderboardEntry {
   rank: number;
@@ -108,6 +111,7 @@ export default function Leaderboard() {
   const [stateData, setStateData]: [State, any] = useState<State>({
     createdAt: new Date(),
     points: 0n,
+    solXen: 0,
     hashes: 0,
     superHashes: 0,
     txs: 0,
@@ -202,6 +206,10 @@ export default function Leaderboard() {
     return Math.floor(Number((points * 10000n) / stateData.points) / 100);
   };
 
+  const avgAmpSecsDate = () => {
+    return new Date(new Date().getTime() + stateData.avgAmpSecs * 1000);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center">
       <div
@@ -223,10 +231,48 @@ export default function Leaderboard() {
       <NavBar />
 
       <div
+        className={`bg-secondary/60 text-secondary-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
+      >
+        <div className="border-r place-items-center justify-center py-0 my-0 flex">
+          <div className="text-accent-content p-0">
+            Zero AMP <span className="hidden md:inline">ETA</span>{" "}
+            <span className="font-thin">|</span>
+          </div>
+          <div className="mx-1 text-accent-content">
+            <CountDown endDate={new Date(stateData.zeroAmpEta)} />
+          </div>
+        </div>
+
+        <div className="sm:border-r justify-center place-items-center py-0 flex">
+          <div className="stat-title text-accent-content p-0">
+            Next AMP <span className="hidden md:inline">ETA</span>{" "}
+            <span className="font-thin">|</span>
+          </div>
+          <div className="mx-1 text-accent-content">
+            <CountDown endDate={new Date(stateData.nextAmpEta)} />
+          </div>
+        </div>
+
+        <div className="place-items-center justify-center py-0 hidden sm:flex">
+          <div className="stat-title text-accent-content p-0">
+            <span className="hidden md:inline">Average</span> AMP Time{" "}
+            <span className="font-thin">|</span>
+          </div>
+          <div className="mx-1 text-accent-content">
+            <CountDown
+              endDate={avgAmpSecsDate()}
+              dontRun={true}
+              showSeconds={true}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
         className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!somethingIsLoading ? "shadow-xl" : ""}`}
       >
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-          <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
+          <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-2 sm:mb-4">
             <div></div>
             <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4">
               <h1 className="text-3xl md:text-5xl">Leaderboard</h1>
