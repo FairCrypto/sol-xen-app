@@ -28,27 +28,6 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-
-  #background-image-overlay {
-    opacity: 0.3;
-  }
-  [data-theme="dark"],
-  [data-theme="synthwave"],
-  [data-theme="forest"],
-  [data-theme="aqua"],
-  [data-theme="black"],
-  [data-theme="luxury"],
-  [data-theme="dracula"],
-  [data-theme="business"],
-  [data-theme="night"],
-  [data-theme="coffee"],
-  [data-theme="dim"],
-  [data-theme="sunset"],
-  [data-theme="halloween"] {
-    #background-image-overlay {
-      opacity: 0.1;
-    }
-  }
 }
 
 @layer utilities {
@@ -57,20 +36,17 @@ body {
   }
 }
 
-.animate-table-row {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition:
-    opacity 0.4s ease,
-    transform 0.3s ease;
-}
-
-.animate-table-row.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .fade-in {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+}
+
+.fade-in-slow {
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
 }

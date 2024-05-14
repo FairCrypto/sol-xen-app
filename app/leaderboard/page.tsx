@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { NavBar } from "@/app/components/NavBar";
@@ -15,9 +15,26 @@ import {
   web3,
 } from "@coral-xyz/anchor";
 import { Connection } from "@solana/web3.js";
-import StateStat from "@/app/leaderboard/StateStat";
 import CountDown from "@/app/components/CountDown";
-import { state } from "sucrase/dist/types/parser/traverser/base";
+import { ThemeContext } from "@/app/context/ThemeContext";
+import colors from "daisyui/src/theming/themes";
+import Color from "colorjs.io";
+
+const DARK_THEMES = {
+  dark: true,
+  synthwave: true,
+  forest: true,
+  aqua: true,
+  black: true,
+  luxury: true,
+  dracula: true,
+  business: true,
+  night: true,
+  coffee: true,
+  dim: true,
+  sunset: true,
+  halloween: true,
+};
 
 export interface LeaderboardEntry {
   rank: number;
@@ -97,6 +114,8 @@ function getAccountTypeFromSearchParams(
 }
 
 export default function Leaderboard() {
+  const [bgOverlayColor, setBgOverlayColor] = useState<string>();
+  const { theme } = useContext(ThemeContext);
   const searchParams = useSearchParams();
   const [accountType, setAccountType] = useState(
     getAccountTypeFromSearchParams(searchParams),
@@ -123,6 +142,19 @@ export default function Leaderboard() {
   });
 
   const somethingIsLoading = isLeaderboardLoading || isStatsLoadingStats;
+
+  useEffect(() => {
+    // @ts-ignore
+    const sd = new Color(colors[theme]["base-100"]).to("srgb");
+    // @ts-ignore
+    if (DARK_THEMES[theme]) {
+      sd.darken(0.1);
+      sd.alpha = 0.88;
+    } else {
+      sd.alpha = 0.65;
+    }
+    setBgOverlayColor(sd.toString());
+  }, [theme]);
 
   useEffect(() => {
     setAccountType(getAccountTypeFromSearchParams(searchParams));
@@ -210,55 +242,59 @@ export default function Leaderboard() {
     return new Date(new Date().getTime() + stateData.avgAmpSecs * 1000);
   };
 
-  return (
-    <main className="flex min-h-screen flex-col items-center">
-      <div
-        id="background-image-overlay"
-        className="fixed h-full w-full left-0 top-0"
-      >
-        <Image
-          className={`opacity-0 ${!somethingIsLoading ? "fade-in" : ""}`}
-          alt="Background image"
-          src="/background-image.jpg"
-          fill
-          sizes="(min-width: 808px) 50vw, 100vw"
-          style={{
-            objectFit: "cover",
-          }}
-        />
-      </div>
+  const mainStyle = () => {
+    if (!somethingIsLoading) {
+      return {
+        background: `url("background-image.jpg")`,
+        backgroundAttachment: "fixed",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        boxShadow: `inset 0 0 0 1000px ${bgOverlayColor}`,
+      };
+    }
+  };
 
+  return (
+    <main
+      className="flex min-h-screen flex-col items-center"
+      style={mainStyle()}
+    >
       <NavBar />
 
       <div
-        className={`bg-secondary/60 text-secondary-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
+        className={`fixed w-full h-full bg-base-100 ${!somethingIsLoading ? "fade-out" : ""}`}
+      />
+
+      <div
+        className={`bg-secondary/50 z-[1] w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
       >
         <div className="border-r place-items-center justify-center py-0 my-0 flex">
-          <div className="text-accent-content p-0">
+          <div className="p-0">
             Zero AMP <span className="hidden md:inline">ETA</span>{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown endDate={new Date(stateData.zeroAmpEta)} />
           </div>
         </div>
 
         <div className="sm:border-r justify-center place-items-center py-0 flex">
-          <div className="stat-title text-accent-content p-0">
+          <div className="p-0">
             Next AMP <span className="hidden md:inline">ETA</span>{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown endDate={new Date(stateData.nextAmpEta)} />
           </div>
         </div>
 
         <div className="place-items-center justify-center py-0 hidden sm:flex">
-          <div className="stat-title text-accent-content p-0">
+          <div className="p-0">
             <span className="hidden md:inline">Average</span> AMP Time{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown
               endDate={avgAmpSecsDate()}
               dontRun={true}

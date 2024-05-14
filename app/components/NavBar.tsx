@@ -11,7 +11,7 @@ export const NavBar = () => {
   const { changeTheme } = React.useContext(ThemeContext);
 
   return (
-    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[1]">
+    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[2]">
       <a className="btn btn-link animate-none text-lg" href="/">
         <img src="/solxen-black.png" alt="solXEN Logo" className="h-10" />
       </a>
@@ -30,7 +30,7 @@ export const NavBar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+            className="dropdown-content z-20 menu p-2 shadow bg-base-100 rounded-box w-52"
           >
             {tailwindConfig.daisyui.themes.map((theme: string) => (
               <li key={theme}>
