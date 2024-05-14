@@ -11,7 +11,7 @@ export const NavBar = () => {
   const { changeTheme } = React.useContext(ThemeContext);
 
   return (
-    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[1]">
+    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[2]">
       <a className="btn btn-link animate-none text-lg" href="/">
         <img src="/solxen-black.png" alt="solXEN Logo" className="h-10" />
       </a>
