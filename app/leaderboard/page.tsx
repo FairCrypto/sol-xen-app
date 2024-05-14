@@ -118,12 +118,12 @@ export default function Leaderboard() {
     avgAmpSecs: 0,
   });
 
+  const somethingIsLoading = isLeaderboardLoading || isStatsLoadingStats;
+
   useEffect(() => {
     setAccountType(getAccountTypeFromSearchParams(searchParams));
 
     const fetchData = async () => {
-      setIsLeaderboardLoading(true);
-
       fetchStateData().then((data) => {
         setStateData(data);
         setIsStatsLoadingStats(false);
@@ -209,7 +209,7 @@ export default function Leaderboard() {
         className="fixed h-full w-full left-0 top-0"
       >
         <Image
-          className={`opacity-0 ${isStatsLoadingStats && isLeaderboardLoading ? "" : "fade-in"}`}
+          className={`opacity-0 ${!somethingIsLoading ? "fade-in" : ""}`}
           alt="Background image"
           src="/background-image.jpg"
           fill
@@ -223,7 +223,7 @@ export default function Leaderboard() {
       <NavBar />
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${isStatsLoadingStats && isLeaderboardLoading ? "" : "shadow-xl"}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!somethingIsLoading ? "shadow-xl" : ""}`}
       >
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
           <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-4">
@@ -242,7 +242,7 @@ export default function Leaderboard() {
 
           <div className="overflow-x-auto">
             <table
-              className={`table table-fixed md:table-auto table-lg table-zebra opacity-0 ${!isStatsLoadingStats && !isLeaderboardLoading ? "fade-in" : ""}`}
+              className={`table table-fixed md:table-auto table-lg table-zebra opacity-0 ${!somethingIsLoading ? "fade-in" : ""}`}
             >
               <thead>
                 <tr>
@@ -360,7 +360,7 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      {!isLeaderboardLoading && !isStatsLoadingStats && <Footer />}
+      {!somethingIsLoading && <Footer />}
     </main>
   );
 }
