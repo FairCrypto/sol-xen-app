@@ -4,7 +4,6 @@ import "chart.js/auto";
 import { Chart } from "react-chartjs-2";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import colors from "daisyui/src/theming/themes";
-import Color from "colorjs.io";
 
 export interface State {
   points: bigint;
@@ -124,8 +123,7 @@ export default function StateStats({
 
   useEffect(() => {
     // @ts-ignore
-    const sd = new Color(colors[theme].accent).to("srgb");
-    setColor(sd.toString());
+    setColor(colors[theme].accent);
 
     fetchStateHistory().then((data) => {
       setStateHistory(data);
