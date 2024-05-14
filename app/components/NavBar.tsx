@@ -5,22 +5,23 @@ import Config from "../../tailwind.config";
 import React from "react";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import tailwindConfig from "@/tailwind.config";
+import Link from "next/link";
 
 export const NavBar = () => {
   const { changeTheme } = React.useContext(ThemeContext);
 
   return (
     <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[1]">
-      <a className="btn btn-ghost text-lg" href="/">
+      <a className="btn btn-link animate-none text-lg" href="/">
         <img src="/solxen-black.png" alt="solXEN Logo" className="h-10" />
       </a>
 
-      <a className=" ml-auto" href="https://github.com/FairCrypto/sol-xen">
+      <Link className=" ml-auto" href="https://github.com/FairCrypto/sol-xen">
         <button className="btn btn-outline btn-accent">
           <FaGithub size="2em"></FaGithub>
           Get Started
         </button>
-      </a>
+      </Link>
 
       <div className="join join-vertical">
         <div className="dropdown dropdown-hover dropdown-end">
