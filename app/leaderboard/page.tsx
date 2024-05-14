@@ -105,6 +105,7 @@ export default function Leaderboard() {
   >(new Map());
   const [isLoadingStats, setIsLoadingStats] = useState(true);
   const [stateData, setStateData]: [State, any] = useState<State>({
+    createdAt: new Date(),
     points: 0n,
     hashes: 0,
     superHashes: 0,

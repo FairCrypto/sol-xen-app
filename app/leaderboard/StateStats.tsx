@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CountDown from "@/app/components/CountDown";
+import "chart.js/auto";
+import { Chart } from "react-chartjs-2";
+import { ThemeContext } from "@/app/context/ThemeContext";
+import colors from "daisyui/src/theming/themes";
+import Color from "colorjs.io";
 
 export interface State {
   points: bigint;
@@ -11,6 +16,25 @@ export interface State {
   zeroAmpEta: Date;
   nextAmpEta: Date;
   avgAmpSecs: number;
+  createdAt: Date;
+}
+
+async function fetchStateHistory() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state/history`,
+  );
+
+  if (!data.ok) {
+    throw new Error("Error fetching state history data");
+  }
+
+  const out = await data.json();
+
+  for (const entry of out) {
+    entry.points = BigInt(entry.points);
+  }
+
+  return out;
 }
 
 export default function StateStats({
@@ -20,6 +44,10 @@ export default function StateStats({
   state: State;
   isLoadingStats: boolean;
 }) {
+  const [color, setColor] = useState<string>();
+  const [stateHistory, setStateHistory] = useState<State[]>([]);
+  const { theme } = useContext(ThemeContext);
+
   const totalSupplyValue = () => {
     return Intl.NumberFormat("en-US").format(
       Number(state.points / 1_000_000_000n),
@@ -50,82 +78,120 @@ export default function StateStats({
     return new Date(new Date().getTime() + state.avgAmpSecs * 1000);
   };
 
-  return (
-    <>
+  const chartData = (name: string) => {
+    return {
+      labels: stateHistory.map((entry: State) => entry["createdAt"]),
+      datasets: [
+        {
+          id: 1,
+          label: "",
+          data: stateHistory.map((entry: any) => entry[name]),
+          fill: true,
+          borderColor: color,
+          backgroundColor: color,
+          pointRadius: 0,
+          borderWidth: 0,
+        },
+      ],
+    };
+  };
+
+  const options = {
+    scales: {
+      x: {
+        display: false,
+      },
+      y: {
+        display: false,
+      },
+    },
+
+    layout: {
+      autoPadding: false,
+    },
+
+    // responsive: false,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    animation: {
+      duration: 0,
+    },
+  };
+
+  useEffect(() => {
+    // @ts-ignore
+    const sd = new Color(colors[theme].accent).to("srgb");
+    setColor(sd.toString());
+
+    fetchStateHistory().then((data) => {
+      setStateHistory(data);
+    });
+  }, [theme]);
+
+  function stat(
+    name: string,
+    title: string,
+    value: any,
+    extraClassName?: string,
+  ) {
+    return (
       <div
-        id="solxen-stats"
-        className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
+        className={`stat bg-accent-content/10 rounded-md shadow p-0 ${extraClassName}`}
       >
-        <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">
-            <span className="hidden sm:inline">Total</span> solXEN
-          </div>
-          <div className="stat-value text-sm md:text-2xl">
-            {totalSupplyValue()}
-          </div>
-        </div>
-        <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">
-            <span className="hidden sm:inline">Total</span> Hashes
-          </div>
-          <div className="stat-value text-sm md:text-2xl">
-            {totalHashesValue()}
-          </div>
-        </div>
-        <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">
-            <span className="hidden sm:inline">Total</span> Super Hashes
-          </div>
-          <div className="stat-value text-sm md:text-2xl">
-            {totalSuperHashesValue()}
-          </div>
-        </div>
-        <div className="stat bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">AMP</div>
-          <div className="stat-value text-sm md:text-2xl">{ampValue()}</div>
-        </div>
-        <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">
-            <span className="hidden sm:inline">Last</span> AMP Slot
-          </div>
-          <div className="stat-value text-sm md:text-2xl">
-            {lastAmpSlotValue()}
-          </div>
-        </div>
-        <div className="stat hidden sm:block bg-accent-content/10 rounded-md shadow py-3 sm:py-5">
-          <div className="stat-title">
-            <span className="hidden sm:inline">Total</span> TXs
-          </div>
-          <div className="stat-value text-sm md:text-2xl">{txsValue()}</div>
-        </div>
-
-        <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
-          <div className="stat-title">Zero AMP ETA</div>
-          <div className="stat-value text-sm sm:text-sm md:text-2xl">
-            <CountDown endDate={new Date(state.zeroAmpEta)} />
-          </div>
-        </div>
-
-        <div className="stat sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
-          <div className="stat-title">Next AMP ETA</div>
-          <div className="stat-value text-sm sm:text-sm md:text-2xl">
-            <CountDown endDate={new Date(state.nextAmpEta)} />
-          </div>
-        </div>
-
-        <div className="stat hidden sm:block sm:mx-auto bg-accent-content/10 rounded-md shadow py-3 sm:py-5 px-0">
-          <div className="stat-title">Average AMP Time</div>
-          <div className="stat-value text-sm md:text-2xl">
-            <>
-              <CountDown
-                endDate={avgAmpSecsDate()}
-                dontRun={true}
-                showSeconds={true}
-              />
-            </>
-          </div>
+        <Chart
+          type="line"
+          data={chartData(name)}
+          options={options}
+          className="absolute -z-10 opacity-50"
+        />
+        <div className="p-4">
+          <div className="stat-title">{title}</div>
+          <div className="stat-value text-sm md:text-2xl">{value}</div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div
+      id="solxen-stats"
+      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-3 mx-4 opacity-0 h-3/4 ${!isLoadingStats ? "fade-in" : ""}`}
+    >
+      {stat("solXen", "Total solXEN", totalSupplyValue())}
+      {stat("hashes", "Total Hashes", totalSupplyValue())}
+      {stat("superHashes", "Total Super Hashes", totalSuperHashesValue())}
+      {stat("amp", "AMP", ampValue())}
+      {stat(
+        "lastAmpSlot",
+        "Last AMP Slot",
+        lastAmpSlotValue(),
+        "hidden sm:inline",
+      )}
+      {stat("txs", "Total TXs", txsValue(), "hidden sm:inline")}
+      {stat(
+        "zeroAmpEta",
+        "Zero AMP ETA",
+        <CountDown endDate={new Date(state.zeroAmpEta)} />,
+      )}
+      {stat(
+        "nextAmpEta",
+        "Next AMP ETA",
+        <CountDown endDate={new Date(state.nextAmpEta)} />,
+      )}
+      {stat(
+        "avgAmpSecs",
+        "Average AMP Time",
+        <CountDown
+          endDate={avgAmpSecsDate()}
+          dontRun={true}
+          showSeconds={true}
+        />,
+        "hidden sm:inline",
+      )}
+    </div>
   );
 }
