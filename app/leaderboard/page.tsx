@@ -15,16 +15,18 @@ import {
   web3,
 } from "@coral-xyz/anchor";
 import { Connection } from "@solana/web3.js";
-import CountDown from "@/app/components/CountDown";
-
-export interface LeaderboardEntry {
-  rank: number;
-  solAccount: string;
-  ethAccount: string;
-  hashes: number;
-  superHashes: number;
-  points: bigint;
-}
+import AmpBanner from "@/app/leaderboard/AmpBanner";
+import {
+  AccountType,
+  fetchLeaderboardData,
+  fetchStateData,
+  generateLeaderboardIndex,
+} from "@/app/leaderboard/Api";
+import { Background } from "@/app/leaderboard/Background";
+import {
+  LeaderboardEntry,
+  LeadersTable,
+} from "@/app/leaderboard/LeadersTable";
 
 export interface EventHash {
   slot: bigint;
@@ -33,57 +35,6 @@ export interface EventHash {
   hashes: number;
   superhashes: number;
   points: BN;
-}
-
-enum AccountType {
-  Ethereum = "ethereum",
-  Solana = "solana",
-}
-
-async function fetchLeaderboardData(accountType: AccountType) {
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}`,
-  );
-
-  if (!data.ok) {
-    throw new Error("Error fetching leaderboard data");
-  }
-
-  const out = await data.json();
-
-  for (const entry of out) {
-    entry.points = BigInt(entry.points);
-  }
-
-  return out;
-}
-
-async function fetchStateData() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/state`);
-
-  if (!data.ok) {
-    throw new Error("Error fetching leaderboard data");
-  }
-
-  const out = await data.json();
-  out.points = BigInt(out.points);
-
-  return out;
-}
-
-function generateLeaderboardIndex(
-  leaderboardData: LeaderboardEntry[],
-  accountType: AccountType,
-) {
-  return leaderboardData.reduce(
-    (acc, entry, index) => {
-      const accountKey =
-        accountType == AccountType.Solana ? entry.solAccount : entry.ethAccount;
-      acc[accountKey] = index;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
 }
 
 function getAccountTypeFromSearchParams(
@@ -118,10 +69,10 @@ export default function Leaderboard() {
     lastAmpSlot: 0n,
     zeroAmpEta: new Date(),
     nextAmpEta: new Date(),
-    avgAmpSecs: 0
+    avgAmpSecs: 0,
   });
 
-  const somethingIsLoading = isLeaderboardLoading || isStatsLoadingStats;
+  const isLoading = isLeaderboardLoading || isStatsLoadingStats;
 
   useEffect(() => {
     setAccountType(getAccountTypeFromSearchParams(searchParams));
@@ -198,77 +149,14 @@ export default function Leaderboard() {
     };
   }, [handleResizeRef]);
 
-  const percentOfState = (points: bigint) => {
-    if (stateData.points === 0n) {
-      return 0;
-    }
-    return Math.floor(Number((points * 10000n) / stateData.points) / 100);
-  };
-
-  const avgAmpSecsDate = () => {
-    return new Date(new Date().getTime() + stateData.avgAmpSecs * 1000);
-  };
-
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <div
-        id="background-image-overlay"
-        className="fixed h-full w-full left-0 top-0"
-      >
-        <Image
-          className={`opacity-0 ${!somethingIsLoading ? "fade-in-slow" : ""}`}
-          alt="Background image"
-          src="/background-image.jpg"
-          fill
-          sizes="(min-width: 808px) 50vw, 100vw"
-          style={{
-            objectFit: "cover",
-          }}
-        />
-      </div>
-
+      <Background isLoading={isLoading} />
       <NavBar />
+      <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
-        className={`bg-secondary/40 z-[1] text-secondary-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
-      >
-        <div className="border-r place-items-center justify-center py-0 my-0 flex">
-          <div className="p-0">
-            Zero AMP <span className="hidden md:inline">ETA</span>{" "}
-            <span className="font-thin">|</span>
-          </div>
-          <div className="mx-1">
-            <CountDown endDate={new Date(stateData.zeroAmpEta)} />
-          </div>
-        </div>
-
-        <div className="sm:border-r justify-center place-items-center py-0 flex">
-          <div className="p-0">
-            Next AMP <span className="hidden md:inline">ETA</span>{" "}
-            <span className="font-thin">|</span>
-          </div>
-          <div className="mx-1">
-            <CountDown endDate={new Date(stateData.nextAmpEta)} />
-          </div>
-        </div>
-
-        <div className="place-items-center justify-center py-0 hidden sm:flex">
-          <div className="p-0">
-            <span className="hidden md:inline">Average</span> AMP Time{" "}
-            <span className="font-thin">|</span>
-          </div>
-          <div className="mx-1">
-            <CountDown
-              endDate={avgAmpSecsDate()}
-              dontRun={true}
-              showSeconds={true}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!somethingIsLoading ? "shadow-xl" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!isLoading ? "shadow-xl" : ""}`}
       >
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
           <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-2 sm:mb-4">
@@ -284,128 +172,16 @@ export default function Leaderboard() {
           </div>
 
           <StateStats state={stateData} isLoadingStats={isStatsLoadingStats} />
-
-          <div className="overflow-x-auto">
-            <table
-              className={`table table-fixed md:table-auto table-lg table-zebra opacity-0 ${!somethingIsLoading ? "fade-in" : ""}`}
-            >
-              <thead>
-                <tr>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
-                    <span>Rank</span>
-                  </th>
-                  <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    <span>Account</span>
-                  </th>
-                  <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    <span>Hashes</span>
-                  </th>
-                  <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                    <span>Super Hashes</span>
-                  </th>
-                  {accountType == AccountType.Solana ? (
-                    <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                      <span>solXEN</span>
-                    </th>
-                  ) : null}
-                </tr>
-              </thead>
-              <tbody>
-                {leaderboardData.map(
-                  (
-                    {
-                      rank,
-                      solAccount,
-                      ethAccount,
-                      hashes,
-                      superHashes,
-                      points,
-                    },
-                    index,
-                  ) => {
-                    return (
-                      <tr key={rank} className={``}>
-                        <td className="p-4 pr-0 border-b border-blue-gray-50">
-                          <span color="blue-gray" className="font-bold">
-                            {rank}
-                          </span>
-                        </td>
-                        <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base font-mono truncate">
-                          <span>
-                            {accountType == "solana" ? solAccount : ethAccount}
-                          </span>
-
-                          <dl className="lg:hidden font-normal mt-2">
-                            <div className="flex justify-between">
-                              <dt className="text-sm text-gray-400 mt-1 font-mono">
-                                Hashes
-                              </dt>
-                              <dd className="text-gray-400 text-sm mt-1 font-mono">
-                                {Intl.NumberFormat("en-US").format(hashes)}
-                              </dd>
-                            </div>
-                            <div className="flex justify-between">
-                              <dt className="text-gray-400 text-sm mt-1 font-mono">
-                                Super Hashes
-                              </dt>
-                              <dd className="text-gray-400 text-sm mt-1">
-                                {Intl.NumberFormat("en-US").format(superHashes)}
-                              </dd>
-                            </div>
-                            {accountType == AccountType.Solana ? (
-                              <div className="flex justify-between">
-                                <dt className="text-gray-400 text-sm mt-1 font-medium">
-                                  solXEN
-                                </dt>
-                                <dd className="text-gray-400 text-sm mt-1  font-mono">
-                                  {percentOfState(points) > 0 ? (
-                                    <div className="badge badge-sm badge-success badge-outline mr-2">
-                                      {percentOfState(points)}%
-                                    </div>
-                                  ) : null}
-                                  {Intl.NumberFormat("en-US").format(
-                                    points / 1_000_000_000n,
-                                  )}
-                                </dd>
-                              </div>
-                            ) : null}
-                          </dl>
-                        </td>
-                        <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
-                          <span className="font-mono">
-                            {Intl.NumberFormat("en-US").format(hashes)}
-                          </span>
-                        </td>
-                        <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
-                          <span className="font-mono">
-                            {Intl.NumberFormat("en-US").format(superHashes)}
-                          </span>
-                        </td>
-                        {accountType == AccountType.Solana ? (
-                          <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
-                            <span className="font-mono">
-                              {Intl.NumberFormat("en-US").format(
-                                points / 1_000_000_000n,
-                              )}
-                              {percentOfState(points) > 0 ? (
-                                <div className="badge badge-sm badge-success badge-outline ml-2">
-                                  {percentOfState(points)}%
-                                </div>
-                              ) : null}
-                            </span>
-                          </td>
-                        ) : null}
-                      </tr>
-                    );
-                  },
-                )}
-              </tbody>
-            </table>
-          </div>
+          <LeadersTable
+            isLoading={isLeaderboardLoading}
+            leaderboardData={leaderboardData}
+            accountType={accountType}
+            stateData={stateData}
+          />
         </div>
       </div>
 
-      {!somethingIsLoading && <Footer />}
+      {!isLoading && <Footer />}
     </main>
   );
 }

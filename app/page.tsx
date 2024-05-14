@@ -6,6 +6,7 @@ import Link from "next/link";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import Footer from "@/app/components/Footer";
+import Image from 'next/image'
 
 export default function Home() {
   return (
@@ -52,8 +53,13 @@ export default function Home() {
             miner is rewarded with solXEN, as well as becoming eligible for XN
             airdrop via included ethereum address.
           </p>
-          <Zoom>
-            <img alt="A diagram of mining solXEN" src="/mining.jpeg" />
+          <Zoom zoomImg={{src: "/mining-large.jpg"}}>
+            <Image
+              alt="A diagram of mining solXEN"
+              src="/mining.jpg"
+              width={880}
+              height={356}
+            ></Image>
           </Zoom>
         </div>
       </div>

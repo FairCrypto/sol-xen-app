@@ -59,4 +59,4 @@ const config: Config = {
   },
 };
 
-export default config satisfies Config;
+export default config;

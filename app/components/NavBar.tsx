@@ -1,19 +1,44 @@
 import { FaGithub } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
-import Config from "../../tailwind.config";
+import Image from 'next/image'
 
-import React from "react";
+import React, {useContext} from "react";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import tailwindConfig from "@/tailwind.config";
 import Link from "next/link";
 
 export const NavBar = () => {
   const { changeTheme } = React.useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
+
+  const DARK_THEMES = {
+    'dark': true,
+    'synthwave': true,
+    'forest': true,
+    'aqua': true,
+    'black': true,
+    'luxury': true,
+    'dracula': true,
+    'business': true,
+    'night': true,
+    'coffee': true,
+    'dim': true,
+    'sunset': true,
+    'halloween': true
+  }
+
+  const logo = () => {
+    // @ts-ignore
+    if (DARK_THEMES[theme]) {
+      return "/solxen-white.png";
+    }
+    return "/solxen-black.png";
+  }
 
   return (
     <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[2]">
       <a className="btn btn-link animate-none text-lg" href="/">
-        <img src="/solxen-black.png" alt="solXEN Logo" className="h-10" />
+        <Image src={logo()} alt="solXEN Logo" width={100} height={40} />
       </a>
 
       <Link className=" ml-auto" href="https://github.com/FairCrypto/sol-xen">
