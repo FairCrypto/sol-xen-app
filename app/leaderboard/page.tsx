@@ -217,7 +217,7 @@ export default function Leaderboard() {
         className="fixed h-full w-full left-0 top-0"
       >
         <Image
-          className={`opacity-0 ${!somethingIsLoading ? "fade-in" : ""}`}
+          className={`opacity-0 ${!somethingIsLoading ? "fade-in-slow" : ""}`}
           alt="Background image"
           src="/background-image.jpg"
           fill
@@ -231,34 +231,34 @@ export default function Leaderboard() {
       <NavBar />
 
       <div
-        className={`bg-secondary/60 text-secondary-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
+        className={`bg-secondary/60 z-[1] text-secondary-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!somethingIsLoading && stateData.amp > 0 ? "fade-in" : ""}`}
       >
         <div className="border-r place-items-center justify-center py-0 my-0 flex">
-          <div className="text-accent-content p-0">
+          <div className="p-0">
             Zero AMP <span className="hidden md:inline">ETA</span>{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown endDate={new Date(stateData.zeroAmpEta)} />
           </div>
         </div>
 
         <div className="sm:border-r justify-center place-items-center py-0 flex">
-          <div className="stat-title text-accent-content p-0">
+          <div className="p-0">
             Next AMP <span className="hidden md:inline">ETA</span>{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown endDate={new Date(stateData.nextAmpEta)} />
           </div>
         </div>
 
         <div className="place-items-center justify-center py-0 hidden sm:flex">
-          <div className="stat-title text-accent-content p-0">
+          <div className="p-0">
             <span className="hidden md:inline">Average</span> AMP Time{" "}
             <span className="font-thin">|</span>
           </div>
-          <div className="mx-1 text-accent-content">
+          <div className="mx-1">
             <CountDown
               endDate={avgAmpSecsDate()}
               dontRun={true}
