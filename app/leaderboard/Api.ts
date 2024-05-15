@@ -1,4 +1,4 @@
-import { LeaderboardEntry } from "@/app/leaderboard/page";
+import {LeaderboardEntry} from "@/app/leaderboard/LeadersTable";
 
 export enum AccountType {
   Ethereum = "ethereum",
