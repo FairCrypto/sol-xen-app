@@ -16,6 +16,9 @@ export interface State {
   avgAmpSecs: number;
   createdAt: Date;
   avgPriorityFee: number;
+  minPriorityFee: number;
+  medianPriorityFee: number;
+  maxPriorityFee: number;
 }
 
 async function fetchStateHistory() {
@@ -90,14 +93,24 @@ export default function StateStats({
       <StateStat
         name="solXen"
         title="Total solXEN"
-        stateHistory={stateHistory.map((entry) => entry.solXen)}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.solXen
+          }
+        ))}
       >
         {totalSupplyValue()}
       </StateStat>
       <StateStat
         name="hashes"
         title="Total Hashes"
-        stateHistory={stateHistory.map((entry) => entry.hashes)}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.hashes
+          }
+        ))}
       >
         {totalHashesValue()}
       </StateStat>
@@ -105,7 +118,12 @@ export default function StateStats({
       <StateStat
         name="superHashes"
         title="Total Super Hashes"
-        stateHistory={stateHistory.map((entry) => entry.superHashes)}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.superHashes
+          }
+        ))}
       >
         {totalSuperHashesValue()}
       </StateStat>
@@ -113,7 +131,12 @@ export default function StateStats({
       <StateStat
         name="txs"
         title="Total TXs"
-        stateHistory={stateHistory.map((entry) => entry.txs)}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.txs
+          }
+        ))}
       >
         {txsValue()}
       </StateStat>
@@ -121,7 +144,12 @@ export default function StateStats({
       <StateStat
         name="amp"
         title="AMP"
-        stateHistory={stateHistory.map((entry) => entry.amp)}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.amp
+          }
+        ))}
       >
         {ampValue()}
       </StateStat>
@@ -138,7 +166,29 @@ export default function StateStats({
       <StateStat
         name="avgPriorityFee"
         title="Avg Priority Fee"
-        stateHistory={stateHistory.map((entry) => entry.avgPriorityFee)}
+        stateHistoryTitle="Median"
+        stateHistory2Title="Min"
+        stateHistory3Title="Max"
+        fillDetailed={false}
+        stateHistory={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.medianPriorityFee
+          }
+        ))}
+        stateHistory2={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.minPriorityFee
+          }
+        ))}
+        stateHistory3={stateHistory.map((entry) => (
+          {
+            x: new Date(entry.createdAt),
+            y: entry.maxPriorityFee
+          }
+        ))}
+
       >
         {avgPriorityFeeValue()}
       </StateStat>

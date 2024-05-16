@@ -243,7 +243,7 @@ export default function LeaderboardSlug({
       <NavBar/>
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-lg bg-base-100 mt-0 md:mt-5 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
           <div className="card-title flex">
@@ -299,7 +299,7 @@ export default function LeaderboardSlug({
       </div>
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-lg bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
           <div className="card-title">
@@ -317,7 +317,7 @@ export default function LeaderboardSlug({
       </div>
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-lg bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
           <div className="card-title">

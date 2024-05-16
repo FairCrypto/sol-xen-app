@@ -49,12 +49,13 @@ export default function Leaderboard() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <Background isLoading={isLoading} />
-      <NavBar />
-      <AmpBanner isLoading={isLoading} stateData={stateData} />
+      <Background isLoading={isLoading}/>
+      <NavBar/>
+      <AmpBanner isLoading={isLoading} stateData={stateData}/>
+
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!isLoading ? " drop-shadow-xl shadow-xl" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!isLoading ? " shadow-xl" : ""}`}
       >
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
           <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-2 sm:mb-4">

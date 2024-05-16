@@ -13,8 +13,6 @@ import {
 
 } from "chart.js";
 
-import Chart from 'react-chartjs-2';
-
 import { Bar } from "react-chartjs-2";
 import 'chartjs-adapter-dayjs-4';
 import React from "react";
