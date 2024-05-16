@@ -1,9 +1,6 @@
-import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
 import { useEffect, useState } from "react";
 import {
-  fetchLeaderboardData,
   fetchStateData,
-  generateLeaderboardIndex,
 } from "@/app/leaderboard/Api";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useSearchParams } from "next/navigation";
@@ -22,6 +19,9 @@ const initialState: State = {
   avgAmpSecs: 0,
   createdAt: new Date(),
   avgPriorityFee: 0,
+  minPriorityFee: 0,
+  medianPriorityFee: 0,
+  maxPriorityFee: 0,
 };
 
 export function useStatsData() {
