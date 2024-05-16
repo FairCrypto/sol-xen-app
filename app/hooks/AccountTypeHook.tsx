@@ -15,7 +15,9 @@ export enum AccountTypeTitleCase {
   Solana = "Solana",
 }
 
-export function useAccountType({titleCase = false}: AccountTypeProps = {titleCase: false}) {
+export function useAccountType(
+  { titleCase = false }: AccountTypeProps = { titleCase: false },
+) {
   const searchParams = useSearchParams();
 
   const [accountType, setAccountType] = useState(
@@ -24,7 +26,7 @@ export function useAccountType({titleCase = false}: AccountTypeProps = {titleCas
 
   function getAccountTypeFromSearchParams(
     searchParams: URLSearchParams,
-  ): AccountType|AccountTypeTitleCase {
+  ): AccountType | AccountTypeTitleCase {
     if (titleCase) {
       return searchParams.get("account") === AccountType.Ethereum
         ? AccountTypeTitleCase.Ethereum

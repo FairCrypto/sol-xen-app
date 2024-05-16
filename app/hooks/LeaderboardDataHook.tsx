@@ -1,11 +1,18 @@
-import {LeaderboardEntry} from "@/app/leaderboard/LeadersTable";
-import {useEffect, useState} from "react";
-import {fetchLeaderboardData, fetchStateData, generateLeaderboardIndex} from "@/app/leaderboard/Api";
-import {AccountType, useAccountType} from "@/app/hooks/AccountTypeHook";
-import {useSearchParams} from "next/navigation";
+import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
+import { useEffect, useState } from "react";
+import {
+  fetchLeaderboardData,
+  fetchStateData,
+  generateLeaderboardIndex,
+} from "@/app/leaderboard/Api";
+import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
+import { useSearchParams } from "next/navigation";
 
 export function useLeaderboardData() {
-  const [leaderboardData, setLeaderboardData]: [LeaderboardEntry[], (data: LeaderboardEntry[]) => void] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardData, setLeaderboardData]: [
+    LeaderboardEntry[],
+    (data: LeaderboardEntry[]) => void,
+  ] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const accountType = useAccountType() as AccountType;
   const searchParams = useSearchParams();
@@ -29,6 +36,5 @@ export function useLeaderboardData() {
     return () => clearInterval(intervalId);
   }, [accountType, searchParams]);
 
-
-  return [leaderboardData, setLeaderboardData, leaderboardIndex, isLoading]
+  return [leaderboardData, setLeaderboardData, leaderboardIndex, isLoading];
 }

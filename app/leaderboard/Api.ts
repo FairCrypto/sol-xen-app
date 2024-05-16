@@ -1,6 +1,5 @@
 import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
-import {AccountType} from "@/app/hooks/AccountTypeHook";
-
+import { AccountType } from "@/app/hooks/AccountTypeHook";
 
 export async function fetchLeaderboardData(accountType: AccountType) {
   const data = await fetch(
@@ -35,7 +34,7 @@ export async function fetchStateData() {
 
 export function generateLeaderboardIndex(
   leaderboardData: LeaderboardEntry[],
-  accountType: AccountType|string,
+  accountType: AccountType | string,
 ) {
   return leaderboardData.reduce(
     (acc, entry, index) => {
@@ -69,14 +68,16 @@ export async function fetchLeaderboardEntry(account: string) {
 }
 
 export interface HashEventStat {
-  createdAt: Date
-  hashes: number
-  superHashes: number
-  solXen: number
-  txs: number
+  createdAt: Date;
+  hashes: number;
+  superHashes: number;
+  solXen: number;
+  txs: number;
 }
 
-export async function fetchHashEventStats(account: string): Promise<HashEventStat[]> {
+export async function fetchHashEventStats(
+  account: string,
+): Promise<HashEventStat[]> {
   let params = "";
   if (account.startsWith("0x") && account.length == 42) {
     params = `?ethAccount=${account}`;
@@ -91,7 +92,8 @@ export async function fetchHashEventStats(account: string): Promise<HashEventSta
   if (!response.ok) {
     const error = new Error();
     error.message =
-      (await response.json())?.message || "Error fetching hash event stats entry";
+      (await response.json())?.message ||
+      "Error fetching hash event stats entry";
     error.cause = response.statusText;
     throw error;
   }
@@ -99,7 +101,9 @@ export async function fetchHashEventStats(account: string): Promise<HashEventSta
   return await response.json();
 }
 
-export async function fetchAssociatedEthAccounts(account: string): Promise<LeaderboardEntry[]> {
+export async function fetchAssociatedEthAccounts(
+  account: string,
+): Promise<LeaderboardEntry[]> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/sol_accounts/${account}/eth_accounts`,
   );
@@ -121,7 +125,9 @@ export async function fetchAssociatedEthAccounts(account: string): Promise<Leade
   return out;
 }
 
-export async function fetchAssociatedSolAccounts(account: string): Promise<LeaderboardEntry[]> {
+export async function fetchAssociatedSolAccounts(
+  account: string,
+): Promise<LeaderboardEntry[]> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/eth_accounts/${account}/sol_accounts`,
   );

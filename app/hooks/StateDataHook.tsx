@@ -1,9 +1,13 @@
-import {LeaderboardEntry} from "@/app/leaderboard/LeadersTable";
-import {useEffect, useState} from "react";
-import {fetchLeaderboardData, fetchStateData, generateLeaderboardIndex} from "@/app/leaderboard/Api";
-import {AccountType, useAccountType} from "@/app/hooks/AccountTypeHook";
-import {useSearchParams} from "next/navigation";
-import {State} from "@/app/leaderboard/StateStats";
+import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
+import { useEffect, useState } from "react";
+import {
+  fetchLeaderboardData,
+  fetchStateData,
+  generateLeaderboardIndex,
+} from "@/app/leaderboard/Api";
+import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
+import { useSearchParams } from "next/navigation";
+import { State } from "@/app/leaderboard/StateStats";
 
 const initialState: State = {
   points: BigInt(0),
@@ -39,6 +43,5 @@ export function useStatsData() {
     return () => clearInterval(intervalId);
   }, [accountType, searchParams]);
 
-
-  return [stateData, setStateData, isLoading]
+  return [stateData, setStateData, isLoading];
 }

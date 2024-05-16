@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { Connection } from "@solana/web3.js";
-import {AnchorProvider, BN, Program, setProvider, web3} from "@coral-xyz/anchor";
+import {
+  AnchorProvider,
+  BN,
+  Program,
+  setProvider,
+  web3,
+} from "@coral-xyz/anchor";
 import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 
 interface SolanaEventsContextType {

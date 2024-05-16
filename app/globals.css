@@ -76,7 +76,7 @@ body {
 }
 
 .fade-in-trans {
-  opacity: .88;
+  opacity: 0.88;
   transition: opacity 0.3s ease-in-out;
 }
 

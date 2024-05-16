@@ -1,22 +1,22 @@
 "use client";
 
-import {Background} from "@/app/leaderboard/Background";
-import {NavBar} from "@/app/components/NavBar";
-import React, {useEffect, useRef, useState} from "react";
+import { Background } from "@/app/leaderboard/Background";
+import { NavBar } from "@/app/components/NavBar";
+import React, { useEffect, useRef, useState } from "react";
 import Footer from "@/app/components/Footer";
 import {
   fetchAssociatedEthAccounts,
   fetchAssociatedSolAccounts,
   fetchHashEventStats,
   fetchLeaderboardEntry,
-  generateLeaderboardIndex
+  generateLeaderboardIndex,
 } from "@/app/leaderboard/Api";
-import {CgDanger} from "react-icons/cg";
-import {LeaderboardEntry, LeadersTable} from "@/app/leaderboard/LeadersTable";
+import { CgDanger } from "react-icons/cg";
+import { LeaderboardEntry, LeadersTable } from "@/app/leaderboard/LeadersTable";
 import Link from "next/link";
-import {IoReturnUpBackSharp} from "react-icons/io5";
-import {EventHash, useSolanaEvents} from "@/app/hooks/SolanaEventsHook";
-import {AccountType, AccountTypeTitleCase} from "@/app/hooks/AccountTypeHook";
+import { IoReturnUpBackSharp } from "react-icons/io5";
+import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
+import { AccountType, AccountTypeTitleCase } from "@/app/hooks/AccountTypeHook";
 import useThemeColors from "@/app/hooks/ThemeColorHook";
 import BarChart from "@/app/components/BarChart";
 import useChartData from "@/app/hooks/ChartDataHook";
@@ -32,10 +32,27 @@ export default function LeaderboardSlug({
   const [isLoading, setIsLoading] = useState(true);
   const [isChartsLoading, setIsChartsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string>();
-  const [hashes, setMappedHashesData, updateMappedHashesData, incrementsMappedHashesData] = useChartData();
-  const [superHashes, setMappedSuperHashesData, updateMappedSuperHashesData, incrementsMappedSuperHashesData] = useChartData();
-  const [solXen, setMappedSolXenData, updateMappedSolXenData, incrementsMappedSolXenData] = useChartData();
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+  const [
+    hashes,
+    setMappedHashesData,
+    updateMappedHashesData,
+    incrementsMappedHashesData,
+  ] = useChartData();
+  const [
+    superHashes,
+    setMappedSuperHashesData,
+    updateMappedSuperHashesData,
+    incrementsMappedSuperHashesData,
+  ] = useChartData();
+  const [
+    solXen,
+    setMappedSolXenData,
+    updateMappedSolXenData,
+    incrementsMappedSolXenData,
+  ] = useChartData();
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
+    [],
+  );
   const [leaderboardIndex, setLeaderboardIndex]: [any, any] = useState<
     Map<string, LeaderboardEntry>
   >(new Map());
@@ -45,10 +62,16 @@ export default function LeaderboardSlug({
       return AccountTypeTitleCase.Ethereum;
     }
     return AccountTypeTitleCase.Solana;
-  }
+  };
 
-  const associatedAccountType = () => accountType(accountAddress) == AccountTypeTitleCase.Ethereum ? AccountTypeTitleCase.Solana: AccountTypeTitleCase.Ethereum;
-  const associatedAccountTypeLower = () => accountType(accountAddress) == AccountTypeTitleCase.Ethereum ? AccountType.Solana: AccountType.Ethereum;
+  const associatedAccountType = () =>
+    accountType(accountAddress) == AccountTypeTitleCase.Ethereum
+      ? AccountTypeTitleCase.Solana
+      : AccountTypeTitleCase.Ethereum;
+  const associatedAccountTypeLower = () =>
+    accountType(accountAddress) == AccountTypeTitleCase.Ethereum
+      ? AccountType.Solana
+      : AccountType.Ethereum;
 
   // Handle Solana events for the account
   // update the account data when a new event is received
@@ -66,8 +89,7 @@ export default function LeaderboardSlug({
 
       if (
         leaderboardIndex[otherAccount] != undefined &&
-        (eventHash.hashes > 0 ||
-          eventHash.superhashes > 0)
+        (eventHash.hashes > 0 || eventHash.superhashes > 0)
       ) {
         const index = leaderboardIndex[otherAccount];
         leaderboardData[index].points += BigInt(
@@ -134,9 +156,9 @@ export default function LeaderboardSlug({
         }
 
         if (firstUpdate.current) {
-          setMappedHashesData(newHashes)
-          setMappedSuperHashesData(newSuperHashes)
-          setMappedSolXenData(newSolXen)
+          setMappedHashesData(newHashes);
+          setMappedSuperHashesData(newSuperHashes);
+          setMappedSolXenData(newSolXen);
           firstUpdate.current = false;
         } else {
           // all subsequent fetches should update the mapped data
@@ -214,7 +236,7 @@ export default function LeaderboardSlug({
       borderColor: primaryColor,
       backgroundColor: primaryColor,
       borderWidth: 1,
-    }
+    },
   ];
 
   const superHashesDataset = () => [
@@ -224,7 +246,7 @@ export default function LeaderboardSlug({
       borderColor: accentColor,
       backgroundColor: accentColor,
       borderWidth: 1,
-    }
+    },
   ];
 
   const solXenDataset = () => [
@@ -234,33 +256,37 @@ export default function LeaderboardSlug({
       borderColor: secondaryColor,
       backgroundColor: secondaryColor,
       borderWidth: 1,
-    }
+    },
   ];
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <Background isLoading={isLoading}/>
-      <NavBar/>
+      <Background isLoading={isLoading} />
+      <NavBar />
 
       <div
         className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
           <div className="card-title flex">
-            <h1 className="text-2xl sm:text-4xl mr-auto mb-6">{accountType(accountAddress)} Account</h1>
+            <h1 className="text-2xl sm:text-4xl mr-auto mb-6">
+              {accountType(accountAddress)} Account
+            </h1>
             <Link
               href={`/leaderboard?account=${accountType(accountAddress).toLowerCase()}`}
               className="btn btn-sm btn-accent"
             >
-              <IoReturnUpBackSharp size={20}/>
+              <IoReturnUpBackSharp size={20} />
               Leaderboard
             </Link>
           </div>
-          <h2 className="font-mono text-xs sm:text-2xl truncate">{accountAddress}</h2>
+          <h2 className="font-mono text-xs sm:text-2xl truncate">
+            {accountAddress}
+          </h2>
 
           {!isLoading && !accountData ? (
             <div className="text-center my-20 flex justify-center align-middle">
-              <CgDanger size={48} className="mr-4"/>
+              <CgDanger size={48} className="mr-4" />
               <span className="text-5xl font-bold mb-3"> {fetchError}</span>
             </div>
           ) : null}
@@ -269,12 +295,16 @@ export default function LeaderboardSlug({
             <div className="grid grid-cols-2 sm:grid-cols-none sm:stats gap-1 my-1 sm:my-5 text-center">
               <div className="stat">
                 <div className="stat-title">Rank</div>
-                <div className="stat-value text-secondary text-lg sm:text-4xl">{rankValue()}</div>
+                <div className="stat-value text-secondary text-lg sm:text-4xl">
+                  {rankValue()}
+                </div>
               </div>
 
               <div className="stat">
                 <div className="stat-title">Hashes</div>
-                <div className="stat-value text-secondary text-lg sm:text-4xl">{hashesValue()}</div>
+                <div className="stat-value text-secondary text-lg sm:text-4xl">
+                  {hashesValue()}
+                </div>
               </div>
 
               <div className="stat">
@@ -294,7 +324,6 @@ export default function LeaderboardSlug({
               ) : null}
             </div>
           ) : null}
-
         </div>
       </div>
 
@@ -302,15 +331,19 @@ export default function LeaderboardSlug({
         className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
-          <div className="card-title">
-            Real Time Mining Stats
-          </div>
+          <div className="card-title">Real Time Mining Stats</div>
           <div className="grid grid-cols-1 gap-6">
-            <div className="h-[200px] sm:h-[240px]"><BarChart datasets={hashesDataset()}/></div>
-            <div className="h-[20px] sm:h-[240px]"><BarChart datasets={superHashesDataset()}/></div>
+            <div className="h-[200px] sm:h-[240px]">
+              <BarChart datasets={hashesDataset()} />
+            </div>
+            <div className="h-[20px] sm:h-[240px]">
+              <BarChart datasets={superHashesDataset()} />
+            </div>
 
             {accountType(accountAddress) == AccountTypeTitleCase.Solana && (
-              <div className="h-[200px] sm:h-[240px]"><BarChart datasets={solXenDataset()}/></div>
+              <div className="h-[200px] sm:h-[240px]">
+                <BarChart datasets={solXenDataset()} />
+              </div>
             )}
           </div>
         </div>
@@ -324,11 +357,16 @@ export default function LeaderboardSlug({
             Associated {associatedAccountType()} Accounts
           </div>
 
-          <LeadersTable accountType={associatedAccountTypeLower()} isLoading={isLoading} leaderboardData={leaderboardData} hideSearch={true}/>
+          <LeadersTable
+            accountType={associatedAccountTypeLower()}
+            isLoading={isLoading}
+            leaderboardData={leaderboardData}
+            hideSearch={true}
+          />
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </main>
-);
+  );
 }

@@ -6,13 +6,18 @@ import StateStats from "@/app/leaderboard/StateStats";
 import AmpBanner from "@/app/leaderboard/AmpBanner";
 import { Background } from "@/app/leaderboard/Background";
 import { LeadersTable } from "@/app/leaderboard/LeadersTable";
-import {EventHash, useSolanaEvents} from "@/app/hooks/SolanaEventsHook";
-import {AccountType, useAccountType} from "@/app/hooks/AccountTypeHook";
-import {useLeaderboardData} from "@/app/hooks/LeaderboardDataHook";
-import {useStatsData} from "@/app/hooks/StateDataHook";
+import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
+import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
+import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
+import { useStatsData } from "@/app/hooks/StateDataHook";
 
 export default function Leaderboard() {
-  const [leaderboardData, setLeaderboardData, leaderboardIndex, isLeaderboardLoading] = useLeaderboardData();
+  const [
+    leaderboardData,
+    setLeaderboardData,
+    leaderboardIndex,
+    isLeaderboardLoading,
+  ] = useLeaderboardData();
   const accountType = useAccountType() as AccountType;
   const [stateData, setStateData, isStatsLoadingStats] = useStatsData();
   const isLoading = isLeaderboardLoading || isStatsLoadingStats;
@@ -49,10 +54,9 @@ export default function Leaderboard() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <Background isLoading={isLoading}/>
-      <NavBar/>
-      <AmpBanner isLoading={isLoading} stateData={stateData}/>
-
+      <Background isLoading={isLoading} />
+      <NavBar />
+      <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
         className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!isLoading ? " shadow-xl" : ""}`}
@@ -65,12 +69,12 @@ export default function Leaderboard() {
             </div>
             <div className="flex justify-end">
               <span className="">
-                <AccountSelector/>
+                <AccountSelector />
               </span>
             </div>
           </div>
 
-          <StateStats state={stateData} isLoadingStats={isStatsLoadingStats}/>
+          <StateStats state={stateData} isLoadingStats={isStatsLoadingStats} />
 
           <LeadersTable
             isLoading={isLeaderboardLoading}
@@ -81,7 +85,7 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      {!isLoading && <Footer/>}
+      {!isLoading && <Footer />}
     </main>
   );
 }

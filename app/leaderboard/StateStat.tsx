@@ -1,9 +1,9 @@
 import { Chart } from "react-chartjs-2";
 import useThemeColors from "@/app/hooks/ThemeColorHook";
-import {ReactNode, useState} from "react";
-import 'chartjs-adapter-dayjs-4';
-import type {ChartData, ChartOptions} from "chart.js";
-import {TimeChartEntry} from "@/app/components/BarChart";
+import { ReactNode, useState } from "react";
+import "chartjs-adapter-dayjs-4";
+import type { ChartData, ChartOptions } from "chart.js";
+import { TimeChartEntry } from "@/app/components/BarChart";
 
 interface StateStatProps {
   name: string;
@@ -33,13 +33,13 @@ export default function StateStat({
   extraClassName = "",
   fill = true,
   fillDetailed = true,
-
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
 
-
-  const chartData = (showDetails: boolean): ChartData<'line', TimeChartEntry[]> => {
+  const chartData = (
+    showDetails: boolean,
+  ): ChartData<"line", TimeChartEntry[]> => {
     const data = {
       datasets: [
         {
@@ -81,27 +81,27 @@ export default function StateStat({
     return data;
   };
 
-  const options = (showDetails: boolean): ChartOptions<'line'> => {
+  const options = (showDetails: boolean): ChartOptions<"line"> => {
     return {
       scales: {
         x: {
           display: showDetails,
-          type: 'time',
+          type: "time",
           grid: {
-            display: false
+            display: false,
           },
           ticks: {
             color: themeColors?.["base-content"],
-          }
+          },
         },
         y: {
           display: showDetails,
           grid: {
-            display: false
+            display: false,
           },
           ticks: {
             color: themeColors?.["base-content"],
-          }
+          },
         },
       },
 
@@ -117,12 +117,12 @@ export default function StateStat({
       animation: {
         duration: 0,
       },
-    }
+    };
   };
 
   return (
     <>
-      <dialog className={`modal ${showModal && 'modal-open'}`}>
+      <dialog className={`modal ${showModal && "modal-open"}`}>
         <div className="modal-box max-w-screen-xl h-[800px]">
           <Chart
             type="line"
