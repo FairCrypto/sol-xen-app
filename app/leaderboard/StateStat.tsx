@@ -1,12 +1,11 @@
 import { Chart } from "react-chartjs-2";
-import React, { useContext, useEffect, useState } from "react";
-import colors from "daisyui/src/theming/themes";
-import { ThemeContext } from "@/app/context/ThemeContext";
+import useThemeColors from "@/app/hooks/ThemeColorHook";
+import {ReactNode} from "react";
 
 interface StateStatProps {
   name: string;
   title: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   stateHistory?: number[];
   extraClassName?: string;
 }
@@ -18,8 +17,7 @@ export default function StateStat({
   stateHistory = [],
   extraClassName = "",
 }: StateStatProps) {
-  const { theme } = useContext(ThemeContext);
-  const [color, setColor] = useState<string>();
+  const [themeColors] = useThemeColors();
 
   const chartData = (name: string) => {
     return {
@@ -30,8 +28,8 @@ export default function StateStat({
           label: "",
           data: stateHistory,
           fill: true,
-          borderColor: color,
-          backgroundColor: color,
+          borderColor: themeColors?.accent,
+          backgroundColor: themeColors?.accent,
           pointRadius: 0,
           borderWidth: 0,
         },
@@ -52,8 +50,6 @@ export default function StateStat({
     layout: {
       autoPadding: false,
     },
-
-    // responsive: false,
     maintainAspectRatio: false,
     plugins: {
       legend: {
@@ -65,14 +61,9 @@ export default function StateStat({
     },
   };
 
-  useEffect(() => {
-    // @ts-ignore
-    setColor(colors[theme].accent);
-  }, [theme]);
-
   return (
     <div
-      className={`stat bg-accent-content/10 rounded-md shadow p-0 ${extraClassName}`}
+      className={`stat bg-accent-content/10 rounded-md drop-shadow-md shadow-md p-0 ${extraClassName}`}
     >
       <Chart
         type="line"

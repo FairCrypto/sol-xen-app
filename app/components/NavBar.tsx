@@ -1,31 +1,31 @@
 import { FaGithub } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
-import Image from 'next/image'
+import Image from "next/image";
 
-import React, {useContext} from "react";
+import { useContext } from "react";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import tailwindConfig from "@/tailwind.config";
 import Link from "next/link";
 
 export const NavBar = () => {
-  const { changeTheme } = React.useContext(ThemeContext);
+  const { changeTheme } = useContext(ThemeContext);
   const { theme } = useContext(ThemeContext);
 
   const DARK_THEMES = {
-    'dark': true,
-    'synthwave': true,
-    'forest': true,
-    'aqua': true,
-    'black': true,
-    'luxury': true,
-    'dracula': true,
-    'business': true,
-    'night': true,
-    'coffee': true,
-    'dim': true,
-    'sunset': true,
-    'halloween': true
-  }
+    dark: true,
+    synthwave: true,
+    forest: true,
+    aqua: true,
+    black: true,
+    luxury: true,
+    dracula: true,
+    business: true,
+    night: true,
+    coffee: true,
+    dim: true,
+    sunset: true,
+    halloween: true,
+  };
 
   const logo = () => {
     // @ts-ignore
@@ -33,7 +33,7 @@ export const NavBar = () => {
       return "/solxen-white.png";
     }
     return "/solxen-black.png";
-  }
+  };
 
   return (
     <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[2]">
@@ -55,7 +55,7 @@ export const NavBar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+            className="dropdown-content z-[1] menu p-2 drop-shadow-md bg-base-100 rounded-box w-52"
           >
             {tailwindConfig.daisyui.themes.map((theme: string) => (
               <li key={theme}>

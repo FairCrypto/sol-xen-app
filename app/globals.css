@@ -72,10 +72,15 @@ body {
 
 .fade-in {
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-in-trans {
+  opacity: .88;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .fade-in-slow {
   opacity: 1;
-  transition: opacity 2s ease-in-out;
+  transition: opacity 1.5s ease-in-out;
 }
