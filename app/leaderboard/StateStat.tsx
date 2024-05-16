@@ -43,7 +43,7 @@ export default function StateStat({
     const data = {
       datasets: [
         {
-          label: stateHistoryTitle,
+          label: stateHistoryTitle || title,
           data: stateHistory,
           fill: showDetails ? fillDetailed : fill,
           borderColor: themeColors?.accent,
