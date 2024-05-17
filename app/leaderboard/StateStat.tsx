@@ -43,7 +43,7 @@ export default function StateStat({
 
   const fillAlpha = (showDetails: boolean) => {
     if (showDetails) {
-      return 20;
+      return 10;
     }
     return 50;
   };

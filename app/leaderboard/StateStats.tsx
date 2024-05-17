@@ -188,7 +188,7 @@ export default function StateStats({
         stateHistoryTitle={`Median (${avgPriorityFeeValue()} Lamports)`}
         stateHistory2Title={`Min (${minPriorityFeeValue()} Lamports)`}
         stateHistory3Title={`Max (${maxPriorityFeeValue()} Lamports)`}
-        fillDetailed={false}
+        // fillDetailed={false}
         stateHistory={stateHistory.map((entry) => ({
           x: new Date(entry.createdAt),
           y: entry.medianPriorityFee,
