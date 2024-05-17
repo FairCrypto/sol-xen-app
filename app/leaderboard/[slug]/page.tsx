@@ -31,6 +31,7 @@ export default function LeaderboardSlug({
   const [accountAddress, setAccountAddress] = useState<string>(params.slug);
   const [isLoading, setIsLoading] = useState(true);
   const [isChartsLoading, setIsChartsLoading] = useState(true);
+  const [isAssociatedLoading, setIsAssociatedLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string>();
   const [
     hashes,
@@ -103,6 +104,7 @@ export default function LeaderboardSlug({
       if (account == accountAddress) {
         // console.log("Event for account", accountAddress);
         const newAccountData = Object.assign({}, accountData);
+
         const points = BigInt("0x" + eventHash.points.toString("hex"));
         newAccountData.points += points;
         newAccountData.hashes += eventHash.hashes;
@@ -184,6 +186,7 @@ export default function LeaderboardSlug({
         console.log("Fetched associated sol accounts", data, idxData);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
+        setIsAssociatedLoading(false);
       });
     } else {
       fetchAssociatedEthAccounts(accountAddress).then((data) => {
@@ -191,6 +194,7 @@ export default function LeaderboardSlug({
         console.log("Fetched associated eth accounts", data, idxData);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
+        setIsAssociatedLoading(false);
       });
     }
   }, [accountAddress]);
@@ -263,6 +267,12 @@ export default function LeaderboardSlug({
     <main className="flex min-h-screen flex-col items-center">
       <Background isLoading={isLoading} />
       <NavBar />
+
+      <div
+        className={`h-20 mt-20 loading absolute ${!isLoading ? "fade-out" : ""}`}
+      >
+        Loading..
+      </div>
 
       <div
         className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
@@ -350,7 +360,7 @@ export default function LeaderboardSlug({
       </div>
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 opacity-0 drop-shadow-md ${!isAssociatedLoading && !isChartsLoading && !isLoading ? "fade-in-trans" : ""}`}
       >
         <div className="card-body">
           <div className="card-title">
@@ -366,7 +376,7 @@ export default function LeaderboardSlug({
         </div>
       </div>
 
-      <Footer />
+      {!isLoading && <Footer />}
     </main>
   );
 }

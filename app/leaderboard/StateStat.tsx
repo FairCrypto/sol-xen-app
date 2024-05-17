@@ -18,6 +18,7 @@ interface StateStatProps {
   extraClassName?: string;
   fill?: boolean;
   fillDetailed?: boolean;
+  setShowBackground?: (show: boolean) => void;
 }
 
 export default function StateStat({
@@ -33,9 +34,24 @@ export default function StateStat({
   extraClassName = "",
   fill = true,
   fillDetailed = true,
+  setShowBackground = () => {},
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
+
+  const fillAlpha = (showDetails: boolean) => {
+    if (showDetails) {
+      return 20;
+    }
+    return 60;
+  };
+
+  const boarderAlpha = (showDetails: boolean) => {
+    if (showDetails) {
+      return 100;
+    }
+    return 60;
+  };
 
   const chartData = (
     showDetails: boolean,
@@ -46,10 +62,16 @@ export default function StateStat({
           label: stateHistoryTitle || title,
           data: stateHistory,
           fill: showDetails ? fillDetailed : fill,
-          borderColor: themeColors?.accent,
-          backgroundColor: themeColors?.accent,
-          pointRadius: showDetails ? 3 : 0,
-          borderWidth: showDetails ? 3 : 0,
+          borderColor: alphaColor(
+            themeColors?.accent,
+            boarderAlpha(showDetails),
+          ),
+          backgroundColor: alphaColor(
+            themeColors?.accent,
+            fillAlpha(showDetails),
+          ),
+          pointRadius: showDetails ? 2 : 0,
+          borderWidth: showDetails ? 2 : 0,
         },
       ],
     };
@@ -59,10 +81,16 @@ export default function StateStat({
         label: stateHistory2Title,
         data: stateHistory2,
         fill: showDetails ? fillDetailed : fill,
-        borderColor: themeColors?.primary,
-        backgroundColor: themeColors?.primary,
-        pointRadius: showDetails ? 3 : 0,
-        borderWidth: showDetails ? 3 : 0,
+        borderColor: alphaColor(
+          themeColors?.primary,
+          boarderAlpha(showDetails),
+        ),
+        backgroundColor: alphaColor(
+          themeColors?.primary,
+          fillAlpha(showDetails),
+        ),
+        pointRadius: showDetails ? 2 : 0,
+        borderWidth: showDetails ? 2 : 0,
       });
     }
 
@@ -71,10 +99,16 @@ export default function StateStat({
         label: stateHistory3Title,
         data: stateHistory3,
         fill: showDetails ? fillDetailed : fill,
-        borderColor: themeColors?.secondary,
-        backgroundColor: themeColors?.secondary,
-        pointRadius: showDetails ? 3 : 0,
-        borderWidth: showDetails ? 3 : 0,
+        borderColor: alphaColor(
+          themeColors?.secondary,
+          boarderAlpha(showDetails),
+        ),
+        backgroundColor: alphaColor(
+          themeColors?.secondary,
+          fillAlpha(showDetails),
+        ),
+        pointRadius: showDetails ? 2 : 0,
+        borderWidth: showDetails ? 2 : 0,
       });
     }
 
@@ -109,9 +143,20 @@ export default function StateStat({
         autoPadding: false,
       },
       maintainAspectRatio: false,
+      // aspectRatio: 1.5,
       plugins: {
         legend: {
           display: showDetails,
+          labels: {
+            color: themeColors?.["base-content"],
+            padding: 24,
+            font: {
+              size: 24,
+            },
+          },
+          title: {
+            color: themeColors?.["base-content"],
+          },
         },
       },
       animation: {
@@ -122,29 +167,42 @@ export default function StateStat({
 
   return (
     <>
-      <dialog className={`modal ${showModal && "modal-open"}`}>
-        <div className="modal-box max-w-screen-xl h-[800px]">
+      <dialog
+        className={`modal ${showModal && "opacity-100 back backdrop-blur-sm modal-open"}`}
+      >
+        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[9000px]">
           <Chart
             type="line"
             data={chartData(true)}
             options={options(true)}
-            className="absolute -z-10 opacity-50"
+            className="absolute -z-10"
           />
         </div>
+
         <form method="dialog" className="modal-backdrop">
-          <button onClick={() => setShowModal(false)}>close</button>
+          <button
+            onClick={() => {
+              setShowBackground(true);
+              setShowModal(false);
+            }}
+          >
+            close
+          </button>
         </form>
       </dialog>
 
       <div
         className={`cursor-pointer hover:brightness-75 hover:contrast-125 hover:drop-shadow-none hover:shadow-none stat bg-accent-content/10 rounded-md drop-shadow-md shadow-md p-0 ${extraClassName}`}
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowBackground(false);
+          setShowModal(true);
+        }}
       >
         <Chart
           type="line"
           data={chartData(false)}
           options={options(false)}
-          className="absolute -z-10 opacity-50"
+          className="absolute -z-10"
         />
         <div className="p-3 sm:p-4">
           <div className="stat-title">{title}</div>

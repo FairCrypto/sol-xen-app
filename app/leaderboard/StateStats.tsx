@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
+import { fetchHashEventStats, HashEventStat } from "@/app/leaderboard/Api";
 
 export interface State {
   points: bigint;
@@ -42,12 +43,15 @@ async function fetchStateHistory() {
 export default function StateStats({
   state,
   isLoadingStats,
+  setShowBackground,
 }: {
   state: State;
   isLoadingStats: boolean;
+  setShowBackground: (show: boolean) => void;
 }) {
   const [stateHistory, setStateHistory] = useState<State[]>([]);
   const { theme } = useContext(ThemeContext);
+  const [hashEventStats, setHashEventStats] = useState<HashEventStat[]>([]);
 
   const totalSupplyValue = () => {
     return Intl.NumberFormat("en-US").format(
@@ -79,9 +83,21 @@ export default function StateStats({
     return Intl.NumberFormat("en-US").format(state.avgPriorityFee);
   };
 
+  const maxPriorityFeeValue = () => {
+    return Intl.NumberFormat("en-US").format(state.maxPriorityFee);
+  };
+
+  const minPriorityFeeValue = () => {
+    return Intl.NumberFormat("en-US").format(state.minPriorityFee);
+  };
+
   useEffect(() => {
     fetchStateHistory().then((data) => {
       setStateHistory(data);
+    });
+
+    fetchHashEventStats().then((data) => {
+      setHashEventStats(data);
     });
   }, [theme]);
 
@@ -91,30 +107,37 @@ export default function StateStats({
       className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
     >
       <StateStat
+        setShowBackground={setShowBackground}
         name="solXen"
         title="Total solXEN"
-        stateHistory={stateHistory.map((entry) => ({
+        stateHistoryTitle="solXEN Rate"
+        stateHistory={hashEventStats.map((entry) => ({
           x: new Date(entry.createdAt),
-          y: entry.solXen,
+          y: entry.solXen / 60,
         }))}
       >
         {totalSupplyValue()}
       </StateStat>
+
       <StateStat
+        setShowBackground={setShowBackground}
         name="hashes"
         title="Total Hashes"
-        stateHistory={stateHistory.map((entry) => ({
+        stateHistoryTitle="Hashes Rate"
+        stateHistory={hashEventStats.map((entry) => ({
           x: new Date(entry.createdAt),
-          y: entry.hashes,
+          y: entry.hashes / 60,
         }))}
       >
         {totalHashesValue()}
       </StateStat>
 
       <StateStat
+        setShowBackground={setShowBackground}
         name="superHashes"
         title="Total Super Hashes"
-        stateHistory={stateHistory.map((entry) => ({
+        stateHistoryTitle="Super Hashes Rate"
+        stateHistory={hashEventStats.map((entry) => ({
           x: new Date(entry.createdAt),
           y: entry.superHashes,
         }))}
@@ -123,9 +146,11 @@ export default function StateStats({
       </StateStat>
 
       <StateStat
+        setShowBackground={setShowBackground}
         name="txs"
         title="Total TXs"
-        stateHistory={stateHistory.map((entry) => ({
+        stateHistoryTitle="TXs Rate"
+        stateHistory={hashEventStats.map((entry) => ({
           x: new Date(entry.createdAt),
           y: entry.txs,
         }))}
@@ -134,8 +159,10 @@ export default function StateStats({
       </StateStat>
 
       <StateStat
+        setShowBackground={setShowBackground}
         name="amp"
         title="AMP"
+        stateHistoryTitle="AMP Over Time"
         stateHistory={stateHistory.map((entry) => ({
           x: new Date(entry.createdAt),
           y: entry.amp,
@@ -154,11 +181,12 @@ export default function StateStats({
       {/*</StateStat>*/}
 
       <StateStat
+        setShowBackground={setShowBackground}
         name="avgPriorityFee"
         title="Avg Priority Fee"
-        stateHistoryTitle="Median"
-        stateHistory2Title="Min"
-        stateHistory3Title="Max"
+        stateHistoryTitle={`Median ${avgPriorityFeeValue()}`}
+        stateHistory2Title={`Min ${minPriorityFeeValue()}`}
+        stateHistory3Title={`Max ${maxPriorityFeeValue()}`}
         fillDetailed={false}
         stateHistory={stateHistory.map((entry) => ({
           x: new Date(entry.createdAt),

@@ -76,13 +76,15 @@ export interface HashEventStat {
 }
 
 export async function fetchHashEventStats(
-  account: string,
+  account?: string,
 ): Promise<HashEventStat[]> {
   let params = "";
-  if (account.startsWith("0x") && account.length == 42) {
-    params = `?ethAccount=${account}`;
-  } else {
-    params = `?solAccount=${account}`;
+  if (account) {
+    if (account.startsWith("0x") && account.length == 42) {
+      params = `?ethAccount=${account}`;
+    } else {
+      params = `?solAccount=${account}`;
+    }
   }
 
   const response = await fetch(

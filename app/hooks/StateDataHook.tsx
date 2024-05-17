@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  fetchStateData,
-} from "@/app/leaderboard/Api";
+import { fetchStateData } from "@/app/leaderboard/Api";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useSearchParams } from "next/navigation";
 import { State } from "@/app/leaderboard/StateStats";

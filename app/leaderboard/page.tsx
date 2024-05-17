@@ -10,6 +10,7 @@ import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
 import { useStatsData } from "@/app/hooks/StateDataHook";
+import { useState } from "react";
 
 export default function Leaderboard() {
   const [
@@ -21,6 +22,7 @@ export default function Leaderboard() {
   const accountType = useAccountType() as AccountType;
   const [stateData, setStateData, isStatsLoadingStats] = useStatsData();
   const isLoading = isLeaderboardLoading || isStatsLoadingStats;
+  const [showBackground, setShowBackground] = useState(true);
 
   // Handle Solana events for the account
   // update the account data when a new event is received
@@ -54,7 +56,7 @@ export default function Leaderboard() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      <Background isLoading={isLoading} />
+      {showBackground && <Background isLoading={isLoading} />}
       <NavBar />
       <AmpBanner isLoading={isLoading} stateData={stateData} />
 
@@ -74,7 +76,11 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <StateStats state={stateData} isLoadingStats={isStatsLoadingStats} />
+          <StateStats
+            state={stateData}
+            isLoadingStats={isStatsLoadingStats}
+            setShowBackground={setShowBackground}
+          />
 
           <LeadersTable
             isLoading={isLeaderboardLoading}
