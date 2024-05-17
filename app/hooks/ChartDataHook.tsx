@@ -6,7 +6,7 @@ export default function useChartData(): [
   TimeChartEntry[],
   (value: Map<number, number>) => void,
   (value: Map<number, number>) => void,
-  (date: Date, value: number) => void,
+  (value: number) => void,
 ] {
   const [mappedChartData, _setMappedChartData] = useState<Map<number, number>>(
     new Map(),
@@ -19,7 +19,8 @@ export default function useChartData(): [
   /**
    * Increments or sets the value of a specific date in the chart data
    */
-  function incrementsMappedChartData(date: Date, value: number) {
+  function incrementsMappedChartData(value: number) {
+    const date = new Date();
     date.setMilliseconds(0);
     date.setSeconds(0);
 
