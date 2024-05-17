@@ -2,7 +2,7 @@ import { Chart } from "react-chartjs-2";
 import useThemeColors from "@/app/hooks/ThemeColorHook";
 import { ReactNode, useState } from "react";
 import "chartjs-adapter-dayjs-4";
-import type { ChartData, ChartOptions } from "chart.js";
+import { ChartData, ChartOptions, LegendItem } from "chart.js";
 import { TimeChartEntry } from "@/app/components/BarChart";
 
 interface StateStatProps {
@@ -19,6 +19,7 @@ interface StateStatProps {
   fill?: boolean;
   fillDetailed?: boolean;
   setShowBackground?: (show: boolean) => void;
+  yAxesTitle?: string;
 }
 
 export default function StateStat({
@@ -35,6 +36,7 @@ export default function StateStat({
   fill = true,
   fillDetailed = true,
   setShowBackground = () => {},
+  yAxesTitle = "",
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
@@ -129,6 +131,11 @@ export default function StateStat({
           },
         },
         y: {
+          title: {
+            text: yAxesTitle,
+            display: showDetails,
+            color: themeColors?.["base-content"],
+          },
           display: showDetails,
           grid: {
             display: false,
@@ -151,7 +158,7 @@ export default function StateStat({
             color: themeColors?.["base-content"],
             padding: 24,
             font: {
-              size: 24,
+              size: 22,
             },
           },
           title: {
