@@ -43,7 +43,7 @@ export default function StateStat({
     if (showDetails) {
       return 20;
     }
-    return 60;
+    return 50;
   };
 
   const boarderAlpha = (showDetails: boolean) => {
@@ -204,8 +204,8 @@ export default function StateStat({
           options={options(false)}
           className="absolute -z-10"
         />
-        <div className="p-3 sm:p-4">
-          <div className="stat-title">{title}</div>
+        <div className="p-3 sm:p-6">
+          <div className="whitespace-nowrap">{title}</div>
           <div className="stat-value text-sm md:text-2xl">{children}</div>
         </div>
       </div>
