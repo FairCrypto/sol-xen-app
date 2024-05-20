@@ -39,7 +39,10 @@ export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
     );
     const provider = new AnchorProvider(connection, null as any);
     setProvider(provider);
-    const program = new Program(idl as any, provider);
+
+    const idlClone = JSON.parse(JSON.stringify(idl));
+    idlClone.address = process.env.NEXT_PUBLIC_SOL_XEN_PROGRAM_ID;
+    const program = new Program(idlClone as any, provider);
 
     console.log("Listening to hash events");
     const listener = program.addEventListener("hashEvent", (event: any) => {
