@@ -36,7 +36,7 @@ export const NavBar = () => {
   };
 
   return (
-    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[2]">
+    <div className="navbar p-0 bg-base-100 shadow-xl opacity-85 flex justify-between z-[20]">
       <a className="btn btn-link animate-none text-lg" href="/">
         <Image src={logo()} alt="solXEN Logo" width={100} height={40} />
       </a>
