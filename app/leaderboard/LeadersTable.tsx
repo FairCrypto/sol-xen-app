@@ -14,12 +14,11 @@ interface LeadersTableProps {
 
 export interface LeaderboardEntry {
   rank: number;
-  solAccount: string;
-  ethAccount: string;
-  hashes: number;
-  superHashes: number;
+  account: string;
+  hashes: bigint;
+  superHashes: bigint;
   points: bigint;
-  solXen: number;
+  solXen: bigint;
 }
 
 export function LeadersTable({
@@ -33,18 +32,19 @@ export function LeadersTable({
   const [searchInput, setSearchInput] = useState<string>("");
   const changeSearchBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
-    console.log("Search input", event.target.value);
   };
 
-  const percentOfState = (points: bigint) => {
-    if (!stateData) {
+  const percentOfState = (solXen: bigint): number => {
+    // @ts-ignore
+    if (!stateData || stateData.solXen === 0n || stateData.solXen === 0) {
       return 0;
     }
 
-    if (stateData.points === 0n) {
+    if (solXen === 0n || !solXen) {
       return 0;
     }
-    return Math.floor(Number((points * 10000n) / stateData.points) / 100);
+
+    return Math.floor(Number((solXen * 10000n) / stateData.solXen) / 100);
   };
 
   const handleClickAccount = (account: string) => {
@@ -111,7 +111,7 @@ export function LeadersTable({
         <tbody>
           {leaderboardData.map(
             (
-              { rank, solAccount, ethAccount, hashes, superHashes, points },
+              { rank, account, hashes, superHashes, solXen },
               index,
             ) => {
               return (
@@ -119,11 +119,7 @@ export function LeadersTable({
                   key={rank}
                   className={`cursor-pointer hover`}
                   onClick={() => {
-                    if (accountType == AccountType.Ethereum) {
-                      handleClickAccount(ethAccount);
-                    } else {
-                      handleClickAccount(solAccount);
-                    }
+                    handleClickAccount(account);
                   }}
                 >
                   <td className="p-4 pr-0 border-b border-blue-gray-50">
@@ -133,7 +129,7 @@ export function LeadersTable({
                   </td>
                   <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base font-mono truncate">
                     <span>
-                      {accountType == "solana" ? solAccount : ethAccount}
+                      {account}
                     </span>
 
                     <dl className="lg:hidden font-normal mt-2">
@@ -159,12 +155,12 @@ export function LeadersTable({
                             solXEN
                           </dt>
                           <dd className="text-gray-400 text-sm mt-1  font-mono">
-                            {percentOfState(points) > 0 ? (
+                            {percentOfState(solXen) > 0 ? (
                               <div className="badge badge-sm badge-success badge-outline mr-2">
-                                {percentOfState(points)}%
+                                {percentOfState(solXen)}%
                               </div>
                             ) : null}
-                            {solXenValue(points)}
+                            {solXenValue(solXen)}
                           </dd>
                         </div>
                       ) : null}
@@ -183,12 +179,10 @@ export function LeadersTable({
                   {accountType == AccountType.Solana ? (
                     <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
                       <span className="font-mono">
-                        {Intl.NumberFormat("en-US").format(
-                          points / 1_000_000_000n,
-                        )}
-                        {percentOfState(points) > 0 ? (
+                        {solXenValue(solXen)}
+                        {percentOfState(solXen) > 0 ? (
                           <div className="badge badge-sm badge-success badge-outline ml-2">
-                            {percentOfState(points)}%
+                            {percentOfState(solXen)}%
                           </div>
                         ) : null}
                       </span>

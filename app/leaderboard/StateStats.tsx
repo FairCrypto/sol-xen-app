@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
-import { fetchHashEventStats, HashEventStat } from "@/app/leaderboard/Api";
+import {fetchHashEventStats, fetchStateHistory, HashEventStat} from "@/app/leaderboard/Api";
 
 export interface State {
   points: bigint;
-  solXen: number;
+  solXen: bigint;
   hashes: number;
   superHashes: number;
   txs: number;
@@ -20,24 +20,7 @@ export interface State {
   minPriorityFee: number;
   medianPriorityFee: number;
   maxPriorityFee: number;
-}
-
-async function fetchStateHistory() {
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state/history`,
-  );
-
-  if (!data.ok) {
-    throw new Error("Error fetching state history data");
-  }
-
-  const out = await data.json();
-
-  for (const entry of out) {
-    entry.points = BigInt(entry.points);
-  }
-
-  return out;
+  programs: string[];
 }
 
 export default function StateStats({
@@ -54,8 +37,11 @@ export default function StateStats({
   const [hashEventStats, setHashEventStats] = useState<HashEventStat[]>([]);
 
   const totalSupplyValue = () => {
+    if (!state.solXen) {
+      return "0";
+    }
     return Intl.NumberFormat("en-US").format(
-      Number(state.points / 1_000_000_000n),
+      Number(state.solXen / 1_000_000_000n),
     );
   };
 
@@ -145,18 +131,30 @@ export default function StateStats({
         {totalSuperHashesValue()}
       </StateStat>
 
+      {/*<StateStat*/}
+      {/*  setShowBackground={setShowBackground}*/}
+      {/*  name="txs"*/}
+      {/*  title="Total TXs"*/}
+      {/*  stateHistoryTitle="TXs Rate"*/}
+      {/*  stateHistory={hashEventStats.map((entry) => ({*/}
+      {/*    x: new Date(entry.createdAt),*/}
+      {/*    y: entry.txs,*/}
+      {/*  }))}*/}
+      {/*>*/}
+      {/*  {txsValue()}*/}
+      {/*</StateStat>*/}
+
       <StateStat
-        setShowBackground={setShowBackground}
-        name="txs"
-        title="Total TXs"
-        stateHistoryTitle="TXs Rate"
-        stateHistory={hashEventStats.map((entry) => ({
+        name="lastAmpSlot"
+        title="Last AMP Slot"
+        stateHistory={stateHistory.map((entry) => ({
           x: new Date(entry.createdAt),
-          y: entry.txs,
+          y: Number(entry.lastAmpSlot),
         }))}
       >
-        {txsValue()}
+        {lastAmpSlotValue()}
       </StateStat>
+
 
       <StateStat
         setShowBackground={setShowBackground}
@@ -170,15 +168,6 @@ export default function StateStats({
       >
         {ampValue()}
       </StateStat>
-
-      {/*<StateStat*/}
-      {/*  name="lastAmpSlot"*/}
-      {/*  title="Last AMP Slot"*/}
-      {/*  extraClassName="hidden sm:inline"*/}
-      {/*  stateHistory={stateHistory.map((entry) => Number(entry.lastAmpSlot))}*/}
-      {/*>*/}
-      {/*  {lastAmpSlotValue()}*/}
-      {/*</StateStat>*/}
 
       <StateStat
         setShowBackground={setShowBackground}

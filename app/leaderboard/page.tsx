@@ -10,7 +10,8 @@ import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
 import { useStatsData } from "@/app/hooks/StateDataHook";
-import { useState } from "react";
+import React, { useState } from "react";
+import {Loader} from "@/app/components/Loader";
 
 export default function Leaderboard() {
   const [
@@ -18,6 +19,7 @@ export default function Leaderboard() {
     setLeaderboardData,
     leaderboardIndex,
     isLeaderboardLoading,
+    isLeaderBoardUpdating
   ] = useLeaderboardData();
   const accountType = useAccountType() as AccountType;
   const [stateData, setStateData, isStatsLoadingStats] = useStatsData();
@@ -28,15 +30,18 @@ export default function Leaderboard() {
   // update the account data when a new event is received
   useSolanaEvents({
     handleEvent: (eventHash: EventHash) => {
+      const newState = { ...stateData };
       const account =
         accountType == AccountType.Solana
           ? eventHash.user.toBase58()
           : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
       // console.log("Event hash", eventHash, account, leaderboardIndex[account]);
-      stateData.points += BigInt("0x" + eventHash.points.toString("hex"));
-      stateData.hashes += eventHash.hashes;
-      stateData.superHashes += eventHash.superhashes;
-      stateData.txs += 1;
+      stateData.solXen += BigInt("0x" + eventHash.points.toString("hex"));
+      newState.hashes += BigInt(eventHash.hashes);
+      newState.superHashes += BigInt(eventHash.superhashes);
+      newState.txs += 1n;
+      setStateData(newState);
+
       if (
         leaderboardIndex[account] != undefined &&
         (eventHash.hashes > 0 ||
@@ -44,11 +49,11 @@ export default function Leaderboard() {
           eventHash.points > 0)
       ) {
         const index = leaderboardIndex[account];
-        leaderboardData[index].points += BigInt(
+        leaderboardData[index].solXen += BigInt(
           "0x" + eventHash.points.toString("hex"),
         );
-        leaderboardData[index].hashes += eventHash.hashes;
-        leaderboardData[index].superHashes += eventHash.superhashes;
+        leaderboardData[index].hashes +=  BigInt(eventHash.hashes);
+        leaderboardData[index].superHashes +=  BigInt(eventHash.superhashes);
         setLeaderboardData([...leaderboardData]);
       }
     },
@@ -56,13 +61,15 @@ export default function Leaderboard() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      {showBackground && <Background isLoading={isLoading} />}
-      <NavBar />
-      <AmpBanner isLoading={isLoading} stateData={stateData} />
+      {showBackground && <Background isLoading={isLoading}/>}
+      <NavBar/>
+      <AmpBanner isLoading={isLoading} stateData={stateData}/>
 
       <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 opacity-85 md:mt-5 sm:mb-8 ${!isLoading ? " shadow-xl" : ""}`}
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
       >
+        <Loader isLoading={isStatsLoadingStats} />
+
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
           <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-2 sm:mb-4">
             <div></div>
@@ -71,7 +78,7 @@ export default function Leaderboard() {
             </div>
             <div className="flex justify-end">
               <span className="">
-                <AccountSelector />
+                <AccountSelector/>
               </span>
             </div>
           </div>
@@ -81,17 +88,28 @@ export default function Leaderboard() {
             isLoadingStats={isStatsLoadingStats}
             setShowBackground={setShowBackground}
           />
-
-          <LeadersTable
-            isLoading={isLeaderboardLoading}
-            leaderboardData={leaderboardData}
-            accountType={accountType}
-            stateData={stateData}
-          />
         </div>
       </div>
 
-      {!isLoading && <Footer />}
-    </main>
-  );
+      <div
+        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
+      >
+        <Loader isLoading={isLeaderBoardUpdating} />
+        <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
+
+        <LeadersTable
+          isLoading={isLeaderBoardUpdating}
+          leaderboardData={leaderboardData}
+          accountType={accountType}
+          stateData={stateData}
+        />
+        </div>
+      </div>
+
+  {
+    !isLoading && <Footer/>
+  }
+</main>
+)
+  ;
 }

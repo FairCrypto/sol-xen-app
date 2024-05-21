@@ -6,7 +6,7 @@ import { State } from "@/app/leaderboard/StateStats";
 
 const initialState: State = {
   points: BigInt(0),
-  solXen: 0,
+  solXen: 0n,
   hashes: 0,
   superHashes: 0,
   txs: 0,
@@ -20,6 +20,7 @@ const initialState: State = {
   minPriorityFee: 0,
   medianPriorityFee: 0,
   maxPriorityFee: 0,
+  programs: []
 };
 
 export function useStatsData() {

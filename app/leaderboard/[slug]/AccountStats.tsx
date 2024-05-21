@@ -50,11 +50,11 @@ export function AccountStats({
   }, [accountAddress]);
 
   const solXenValue = () => {
-    if (!accountData?.points) {
+    if (!accountData?.solXen) {
       return "0";
     }
     return Intl.NumberFormat("en-US").format(
-      Number(accountData.points / BigInt(10 ** 9)),
+      Number(accountData.solXen / BigInt(10 ** 9)),
     );
   };
 
@@ -81,7 +81,7 @@ export function AccountStats({
 
   return (
     <div
-      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 shadow-lg drow-shadow-lg fade-in-animation`}
+      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
     >
       <Loader isLoading={isLoading} />
 

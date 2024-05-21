@@ -40,18 +40,21 @@ export default function LeaderboardSlug({
           ? eventHash.user.toBase58()
           : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
 
-      if (account == accountAddress) {
+      if (account.toLowerCase() == accountAddress.toLowerCase()) {
         // console.log("Event for account", accountAddress);
         const newAccountData = Object.assign({}, accountData);
 
-        newAccountData.hashes += eventHash.hashes;
-        newAccountData.superHashes += eventHash.superhashes;
+        newAccountData.hashes += BigInt(eventHash.hashes);
+        newAccountData.superHashes += BigInt(eventHash.superhashes);
         if (eventHash.points > 0) {
           const points = BigInt("0x" + eventHash.points.toString("hex"));
-          newAccountData.points += points;
+          if (newAccountData.points != undefined) {
+            newAccountData.points += points;
+          }
         }
 
         setAccountData(newAccountData);
+        setAccountAddress(newAccountData.account);
         setEventHash(eventHash);
       }
     },

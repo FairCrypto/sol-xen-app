@@ -11,9 +11,18 @@ export async function fetchLeaderboardData(accountType: AccountType) {
   }
 
   const out = await data.json();
-
-  for (const entry of out) {
-    entry.points = BigInt(entry.points);
+  if (accountType == AccountType.Solana) {
+    for (const entry of out) {
+      entry.solXen = BigInt(entry.solXen);
+      entry.hashes = BigInt(entry.hashes);
+      entry.superHashes = BigInt(entry.superHashes);
+    }
+  } else {
+    for (const entry of out) {
+      entry.points = BigInt(entry.points);
+      entry.hashes = BigInt(entry.hashes);
+      entry.superHashes = BigInt(entry.superHashes);
+    }
   }
 
   return out;
@@ -27,20 +36,20 @@ export async function fetchStateData() {
   }
 
   const out = await data.json();
-  out.points = BigInt(out.points);
+  out.solXen = BigInt(out.solXen);
+  out.txs = BigInt(out.txs);
+  out.hashes = BigInt(out.hashes);
+  out.superHashes = BigInt(out.superHashes);
 
   return out;
 }
 
 export function generateLeaderboardIndex(
   leaderboardData: LeaderboardEntry[],
-  accountType: AccountType | string,
 ) {
   return leaderboardData.reduce(
     (acc, entry, index) => {
-      const accountKey =
-        accountType == AccountType.Solana ? entry.solAccount : entry.ethAccount;
-      acc[accountKey] = index;
+      acc[entry.account] = index;
       return acc;
     },
     {} as Record<string, number>,
@@ -64,6 +73,12 @@ export async function fetchLeaderboardEntry(account: string) {
   if (out?.points) {
     out.points = BigInt(out.points);
   }
+  if (out?.solXen) {
+    out.solXen = BigInt(out.solXen);
+  }
+  out.hashes = BigInt(out.hashes);
+  out.superHashes = BigInt(out.superHashes);
+
   return out;
 }
 
@@ -122,6 +137,8 @@ export async function fetchAssociatedEthAccounts(
 
   for (const entry of out) {
     entry.points = BigInt(entry.points);
+    entry.hashes = BigInt(entry.hashes);
+    entry.superHashes = BigInt(entry.superHashes);
   }
 
   return out;
@@ -145,7 +162,29 @@ export async function fetchAssociatedSolAccounts(
   const out = await response.json();
 
   for (const entry of out) {
-    entry.points = BigInt(entry.points);
+    entry.solXen = BigInt(entry.solXen);
+    entry.hashes = BigInt(entry.hashes);
+    entry.superHashes = BigInt(entry.superHashes);
+  }
+
+  return out;
+}
+
+export async function fetchStateHistory() {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/state/history`,
+  );
+
+  if (!data.ok) {
+    throw new Error("Error fetching state history data");
+  }
+
+  const out = await data.json();
+
+  for (const entry of out) {
+    if (entry.solXen) {
+      entry.solXen = BigInt(entry.solXen);
+    }
   }
 
   return out;

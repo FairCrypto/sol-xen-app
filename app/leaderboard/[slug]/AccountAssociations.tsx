@@ -39,15 +39,15 @@ export function AccountAssociations({
   useEffect(() => {
     if (accountType() == AccountType.Ethereum) {
       fetchAssociatedSolAccounts(accountAddress).then((data) => {
-        const idxData = generateLeaderboardIndex(data, AccountType.Solana);
-        console.log("Fetched associated sol accounts", data, idxData);
+        const idxData = generateLeaderboardIndex(data);
+        // console.log("Fetched associated sol accounts", data, idxData);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
         setIsAssociatedLoading(false);
       });
     } else {
       fetchAssociatedEthAccounts(accountAddress).then((data) => {
-        const idxData = generateLeaderboardIndex(data, AccountType.Ethereum);
+        const idxData = generateLeaderboardIndex(data);
         console.log("Fetched associated eth accounts", data, idxData);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
@@ -71,20 +71,23 @@ export function AccountAssociations({
       (eventHash.hashes > 0 || eventHash.superhashes > 0)
     ) {
       const index = leaderboardIndex[otherAccount];
-      leaderboardData[index].points += BigInt(
-        "0x" + eventHash.points.toString("hex"),
-      );
-      leaderboardData[index].hashes += eventHash.hashes;
-      leaderboardData[index].superHashes += eventHash.superhashes;
+      if (leaderboardData[index].solXen != undefined) {
+        leaderboardData[index].solXen += BigInt(
+          "0x" + eventHash.points.toString("hex"),
+        );
+      }
+      leaderboardData[index].hashes += BigInt(eventHash.hashes);
+      leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
       setLeaderboardData([...leaderboardData]);
     }
   }, [eventHash]);
 
   return (
     <div
-      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 shadow-lg drow-shadow-lg fade-in-animation`}
+      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
     >
       <Loader isLoading={isAssociatedLoading} />
+
       <div className={`card-body mb-10`}>
         <div className="card-title capitalize">
           Associated {associatedAccountType()} Accounts

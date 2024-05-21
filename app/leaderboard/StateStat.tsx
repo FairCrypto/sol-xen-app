@@ -45,7 +45,7 @@ export default function StateStat({
     if (showDetails) {
       return 10;
     }
-    return 50;
+    return 40;
   };
 
   const boarderAlpha = (showDetails: boolean) => {

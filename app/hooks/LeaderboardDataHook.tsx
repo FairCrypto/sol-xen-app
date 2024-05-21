@@ -14,6 +14,7 @@ export function useLeaderboardData() {
     (data: LeaderboardEntry[]) => void,
   ] = useState<LeaderboardEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(true);
   const accountType = useAccountType() as AccountType;
   const searchParams = useSearchParams();
   const [leaderboardIndex, setLeaderboardIndex]: [any, any] = useState<
@@ -22,11 +23,13 @@ export function useLeaderboardData() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsUpdating(true);
       fetchLeaderboardData(accountType).then((data: LeaderboardEntry[]) => {
-        const idxData = generateLeaderboardIndex(data, accountType);
+        const idxData = generateLeaderboardIndex(data);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
         setIsLoading(false);
+        setIsUpdating(false);
         // console.log("Fetched leaderboard data", data, idxData);
       });
     };

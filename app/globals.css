@@ -30,7 +30,7 @@ body {
     rgb(var(--background-start-rgb));
 
   #background-image-overlay {
-    opacity: 0.3;
+    opacity: 0.2;
   }
   [data-theme="dark"],
   [data-theme="synthwave"],
@@ -46,7 +46,7 @@ body {
   [data-theme="sunset"],
   [data-theme="halloween"] {
     #background-image-overlay {
-      opacity: 0.06;
+      opacity: 0.12;
     }
   }
 }
@@ -61,8 +61,8 @@ body {
   0% {
     opacity: 0;
   }
-  50% {
-    opacity: 1;
+  100% {
+    opacity: 0.90;
   }
 }
 

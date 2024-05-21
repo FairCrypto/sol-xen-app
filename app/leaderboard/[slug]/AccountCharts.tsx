@@ -111,10 +111,10 @@ export function AccountCharts({
           const truncatedDate = new Date(stat.createdAt);
           truncatedDate.setMilliseconds(0);
           truncatedDate.setSeconds(0);
-          newHashes.set(truncatedDate.getTime(), stat.hashes);
-          newSuperHashes.set(truncatedDate.getTime(), stat.superHashes);
-          newSolXen.set(truncatedDate.getTime(), stat.solXen);
-          newTxs.set(truncatedDate.getTime(), stat.txs);
+          newHashes.set(truncatedDate.getTime(), Number(stat.hashes));
+          newSuperHashes.set(truncatedDate.getTime(), Number(stat.superHashes));
+          newSolXen.set(truncatedDate.getTime(), Number(stat.solXen));
+          newTxs.set(truncatedDate.getTime(), Number(stat.txs));
         }
 
         if (firstUpdate.current) {
@@ -153,13 +153,13 @@ export function AccountCharts({
 
   return (
     <div
-      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg fade-in-animation`}
+      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
     >
       <Loader isLoading={isChartsLoading} />
 
       <div className={`card-body sm:py-6`}>
         <div className="card-title">Real Time Mining Stats</div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="h-[200px] sm:h-[240px]">
             <BarChart datasets={hashesDataset()} />
           </div>
