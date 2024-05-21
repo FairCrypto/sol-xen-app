@@ -66,20 +66,18 @@ export default function Leaderboard() {
       <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
-        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
+        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 sm:shadow-lg sm:drop-shadow-lg opacity-90 fade-in-animation`}
       >
         <Loader isLoading={isStatsLoadingStats} />
 
-        <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-          <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-2 sm:mb-4">
+        <div className="card-body px-0 py-5 sm:px-5 sm:py-5 md:px-8 md:py-8">
+          <div className="flex md:grid md:grid-cols-3 items-center justify-center mb-5 sm:mb-4">
             <div></div>
-            <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4">
+            <div className="flex justify-start md:justify-center mr-auto md:mr-1 ml-4 pb-3">
               <h1 className="text-3xl md:text-5xl">Leaderboard</h1>
             </div>
             <div className="flex justify-end">
-              <span className="">
-                <AccountSelector />
-              </span>
+              <AccountSelector />
             </div>
           </div>
 

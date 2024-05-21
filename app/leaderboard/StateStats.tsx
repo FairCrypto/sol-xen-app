@@ -94,7 +94,7 @@ export default function StateStats({
   return (
     <div
       id="solxen-stats"
-      className={`grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
+      className={`grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
     >
       <StateStat
         setShowBackground={setShowBackground}

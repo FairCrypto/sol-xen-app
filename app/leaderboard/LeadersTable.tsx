@@ -69,7 +69,7 @@ export function LeadersTable({
           onSubmit={handleSearchClick}
           className={`mx-2 sm:mx-0 opacity-0 ${!isLoading ? "fade-in" : ""}`}
         >
-          <label className="input input-bordered flex items-center gap-2 mt-3">
+          <label className="input input-bordered flex items-center gap-2 my-3 ">
             <input
               type="text"
               className="grow"

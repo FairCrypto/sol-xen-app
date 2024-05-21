@@ -204,7 +204,7 @@ export default function StateStat({
           type="line"
           data={chartData(false)}
           options={options(false)}
-          className="absolute -z-10"
+          className="absolute -z-10 rounded-md"
         />
         <div className="p-3 sm:p-6">
           <div className="whitespace-nowrap">{title}</div>
