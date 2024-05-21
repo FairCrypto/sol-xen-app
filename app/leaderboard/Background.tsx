@@ -12,7 +12,6 @@ export function Background({ isLoading }: BackgroundProps) {
       className="fixed h-full w-full left-0 top-0"
     >
       <Image
-        className={`fade-in-animation`}
         alt="Background image"
         src="/background-image.jpg"
         fill

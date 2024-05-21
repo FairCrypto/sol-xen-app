@@ -104,7 +104,7 @@ body {
 }
 
 .fade-in-animation {
-  animation: fadeInAnimation ease-in-out 0.88s;
+  animation: fadeInAnimation ease-in-out 0.3s;
 }
 
 .loader-container {
