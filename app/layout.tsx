@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/app/context/ThemeContext";
 import ClientThemeWrapper from "@/app/context/ClientThemeWrapper";
 import React from "react";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <ClientThemeWrapper>{children}</ClientThemeWrapper>
         </ThemeProvider>
       </body>
+      <GoogleAnalytics gaId="G-VBPT50SHRY" />
     </html>
   );
 }
