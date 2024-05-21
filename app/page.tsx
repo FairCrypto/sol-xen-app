@@ -135,29 +135,34 @@ export default function Home() {
             </div>
 
             <article className="prose">
-              <p className="mb-2">solXEN</p>
+              <h3 className="text-lg my-3 font-bold">solXEN</h3>
               <p>
-                A miner is rewarded solXEN for every 420 hash found according to
+                A miner is rewarded solXEN for every <code>420</code> hash found according to
                 this formula:
               </p>
               <code>420hash * AMP = solXEN</code>
               <p className="mb-4">where AMP is the amplification.</p>
               <p className="mb-4">
                 The AMP starts at 300 and reduces by 1 every 100.000 blocks.
-                Given that each block is 400 ms the AMP will be reduced to 0 in
-                about 139 days, which is makes the limited distribution period
-                for solXEN.
+                Given that each block is 400 ms the AMP will be reduced to 0 in about 139 days, which makes the limited distribution period for solXEN.
               </p>
               <p>
-                The probability to find a 420 hash is roughly 95%. solXEN is
-                directly issued upon finding a 420 hash and transferable.
+                The probability of finding a <code>420</code> hash is roughly 95%.
+                solXEN is directly issued upon finding a <code>420</code> hash and is transferable.
+              </p>
+
+              <h3 className="text-lg my-3 font-bold">Super Hashes</h3>
+              <p>
+                If <code>42069</code> is found in a hash, the amount of solXEN is multiplied by 250.
+                The probability of finding a <code>42069</code> hash is roughly 0,2%, which is 250X harder to find than
+                a <code>420</code> hash.
               </p>
             </article>
           </div>
         </div>
       </div>
 
-      <Footer />
+      <Footer/>
     </main>
   );
 }
