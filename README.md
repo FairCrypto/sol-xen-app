@@ -4,6 +4,11 @@ This is a [Next.js](https://nextjs.org/) project with [Tailwind CSS](https://tai
 
 ## Getting Started
 
+> Install [NodeJS](https://nodejs.org/en/download/package-manager) and install the dependencies.
+```shell
+npm install
+```
+
 First, run the development server:
 
 ```bash
