@@ -88,8 +88,8 @@ export function AccountAssociations({
     >
       <Loader isLoading={isAssociatedLoading} />
 
-      <div className={`card-body mb-10`}>
-        <div className="card-title capitalize">
+      <div className={`card-body mb-10 px-0 sm:px-6`}>
+        <div className="card-title capitalize px-4">
           Associated {associatedAccountType()} Accounts
         </div>
 

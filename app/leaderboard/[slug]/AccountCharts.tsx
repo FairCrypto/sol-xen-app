@@ -157,8 +157,9 @@ export function AccountCharts({
     >
       <Loader isLoading={isChartsLoading} />
 
-      <div className={`card-body sm:py-6`}>
+      <div className={`card-body sm:py-6 px-3 sm:px-6`}>
         <div className="card-title">Real Time Mining Stats</div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="h-[200px] sm:h-[240px]">
             <BarChart datasets={hashesDataset()} />
@@ -175,7 +176,7 @@ export function AccountCharts({
           )}
 
           <div
-            className={`h-[180px] sm:h-[240px] ${accountType() == AccountType.Ethereum && "col-span-2"}`}
+            className={`h-[180px] sm:h-[240px] ${accountType() == AccountType.Ethereum && "sm:col-span-2"}`}
           >
             <BarChart datasets={txsDataset()} />
           </div>

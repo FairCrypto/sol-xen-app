@@ -85,7 +85,7 @@ export function AccountStats({
     >
       <Loader isLoading={isLoading} />
 
-      <div className={`card-body`}>
+      <div className={`card-body px-4 sm:px-6`}>
         <div className="card-title flex mb-6 capitalize">
           <h1 className="text-xl sm:text-4xl mr-auto whitespace-nowrap">
             {accountType()} Account
@@ -115,22 +115,22 @@ export function AccountStats({
           )}
 
           {!fetchError && (
-            <div className="w-full grid grid-cols-2 md:grid-cols-none md:stats gap-1 text-center">
-              <div className="stat">
+            <div className={`w-full grid ${accountType() == AccountType.Solana ? 'grid-cols-2': 'grid-cols-3'}  md:grid-cols-none md:stats gap-0 sm:gap-1 text-center`}>
+              <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Rank</div>
                 <div className="stat-value text-secondary text-lg sm:text-4xl">
                   {rankValue()}
                 </div>
               </div>
 
-              <div className="stat">
+              <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Hashes</div>
                 <div className="stat-value text-secondary text-lg sm:text-4xl">
                   {hashesValue()}
                 </div>
               </div>
 
-              <div className="stat">
+              <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Super Hashes</div>
                 <div className="stat-value text-secondary text-lg sm:text-4xl">
                   {superHashesValue()}
@@ -138,7 +138,7 @@ export function AccountStats({
               </div>
 
               {accountType() == AccountType.Solana ? (
-                <div className="stat">
+                <div className="stat px-0 sm:px-4">
                   <div className="stat-title">solXEN</div>
                   <div className="stat-value text-secondary text-lg sm:text-4xl">
                     {solXenValue()}
