@@ -11,7 +11,7 @@ import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
 import { useStatsData } from "@/app/hooks/StateDataHook";
 import React, { useState } from "react";
-import {Loader} from "@/app/components/Loader";
+import { Loader } from "@/app/components/Loader";
 
 export default function Leaderboard() {
   const [
@@ -19,7 +19,7 @@ export default function Leaderboard() {
     setLeaderboardData,
     leaderboardIndex,
     isLeaderboardLoading,
-    isLeaderBoardUpdating
+    isLeaderBoardUpdating,
   ] = useLeaderboardData();
   const accountType = useAccountType() as AccountType;
   const [stateData, setStateData, isStatsLoadingStats] = useStatsData();
@@ -52,8 +52,8 @@ export default function Leaderboard() {
         leaderboardData[index].solXen += BigInt(
           "0x" + eventHash.points.toString("hex"),
         );
-        leaderboardData[index].hashes +=  BigInt(eventHash.hashes);
-        leaderboardData[index].superHashes +=  BigInt(eventHash.superhashes);
+        leaderboardData[index].hashes += BigInt(eventHash.hashes);
+        leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
         setLeaderboardData([...leaderboardData]);
       }
     },
@@ -61,9 +61,9 @@ export default function Leaderboard() {
 
   return (
     <main className="flex min-h-screen flex-col items-center">
-      {showBackground && <Background isLoading={isLoading}/>}
-      <NavBar/>
-      <AmpBanner isLoading={isLoading} stateData={stateData}/>
+      {showBackground && <Background isLoading={isLoading} />}
+      <NavBar />
+      <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
         className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
@@ -78,7 +78,7 @@ export default function Leaderboard() {
             </div>
             <div className="flex justify-end">
               <span className="">
-                <AccountSelector/>
+                <AccountSelector />
               </span>
             </div>
           </div>
@@ -96,20 +96,16 @@ export default function Leaderboard() {
       >
         <Loader isLoading={isLeaderBoardUpdating} />
         <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-
-        <LeadersTable
-          isLoading={isLeaderBoardUpdating}
-          leaderboardData={leaderboardData}
-          accountType={accountType}
-          stateData={stateData}
-        />
+          <LeadersTable
+            isLoading={isLeaderBoardUpdating}
+            leaderboardData={leaderboardData}
+            accountType={accountType}
+            stateData={stateData}
+          />
         </div>
       </div>
 
-  {
-    !isLoading && <Footer/>
-  }
-</main>
-)
-  ;
+      {!isLoading && <Footer />}
+    </main>
+  );
 }

@@ -110,10 +110,7 @@ export function LeadersTable({
         </thead>
         <tbody>
           {leaderboardData.map(
-            (
-              { rank, account, hashes, superHashes, solXen },
-              index,
-            ) => {
+            ({ rank, account, hashes, superHashes, solXen }, index) => {
               return (
                 <tr
                   key={rank}
@@ -128,9 +125,7 @@ export function LeadersTable({
                     </span>
                   </td>
                   <td className="p-4 border-b border-blue-gray-50 text-xs sm:text-base font-mono truncate">
-                    <span>
-                      {account}
-                    </span>
+                    <span>{account}</span>
 
                     <dl className="lg:hidden font-normal mt-2">
                       <div className="flex justify-between">

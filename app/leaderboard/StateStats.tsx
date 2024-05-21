@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
-import {fetchHashEventStats, fetchStateHistory, HashEventStat} from "@/app/leaderboard/Api";
+import {
+  fetchHashEventStats,
+  fetchStateHistory,
+  HashEventStat,
+} from "@/app/leaderboard/Api";
 
 export interface State {
   points: bigint;
@@ -154,7 +158,6 @@ export default function StateStats({
       >
         {lastAmpSlotValue()}
       </StateStat>
-
 
       <StateStat
         setShowBackground={setShowBackground}

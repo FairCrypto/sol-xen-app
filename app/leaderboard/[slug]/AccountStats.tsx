@@ -115,7 +115,9 @@ export function AccountStats({
           )}
 
           {!fetchError && (
-            <div className={`w-full grid ${accountType() == AccountType.Solana ? 'grid-cols-2': 'grid-cols-3'}  md:grid-cols-none md:stats gap-0 sm:gap-1 text-center`}>
+            <div
+              className={`w-full grid ${accountType() == AccountType.Solana ? "grid-cols-2" : "grid-cols-3"}  md:grid-cols-none md:stats gap-0 sm:gap-1 text-center`}
+            >
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Rank</div>
                 <div className="stat-value text-secondary text-lg sm:text-4xl">

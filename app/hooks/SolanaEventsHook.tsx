@@ -1,15 +1,10 @@
 "use client";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { Connection } from "@solana/web3.js";
-import {
-  AnchorProvider,
-  BN,
-  Program,
-  web3,
-} from "@coral-xyz/anchor";
+import { AnchorProvider, BN, Program, web3 } from "@coral-xyz/anchor";
 import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 
-import {fetchStateData} from "@/app/leaderboard/Api";
+import { fetchStateData } from "@/app/leaderboard/Api";
 
 interface SolanaEventsContextType {
   handleEvent?: (event: EventHash) => void;
@@ -36,7 +31,7 @@ export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
   useEffect(() => {
     fetchStateData().then((state) => {
       setProgramsIds(state.programs);
-    })
+    });
   }, []);
 
   // We can use the custom hook declared above
@@ -57,9 +52,12 @@ export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
       programs.push(new Program(idlClone as any, provider));
 
       console.log(`Listening to hash events: ${programsIds[i]}`);
-      listeners[i] = programs[i].addEventListener("hashEvent", (event: EventHash) => {
-        handleResizeRef.current(event);
-      });
+      listeners[i] = programs[i].addEventListener(
+        "hashEvent",
+        (event: EventHash) => {
+          handleResizeRef.current(event);
+        },
+      );
     }
 
     return () => {

@@ -20,7 +20,7 @@ const initialState: State = {
   minPriorityFee: 0,
   medianPriorityFee: 0,
   maxPriorityFee: 0,
-  programs: []
+  programs: [],
 };
 
 export function useStatsData() {

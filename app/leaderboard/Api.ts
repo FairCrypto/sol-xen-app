@@ -44,9 +44,7 @@ export async function fetchStateData() {
   return out;
 }
 
-export function generateLeaderboardIndex(
-  leaderboardData: LeaderboardEntry[],
-) {
+export function generateLeaderboardIndex(leaderboardData: LeaderboardEntry[]) {
   return leaderboardData.reduce(
     (acc, entry, index) => {
       acc[entry.account] = index;
