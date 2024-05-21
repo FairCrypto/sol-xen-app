@@ -177,12 +177,11 @@ export default function StateStat({
       <dialog
         className={`modal ${showModal && "opacity-100 back backdrop-blur-sm modal-open"}`}
       >
-        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[9000px]">
+        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[900px]">
           <Chart
             type="line"
             data={chartData(true)}
             options={options(true)}
-            className="absolute -z-10"
           />
         </div>
 
@@ -191,6 +190,7 @@ export default function StateStat({
             onClick={() => {
               setShowBackground(true);
               setShowModal(false);
+
             }}
           >
             close
