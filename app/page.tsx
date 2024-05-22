@@ -172,6 +172,14 @@ export default function Home() {
             <code>420</code> hash.
           </p>
         </article>
+        <Zoom zoomImg={{ src: "/tokenomics.jpg" }}>
+          <Image
+            alt="A diagram of mining solXEN"
+            src="/tokenomics.jpg"
+            width={880}
+            height={356}
+          ></Image>
+        </Zoom>
       </Section>
       <Footer />
     </main>
