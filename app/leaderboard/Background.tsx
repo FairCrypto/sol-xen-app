@@ -12,6 +12,7 @@ export function Background({ isLoading }: BackgroundProps) {
       className="fixed h-full w-full left-0 top-0"
     >
       <Image
+        className={`opacity-0 ${!isLoading && "fade-in-fast"}`}
         alt="Background image"
         src="/background-image.jpg"
         fill

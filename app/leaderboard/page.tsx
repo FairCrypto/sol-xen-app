@@ -113,7 +113,7 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      {!isLoading && <Footer />}
+      <Footer isLoading={isLoading} />
     </main>
   );
 }

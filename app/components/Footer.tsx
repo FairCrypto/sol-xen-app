@@ -1,6 +1,8 @@
-export default function Footer() {
+export default function Footer({ isLoading = false }: { isLoading?: boolean }) {
   return (
-    <footer className="footer footer-center z-[2] mt-auto p-5 text-accent-content drop-shadow-xl shadow-xl bg-accent text-gray-700">
+    <footer
+      className={`footer footer-center z-[2] mt-auto p-5 text-accent-content drop-shadow-xl shadow-xl bg-accent text-gray-700 opacity-0 ${!isLoading && "fade-in"}`}
+    >
       <aside>
         <p className="font-bold">solXEN</p>
         <p>Copyright © 2024 - All right reserved</p>

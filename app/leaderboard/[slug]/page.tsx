@@ -101,7 +101,8 @@ export default function LeaderboardSlug({
           />
         </>
       )}
-      {!isLoading && <Footer />}
+
+      <Footer isLoading={isLoading} />
     </main>
   );
 }

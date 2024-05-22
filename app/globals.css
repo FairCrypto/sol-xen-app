@@ -84,6 +84,11 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
+.fade-in-fast {
+  opacity: 1;
+  transition: opacity 0.1s ease-in-out;
+}
+
 .fade-out {
   opacity: 0;
   transition: opacity 0.1s ease-in-out;
