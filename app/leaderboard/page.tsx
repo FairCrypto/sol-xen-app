@@ -76,7 +76,7 @@ export default function Leaderboard() {
       <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
-        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 sm:shadow-lg sm:drop-shadow-lg opacity-90 fade-in-animation`}
+        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 sm:shadow-lg opacity-90 fade-in-animation`}
       >
         <Loader isLoading={isStatsLoadingStats} />
 
