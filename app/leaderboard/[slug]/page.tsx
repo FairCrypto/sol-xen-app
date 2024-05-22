@@ -17,13 +17,20 @@ export default function LeaderboardSlug({
   params: { slug: string };
 }) {
   const [accountData, setAccountData]: [
-    LeaderboardEntry | null,
-    (data: LeaderboardEntry | null) => void,
-  ] = useState<LeaderboardEntry | null>(null);
+    LeaderboardEntry,
+    (data: LeaderboardEntry) => void,
+  ] = useState<LeaderboardEntry>({
+    rank: 0,
+    account: "",
+    hashes: 0n,
+    superHashes: 0n,
+    points: 0n,
+    solXen: 0n,
+  });
   const [accountAddress, setAccountAddress] = useState<string>(params.slug);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string>("");
-  const [eventHash, setEventHash] = useState<EventHash>();
+  const [eventHashes, setEventHashes] = useState<EventHash[]>();
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
       return AccountType.Ethereum;
@@ -34,29 +41,36 @@ export default function LeaderboardSlug({
   // Handle Solana events for the account
   // update the account data when a new event is received
   useSolanaEvents({
-    handleEvent: (eventHash: EventHash) => {
-      const account =
-        accountType() == AccountType.Solana
-          ? eventHash.user.toBase58()
-          : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
+    refreshRate: 500,
+    handleEventBatch: (eventHashes: EventHash[]) => {
+      const newAccountData: LeaderboardEntry = { ...accountData };
+      const newEventHashes: EventHash[] = [];
 
-      if (account.toLowerCase() == accountAddress.toLowerCase()) {
-        // console.log("Event for account", accountAddress);
-        const newAccountData = Object.assign({}, accountData);
+      eventHashes.forEach((eventHash) => {
+        const account =
+          accountType() == AccountType.Solana
+            ? eventHash.user.toBase58()
+            : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
+
+        if (account.toLowerCase() !== accountAddress.toLowerCase()) return;
 
         newAccountData.hashes += BigInt(eventHash.hashes);
         newAccountData.superHashes += BigInt(eventHash.superhashes);
-        if (eventHash.points > 0) {
+        if (eventHash.points) {
           const points = BigInt("0x" + eventHash.points.toString("hex"));
-          if (newAccountData.points != undefined) {
-            newAccountData.points += points;
+          if (accountType() == AccountType.Ethereum) {
+            newAccountData.points = (newAccountData.points || 0n) + points;
+          } else {
+            newAccountData.solXen += points;
           }
         }
 
         setAccountData(newAccountData);
         setAccountAddress(newAccountData.account);
-        setEventHash(eventHash);
-      }
+        newEventHashes.push(eventHash);
+      });
+
+      setEventHashes(newEventHashes);
     },
   });
 
@@ -78,12 +92,12 @@ export default function LeaderboardSlug({
         <>
           <AccountCharts
             accountAddress={accountAddress}
-            eventHash={eventHash}
+            eventHashes={eventHashes}
           />
 
           <AccountAssociations
             accountAddress={accountAddress}
-            eventHash={eventHash}
+            eventHashes={eventHashes}
           />
         </>
       )}

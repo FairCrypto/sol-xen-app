@@ -11,10 +11,10 @@ import { Loader } from "@/app/components/Loader";
 
 export function AccountAssociations({
   accountAddress,
-  eventHash,
+  eventHashes,
 }: {
   accountAddress: string;
-  eventHash?: EventHash;
+  eventHashes?: EventHash[];
 }) {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     [],
@@ -47,7 +47,7 @@ export function AccountAssociations({
       });
     } else {
       fetchAssociatedEthAccounts(accountAddress).then((data) => {
-        const idxData = generateLeaderboardIndex(data);
+        const idxData = generateLeaderboardIndex(data, true);
         console.log("Fetched associated eth accounts", data, idxData);
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
@@ -57,30 +57,32 @@ export function AccountAssociations({
   }, [accountAddress]);
 
   useEffect(() => {
-    if (!eventHash) {
-      return;
-    }
+    if (eventHashes && eventHashes.length > 0) {
+      eventHashes.forEach((eventHash) => {
+        const otherAccount =
+          accountType() == AccountType.Ethereum
+            ? eventHash.user.toBase58()
+            : "0x" +
+              Buffer.from(eventHash.ethAccount).toString("hex").toLowerCase();
 
-    const otherAccount =
-      accountType() == AccountType.Ethereum
-        ? eventHash.user.toBase58()
-        : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
+        if (
+          leaderboardIndex[otherAccount] != undefined &&
+          (eventHash.hashes > 0 || eventHash.superhashes > 0)
+        ) {
+          const index = leaderboardIndex[otherAccount];
+          if (leaderboardData[index].solXen != undefined) {
+            leaderboardData[index].solXen += BigInt(
+              "0x" + eventHash.points.toString("hex"),
+            );
+          }
+          leaderboardData[index].hashes += BigInt(eventHash.hashes);
+          leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
+        }
+      });
 
-    if (
-      leaderboardIndex[otherAccount] != undefined &&
-      (eventHash.hashes > 0 || eventHash.superhashes > 0)
-    ) {
-      const index = leaderboardIndex[otherAccount];
-      if (leaderboardData[index].solXen != undefined) {
-        leaderboardData[index].solXen += BigInt(
-          "0x" + eventHash.points.toString("hex"),
-        );
-      }
-      leaderboardData[index].hashes += BigInt(eventHash.hashes);
-      leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
       setLeaderboardData([...leaderboardData]);
     }
-  }, [eventHash]);
+  }, [eventHashes, accountAddress]);
 
   return (
     <div

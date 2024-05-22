@@ -5,13 +5,14 @@ import Footer from "@/app/components/Footer";
 import StateStats from "@/app/leaderboard/StateStats";
 import AmpBanner from "@/app/leaderboard/AmpBanner";
 import { Background } from "@/app/leaderboard/Background";
-import { LeadersTable } from "@/app/leaderboard/LeadersTable";
+import { LeaderboardEntry, LeadersTable } from "@/app/leaderboard/LeadersTable";
 import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
 import { useStatsData } from "@/app/hooks/StateDataHook";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@/app/components/Loader";
+import { useSearchParams } from "next/navigation";
 
 export default function Leaderboard() {
   const [
@@ -26,36 +27,45 @@ export default function Leaderboard() {
   const isLoading = isLeaderboardLoading || isStatsLoadingStats;
   const [showBackground, setShowBackground] = useState(true);
 
-  // Handle Solana events for the account
-  // update the account data when a new event is received
   useSolanaEvents({
-    handleEvent: (eventHash: EventHash) => {
+    refreshRate: 500,
+    handleEventBatch: (eventHashes: EventHash[]) => {
       const newState = { ...stateData };
-      const account =
-        accountType == AccountType.Solana
-          ? eventHash.user.toBase58()
-          : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
-      // console.log("Event hash", eventHash, account, leaderboardIndex[account]);
-      stateData.solXen += BigInt("0x" + eventHash.points.toString("hex"));
-      newState.hashes += BigInt(eventHash.hashes);
-      newState.superHashes += BigInt(eventHash.superhashes);
-      newState.txs += 1n;
-      setStateData(newState);
+      const newLeaderboardData = [...leaderboardData];
 
-      if (
-        leaderboardIndex[account] != undefined &&
-        (eventHash.hashes > 0 ||
-          eventHash.superhashes > 0 ||
-          eventHash.points > 0)
-      ) {
-        const index = leaderboardIndex[account];
-        leaderboardData[index].solXen += BigInt(
-          "0x" + eventHash.points.toString("hex"),
-        );
-        leaderboardData[index].hashes += BigInt(eventHash.hashes);
-        leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
-        setLeaderboardData([...leaderboardData]);
-      }
+      // Calculate the new state based on the events in the buffer
+      eventHashes.forEach((eventHash) => {
+        const account =
+          accountType == AccountType.Solana
+            ? eventHash.user.toBase58()
+            : "0x" + Buffer.from(eventHash.ethAccount).toString("hex");
+
+        newState.solXen += BigInt("0x" + eventHash.points.toString("hex"));
+        newState.hashes += BigInt(eventHash.hashes);
+        newState.superHashes += BigInt(eventHash.superhashes);
+        newState.txs += 1n;
+
+        if (
+          leaderboardIndex[account] != undefined &&
+          (eventHash.hashes > 0 ||
+            eventHash.superhashes > 0 ||
+            eventHash.points > 0)
+        ) {
+          const index = leaderboardIndex[account];
+          if (accountType == AccountType.Solana) {
+            const points = BigInt("0x" + eventHash.points.toString("hex"));
+            newLeaderboardData[index].solXen += points;
+          }
+          newLeaderboardData[index].hashes += BigInt(eventHash.hashes);
+          newLeaderboardData[index].superHashes += BigInt(
+            eventHash.superhashes,
+          );
+        }
+      });
+
+      // Update the state
+      setStateData(newState);
+      setLeaderboardData(newLeaderboardData);
     },
   });
 

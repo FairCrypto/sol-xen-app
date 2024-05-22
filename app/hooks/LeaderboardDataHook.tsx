@@ -25,7 +25,10 @@ export function useLeaderboardData() {
     const fetchData = async () => {
       setIsUpdating(true);
       fetchLeaderboardData(accountType).then((data: LeaderboardEntry[]) => {
-        const idxData = generateLeaderboardIndex(data);
+        const idxData = generateLeaderboardIndex(
+          data,
+          accountType == AccountType.Ethereum,
+        );
         setLeaderboardData(data);
         setLeaderboardIndex(idxData);
         setIsLoading(false);

@@ -44,10 +44,17 @@ export async function fetchStateData() {
   return out;
 }
 
-export function generateLeaderboardIndex(leaderboardData: LeaderboardEntry[]) {
+export function generateLeaderboardIndex(
+  leaderboardData: LeaderboardEntry[],
+  isEthereum = false,
+) {
   return leaderboardData.reduce(
     (acc, entry, index) => {
-      acc[entry.account] = index;
+      if (isEthereum) {
+        acc[entry.account.toLowerCase()] = index;
+      } else {
+        acc[entry.account] = index;
+      }
       return acc;
     },
     {} as Record<string, number>,

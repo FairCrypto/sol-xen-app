@@ -10,10 +10,10 @@ import { Loader } from "@/app/components/Loader";
 
 export function AccountCharts({
   accountAddress,
-  eventHash,
+  eventHashes,
 }: {
   accountAddress: string;
-  eventHash?: EventHash;
+  eventHashes?: EventHash[];
 }) {
   const [themeColors, alphaColor] = useThemeColors();
   const [isChartsLoading, setIsChartsLoading] = useState(true);
@@ -143,13 +143,15 @@ export function AccountCharts({
 
   // Update the mapped data when a new event is received
   useEffect(() => {
-    if (eventHash) {
-      incrementsMappedHashesData(eventHash.hashes);
-      incrementsMappedSuperHashesData(eventHash.superhashes);
-      incrementsMappedSolXenData(Number(eventHash.points) / 1_000_000_000);
-      incrementsMappedTxsData(1);
+    if (eventHashes && eventHashes.length > 0) {
+      eventHashes.forEach((eventHash) => {
+        incrementsMappedHashesData(eventHash.hashes);
+        incrementsMappedSuperHashesData(eventHash.superhashes);
+        incrementsMappedSolXenData(Number(eventHash.points) / 1_000_000_000);
+        incrementsMappedTxsData(1);
+      });
     }
-  }, [eventHash, accountAddress]);
+  }, [eventHashes, accountAddress]);
 
   return (
     <div

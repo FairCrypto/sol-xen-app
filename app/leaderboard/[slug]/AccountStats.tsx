@@ -17,7 +17,7 @@ export function AccountStats({
   isLoading,
 }: {
   accountData: LeaderboardEntry | null;
-  setAccountData: (data: LeaderboardEntry | null) => void;
+  setAccountData: (data: LeaderboardEntry) => void;
   setFetchError: (error: string) => void;
   setIsLoading: (loading: boolean) => void;
   accountAddress: string;
@@ -39,13 +39,11 @@ export function AccountStats({
       })
       .catch((err) => {
         setFetchError(err.message);
-        setAccountData(null);
         setIsLoading(false);
       });
 
     return () => {
       setIsLoading(true);
-      setAccountData(null);
     };
   }, [accountAddress]);
 
@@ -120,21 +118,21 @@ export function AccountStats({
             >
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Rank</div>
-                <div className="stat-value text-secondary text-lg sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
                   {rankValue()}
                 </div>
               </div>
 
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Hashes</div>
-                <div className="stat-value text-secondary text-lg sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
                   {hashesValue()}
                 </div>
               </div>
 
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Super Hashes</div>
-                <div className="stat-value text-secondary text-lg sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
                   {superHashesValue()}
                 </div>
               </div>
@@ -142,7 +140,7 @@ export function AccountStats({
               {accountType() == AccountType.Solana ? (
                 <div className="stat px-0 sm:px-4">
                   <div className="stat-title">solXEN</div>
-                  <div className="stat-value text-secondary text-lg sm:text-4xl">
+                  <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
                     {solXenValue()}
                   </div>
                 </div>

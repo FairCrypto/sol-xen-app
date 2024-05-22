@@ -7,7 +7,8 @@ import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 import { fetchStateData } from "@/app/leaderboard/Api";
 
 interface SolanaEventsContextType {
-  handleEvent?: (event: EventHash) => void;
+  refreshRate: number;
+  handleEventBatch?: (eventHashes: EventHash[]) => void;
 }
 
 export interface EventHash {
@@ -19,8 +20,13 @@ export interface EventHash {
   points: BN;
 }
 
-export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
+export function useSolanaEvents({
+  refreshRate,
+  handleEventBatch,
+}: SolanaEventsContextType) {
   const [programsIds, setProgramsIds] = useState<string[]>([]);
+  const eventsBuffer = useRef<EventHash[]>([]);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   function useRefEventListener(fn: any) {
     const fnRef = useRef(fn);
@@ -34,8 +40,7 @@ export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
     });
   }, []);
 
-  // We can use the custom hook declared above
-  const handleResizeRef = useRefEventListener(handleEvent);
+  const handleEventRef = useRefEventListener(handleEventBatch);
 
   useEffect(() => {
     const connection = new Connection(
@@ -55,18 +60,29 @@ export function useSolanaEvents({ handleEvent }: SolanaEventsContextType) {
       listeners[i] = programs[i].addEventListener(
         "hashEvent",
         (event: EventHash) => {
-          handleResizeRef.current(event);
+          eventsBuffer.current.push(event);
         },
       );
     }
+
+    intervalId.current = setInterval(() => {
+      if (eventsBuffer.current.length > 0) {
+        handleEventRef.current(eventsBuffer.current);
+        eventsBuffer.current = [];
+      }
+    }, refreshRate);
 
     return () => {
       for (let i = 0; i < programsIds.length; i++) {
         console.log(`stop listening to hash events: ${programsIds[i]}`);
         programs[i].removeEventListener(listeners[i]).then();
       }
-    };
-  }, [programsIds, handleResizeRef]);
 
-  return handleResizeRef;
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+    };
+  }, [refreshRate, programsIds, handleEventRef]);
+
+  return handleEventRef;
 }
