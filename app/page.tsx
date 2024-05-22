@@ -165,21 +165,21 @@ export default function Home() {
           </p>
 
           <h3 className="text-lg mb-4 font-bold">Super Hashes</h3>
-          <p>
+          <p className="mb-8">
             If <code>42069</code> is found in a hash, the amount of solXEN is
             multiplied by 250. The probability of finding a <code>42069</code>{" "}
             hash is roughly 0,2%, which is 250X harder to find than a{" "}
             <code>420</code> hash.
           </p>
+          <Zoom zoomImg={{ src: "/tokenomics.jpg" }}>
+            <Image
+              alt="A diagram of mining solXEN"
+              src="/tokenomics.jpg"
+              width={880}
+              height={356}
+            ></Image>
+          </Zoom>
         </article>
-        <Zoom zoomImg={{ src: "/tokenomics.jpg" }}>
-          <Image
-            alt="A diagram of mining solXEN"
-            src="/tokenomics.jpg"
-            width={880}
-            height={356}
-          ></Image>
-        </Zoom>
       </Section>
       <Footer />
     </main>
