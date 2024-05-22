@@ -1,10 +1,9 @@
-import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
 import { useEffect, useState } from "react";
 import {
   fetchLeaderboardData,
-  fetchStateData,
   generateLeaderboardIndex,
-} from "@/app/leaderboard/Api";
+  LeaderboardEntry,
+} from "@/app/Api";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useSearchParams } from "next/navigation";
 

@@ -17,7 +17,8 @@ import {
 
 import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-dayjs-4";
-import React from "react";
+import React, { useEffect } from "react";
+import { humanizeNumber } from "@/app/utils";
 
 ChartJS.register(
   ArcElement,
@@ -70,17 +71,15 @@ export default function BarChart({ datasets, emptyDataLabel }: BarChartProps) {
         },
         stacked: true,
 
-        type: "time",
-        min: new Date(new Date().getTime() - 60 * 60 * 1000).toISOString(),
+        type: "timeseries",
+        // min: new Date(new Date().getTime() - 60 * 60 * 1000).toISOString(),
         ticks: {
-          source: "auto",
-          autoSkip: true,
-          maxTicksLimit: 60,
+          // source: "auto",
+          // autoSkip: true,
+          // maxTicksLimit: 60,
         },
         time: {
-          unit: "minute",
-          // round: 'minute',
-          // minUnit: 'minute',
+          // unit: "auto",
         },
       },
       y: {
@@ -89,6 +88,9 @@ export default function BarChart({ datasets, emptyDataLabel }: BarChartProps) {
         },
         ticks: {
           precision: 0,
+          callback: function (value) {
+            return humanizeNumber(Number(value));
+          },
         },
       },
     },

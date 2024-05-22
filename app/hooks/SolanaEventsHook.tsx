@@ -4,7 +4,7 @@ import { Connection } from "@solana/web3.js";
 import { AnchorProvider, BN, Program, web3 } from "@coral-xyz/anchor";
 import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 
-import { fetchStateData } from "@/app/leaderboard/Api";
+import { fetchStateData } from "@/app/Api";
 
 interface SolanaEventsContextType {
   refreshRate: number;

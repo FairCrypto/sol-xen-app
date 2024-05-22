@@ -5,7 +5,7 @@ import Footer from "@/app/components/Footer";
 import StateStats from "@/app/leaderboard/StateStats";
 import AmpBanner from "@/app/leaderboard/AmpBanner";
 import { Background } from "@/app/leaderboard/Background";
-import { LeaderboardEntry, LeadersTable } from "@/app/leaderboard/LeadersTable";
+import { LeadersTable } from "@/app/leaderboard/LeadersTable";
 import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
@@ -42,7 +42,7 @@ export default function Leaderboard() {
 
         newState.solXen += BigInt("0x" + eventHash.points.toString("hex"));
         newState.hashes += BigInt(eventHash.hashes);
-        newState.superHashes += BigInt(eventHash.superhashes);
+        newState.superHashes += Number(eventHash.superhashes);
         newState.txs += 1n;
 
         if (
@@ -57,7 +57,7 @@ export default function Leaderboard() {
             newLeaderboardData[index].solXen += points;
           }
           newLeaderboardData[index].hashes += BigInt(eventHash.hashes);
-          newLeaderboardData[index].superHashes += BigInt(
+          newLeaderboardData[index].superHashes += Number(
             eventHash.superhashes,
           );
         }
@@ -99,20 +99,21 @@ export default function Leaderboard() {
         </div>
       </div>
 
-      <div
-        className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
-      >
-        <Loader isLoading={isLeaderBoardUpdating} />
-        <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-          <LeadersTable
-            isLoading={isLeaderBoardUpdating}
-            leaderboardData={leaderboardData}
-            accountType={accountType}
-            stateData={stateData}
-          />
+      {showBackground && (
+        <div
+          className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
+        >
+          <Loader isLoading={isLeaderBoardUpdating} />
+          <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
+            <LeadersTable
+              isLoading={isLeaderBoardUpdating}
+              leaderboardData={leaderboardData}
+              accountType={accountType}
+              stateData={stateData}
+            />
+          </div>
         </div>
-      </div>
-
+      )}
       <Footer isLoading={isLoading} />
     </main>
   );

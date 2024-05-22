@@ -3,10 +3,20 @@ import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
 import {
+  ChartUnit,
   fetchHashEventStats,
+  fetchPriorityFees,
   fetchStateHistory,
+  GlobalState,
   HashEventStat,
-} from "@/app/leaderboard/Api";
+  SolXenPriorityFees,
+} from "@/app/Api";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { endTime, startTime, unit } from "@/app/components/ChartUnitSelector";
+import { useChartSelector } from "@/app/hooks/ChartSelector";
+import { hashRateValue } from "@/app/utils";
+dayjs.extend(utc);
 
 export interface State {
   points: bigint;
@@ -36,9 +46,11 @@ export default function StateStats({
   isLoadingStats: boolean;
   setShowBackground: (show: boolean) => void;
 }) {
-  const [stateHistory, setStateHistory] = useState<State[]>([]);
   const { theme } = useContext(ThemeContext);
+  const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
   const [hashEventStats, setHashEventStats] = useState<HashEventStat[]>([]);
+  const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees[]>([]);
+  const [chartUnit, setChartUnit] = useChartSelector();
 
   const totalSupplyValue = () => {
     if (!state.solXen) {
@@ -69,42 +81,126 @@ export default function StateStats({
     return Intl.NumberFormat("en-US").format(state.lastAmpSlot);
   };
 
+  const hashRateValue = () => {
+    const lastFive = stateHistory.slice(-8).slice(3);
+    let nonZeroCount = 0;
+    if (lastFive.length > 0) {
+      const avgHashRate =
+        lastFive.reduce((sum, fee) => {
+          if (fee.hashesDelta !== 0n) {
+            nonZeroCount++;
+            return BigInt(sum) + fee.hashesDelta;
+          }
+          return BigInt(sum);
+        }, 0n) /
+        BigInt(divisor()) /
+        BigInt(nonZeroCount);
+      return Intl.NumberFormat("en-US").format(Math.floor(Number(avgHashRate)));
+    }
+  };
+
   const avgPriorityFeeValue = () => {
-    return Intl.NumberFormat("en-US").format(state.avgPriorityFee);
+    const lastFive = priorityFees.slice(-5);
+    let nonZeroCount = 0;
+    const avgPriorityFee =
+      lastFive.reduce((sum, fee) => {
+        if (fee.avgPriorityFee !== 0) {
+          nonZeroCount++;
+          return sum + fee.avgPriorityFee;
+        }
+        return sum;
+      }, 0) / nonZeroCount;
+    return Intl.NumberFormat("en-US").format(Math.floor(avgPriorityFee || 0));
   };
 
   const maxPriorityFeeValue = () => {
-    return Intl.NumberFormat("en-US").format(state.maxPriorityFee);
+    const lastFive = priorityFees.slice(-5);
+    let nonZeroCount = 0;
+    const avgMaxPriorityFee =
+      lastFive.reduce((sum, fee) => {
+        if (fee.maxPriorityFee !== 0) {
+          nonZeroCount++;
+          return sum + fee.maxPriorityFee;
+        }
+        return sum;
+      }, 0) / nonZeroCount;
+    return Intl.NumberFormat("en-US").format(
+      Math.floor(avgMaxPriorityFee || 0),
+    );
   };
 
   const minPriorityFeeValue = () => {
-    return Intl.NumberFormat("en-US").format(state.minPriorityFee);
+    const lastFive = priorityFees.slice(-5);
+    let nonZeroCount = 0;
+    const avgMinPriorityFee =
+      lastFive.reduce((sum, fee) => {
+        if (fee.lowPriorityFee !== 0) {
+          nonZeroCount++;
+          return sum + fee.lowPriorityFee;
+        }
+        return sum;
+      }, 0) / nonZeroCount;
+
+    return Intl.NumberFormat("en-US").format(
+      Math.floor(avgMinPriorityFee || 0),
+    );
   };
 
   useEffect(() => {
-    fetchStateHistory().then((data) => {
-      setStateHistory(data);
-    });
+    if (chartUnit) {
+      fetchStateHistory(
+        startTime(chartUnit),
+        endTime(chartUnit),
+        unit(chartUnit),
+      ).then((data) => {
+        setStateHistory(data);
+      });
 
-    fetchHashEventStats().then((data) => {
-      setHashEventStats(data);
-    });
-  }, [theme]);
+      fetchHashEventStats(
+        undefined,
+        startTime(chartUnit),
+        endTime(chartUnit),
+        unit(chartUnit),
+      ).then((data) => {
+        setHashEventStats(data);
+      });
+
+      fetchPriorityFees(
+        startTime(chartUnit),
+        endTime(chartUnit),
+        unit(chartUnit),
+      ).then((data) => {
+        setPriorityFees(data);
+      });
+    }
+  }, [theme, chartUnit]);
+
+  const divisor = () => (chartUnit === "day" ? 60 * 60 : 60);
+  const units = chartUnit === "day" ? "hour" : "minute";
 
   return (
     <div
       id="solxen-stats"
       className={`grid grid-cols-2 sm:grid-cols-3 gap-4 text-center mb-2 sm:mb-3 mx-4 opacity-0 ${!isLoadingStats ? "fade-in" : ""}`}
     >
+      {}
+
       <StateStat
         setShowBackground={setShowBackground}
         name="solXen"
         title="Total solXEN"
-        stateHistoryTitle="solXEN Rate"
-        stateHistory={hashEventStats.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.solXen / 60,
-        }))}
+        yAxesTitle={`Increase (per ${units})`}
+        sets={[
+          {
+            label: "solXEN",
+            data: hashEventStats.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: Number(entry.solXen / 100_000_000n),
+            })),
+          },
+        ]}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
       >
         {totalSupplyValue()}
       </StateStat>
@@ -113,11 +209,19 @@ export default function StateStats({
         setShowBackground={setShowBackground}
         name="hashes"
         title="Total Hashes"
-        stateHistoryTitle="Hashes Rate"
-        stateHistory={hashEventStats.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.hashes / 60,
-        }))}
+        yAxesTitle={`Increase (per ${units})`}
+        stateHistoryTitle="Hashes"
+        sets={[
+          {
+            label: "Hashes",
+            data: stateHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: Number(entry.hashesDelta),
+            })),
+          },
+        ]}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
       >
         {totalHashesValue()}
       </StateStat>
@@ -126,11 +230,19 @@ export default function StateStats({
         setShowBackground={setShowBackground}
         name="superHashes"
         title="Total Super Hashes"
+        yAxesTitle={`Increase (per ${units})`}
         stateHistoryTitle="Super Hashes Rate"
-        stateHistory={hashEventStats.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.superHashes,
-        }))}
+        sets={[
+          {
+            label: "Super Hashes",
+            data: stateHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: entry.superHashesDelta,
+            })),
+          },
+        ]}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
       >
         {totalSuperHashesValue()}
       </StateStat>
@@ -148,26 +260,64 @@ export default function StateStats({
       {/*  {txsValue()}*/}
       {/*</StateStat>*/}
 
+      {/*<StateStat*/}
+      {/*  setShowBackground={setShowBackground}*/}
+      {/*  name="lastAmpSlot"*/}
+      {/*  title="Last AMP Slot"*/}
+      {/*  yAxesTitle="Slots"*/}
+      {/*  sets={[*/}
+      {/*    {*/}
+      {/*      label: "Last AMP Slot",*/}
+      {/*      data: stateHistory.map((entry) => ({*/}
+      {/*        x: new Date(entry.createdAt),*/}
+      {/*        y: Number(entry.lastAmpSlot),*/}
+      {/*      })),*/}
+      {/*    }*/}
+      {/*  ]}*/}
+      {/*  chartUnit={chartUnit}*/}
+      {/*  setChartUnit={setChartUnit}*/}
+      {/*>*/}
+      {/*  {lastAmpSlotValue()}*/}
+      {/*</StateStat>*/}
+
       <StateStat
-        name="lastAmpSlot"
-        title="Last AMP Slot"
-        stateHistory={stateHistory.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: Number(entry.lastAmpSlot),
-        }))}
+        setShowBackground={setShowBackground}
+        name="hashRate"
+        title="Hash Rate"
+        yAxesTitle="Rate (hashes/sec)"
+        sets={[
+          {
+            label: "Hash Rate",
+            data: stateHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: Number(entry.hashesDelta) / divisor(),
+            })),
+          },
+        ]}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
+        detailedChartType={"line"}
       >
-        {lastAmpSlotValue()}
+        {hashRateValue()}
       </StateStat>
 
       <StateStat
         setShowBackground={setShowBackground}
-        name="amp"
+        name="Amp"
         title="AMP"
+        yAxesTitle="AMP"
+        sets={[
+          {
+            label: "AMP",
+            data: stateHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: entry.amp,
+            })),
+          },
+        ]}
         stateHistoryTitle="AMP Over Time"
-        stateHistory={stateHistory.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.amp,
-        }))}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
       >
         {ampValue()}
       </StateStat>
@@ -177,22 +327,31 @@ export default function StateStats({
         name="avgPriorityFee"
         title="Avg Priority Fee"
         yAxesTitle="Microlamports"
-        stateHistoryTitle={`Median (${avgPriorityFeeValue()})`}
-        stateHistory2Title={`Min (${minPriorityFeeValue()})`}
-        stateHistory3Title={`Max (${maxPriorityFeeValue()})`}
-        // fillDetailed={false}
-        stateHistory={stateHistory.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.medianPriorityFee,
-        }))}
-        stateHistory2={stateHistory.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.minPriorityFee,
-        }))}
-        stateHistory3={stateHistory.map((entry) => ({
-          x: new Date(entry.createdAt),
-          y: entry.maxPriorityFee,
-        }))}
+        sets={[
+          {
+            label: `Low | ${minPriorityFeeValue()}`,
+            data: priorityFees.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: entry.lowPriorityFee,
+            })),
+          },
+          {
+            label: `Avg | ${avgPriorityFeeValue()}`,
+            data: priorityFees.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: entry.avgPriorityFee,
+            })),
+          },
+          {
+            label: `High | ${maxPriorityFeeValue()}`,
+            data: priorityFees.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y: entry.highPriorityFee,
+            })),
+          },
+        ]}
+        chartUnit={chartUnit}
+        setChartUnit={setChartUnit}
       >
         {avgPriorityFeeValue()}
       </StateStat>

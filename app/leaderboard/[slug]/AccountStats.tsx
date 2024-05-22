@@ -1,11 +1,10 @@
-import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import React, { useEffect } from "react";
-import { fetchLeaderboardEntry } from "@/app/leaderboard/Api";
+import { fetchLeaderboardEntry, LeaderboardEntry } from "@/app/Api";
 import Link from "next/link";
 import { IoReturnUpBackSharp } from "react-icons/io5";
-import { CgDanger } from "react-icons/cg";
 import { Loader } from "@/app/components/Loader";
+import { hashRateValue } from "@/app/utils";
 
 export function AccountStats({
   accountData,
@@ -32,18 +31,24 @@ export function AccountStats({
   };
 
   useEffect(() => {
-    fetchLeaderboardEntry(accountAddress)
-      .then((data) => {
-        setAccountData(data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setFetchError(err.message);
-        setIsLoading(false);
-      });
+    const fetchData = async () => {
+      fetchLeaderboardEntry(accountAddress)
+        .then((data) => {
+          setAccountData(data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setFetchError(err.message);
+          setIsLoading(false);
+        });
+    };
+
+    fetchData().then();
+    const interval = setInterval(fetchData, 30000);
 
     return () => {
       setIsLoading(true);
+      clearInterval(interval);
     };
   }, [accountAddress]);
 
@@ -103,48 +108,96 @@ export function AccountStats({
 
         <div className={`opacity-0 ${!isLoading ? "fade-in-slow" : ""}`}>
           {fetchError && (
-            <div className="text-center flex justify-center align-middle min-h-[96px]">
-              <div className="flex self-center">
-                <span className="flex text-5xl font-bold">
-                  <CgDanger size={48} className="mr-4" /> {fetchError}
-                </span>
-              </div>
+            <div className="mt-3">
+              {fetchError == "Account not found" ? (
+                <div className="alert alert-warning w-full opacity-70">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                  <span>
+                    Warning! Account not found - Please start mining and check
+                    back.
+                  </span>
+                </div>
+              ) : (
+                <div className="alert alert-error w-full opacity-70">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>Error! {fetchError}</span>
+                </div>
+              )}
             </div>
           )}
 
           {!fetchError && (
             <div
-              className={`w-full grid ${accountType() == AccountType.Solana ? "grid-cols-2" : "grid-cols-3"}  md:grid-cols-none md:stats gap-0 sm:gap-1 text-center`}
+              className={`w-full grid grid-cols-2 md:grid-cols-none md:stats gap-0 sm:gap-1 text-center`}
             >
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Rank</div>
-                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
                   {rankValue()}
                 </div>
               </div>
 
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Hashes</div>
-                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
                   {hashesValue()}
                 </div>
               </div>
 
               <div className="stat px-0 sm:px-4">
                 <div className="stat-title">Super Hashes</div>
-                <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
+                <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
                   {superHashesValue()}
                 </div>
               </div>
 
               {accountType() == AccountType.Solana ? (
+                <>
+                  <div className="hidden lg:block stat px-0 sm:px-4">
+                    <div className="stat-title">Hash Rate</div>
+                    <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
+                      {hashRateValue(accountData?.hashRate || 0)}
+                    </div>
+                  </div>
+                  <div className="stat px-0 sm:px-4">
+                    <div className="stat-title">solXEN</div>
+                    <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
+                      {solXenValue()}
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <div className="stat px-0 sm:px-4">
-                  <div className="stat-title">solXEN</div>
-                  <div className="stat-value text-secondary text-lg font-mono sm:text-4xl">
-                    {solXenValue()}
+                  <div className="stat-title">Hash Rate</div>
+                  <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
+                    {hashRateValue(accountData?.hashRate || 0)}
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
           )}
         </div>

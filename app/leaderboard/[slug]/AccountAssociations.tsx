@@ -1,12 +1,13 @@
 import { EventHash } from "@/app/hooks/SolanaEventsHook";
 import React, { useEffect, useState } from "react";
-import { LeaderboardEntry, LeadersTable } from "@/app/leaderboard/LeadersTable";
+import { LeadersTable } from "@/app/leaderboard/LeadersTable";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import {
   fetchAssociatedEthAccounts,
   fetchAssociatedSolAccounts,
   generateLeaderboardIndex,
-} from "@/app/leaderboard/Api";
+  LeaderboardEntry,
+} from "@/app/Api";
 import { Loader } from "@/app/components/Loader";
 
 export function AccountAssociations({
@@ -76,7 +77,7 @@ export function AccountAssociations({
             );
           }
           leaderboardData[index].hashes += BigInt(eventHash.hashes);
-          leaderboardData[index].superHashes += BigInt(eventHash.superhashes);
+          leaderboardData[index].superHashes += Number(eventHash.superhashes);
         }
       });
 

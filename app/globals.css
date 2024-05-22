@@ -118,3 +118,13 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/*.modal:not(dialog:not(.modal-open)),*/
+/*.modal::backdrop {*/
+/*  background-color: #000000;*/
+/*}*/
+
+/*.modal {*/
+/*  background-color: #000000;*/
+/*  z-index: 60;*/
+/*}*/
