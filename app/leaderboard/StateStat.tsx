@@ -158,7 +158,7 @@ export default function StateStat({
             color: themeColors?.["base-content"],
             padding: 24,
             font: {
-              size: 22,
+              size: 20,
             },
           },
           title: {

@@ -176,10 +176,10 @@ export default function StateStats({
         setShowBackground={setShowBackground}
         name="avgPriorityFee"
         title="Avg Priority Fee"
-        yAxesTitle="Lamports"
-        stateHistoryTitle={`Median (${avgPriorityFeeValue()} Lamports)`}
-        stateHistory2Title={`Min (${minPriorityFeeValue()} Lamports)`}
-        stateHistory3Title={`Max (${maxPriorityFeeValue()} Lamports)`}
+        yAxesTitle="Microlamports"
+        stateHistoryTitle={`Median (${avgPriorityFeeValue()})`}
+        stateHistory2Title={`Min (${minPriorityFeeValue()})`}
+        stateHistory3Title={`Max (${maxPriorityFeeValue()})`}
         // fillDetailed={false}
         stateHistory={stateHistory.map((entry) => ({
           x: new Date(entry.createdAt),
