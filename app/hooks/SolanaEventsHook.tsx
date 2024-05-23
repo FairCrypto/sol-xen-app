@@ -43,9 +43,10 @@ export function useSolanaEvents({
   const handleEventRef = useRefEventListener(handleEventBatch);
 
   useEffect(() => {
-    const connection = new Connection(
-      process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || "",
-    );
+    const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || "", {
+      commitment: "finalized",
+      wsEndpoint: process.env.NEXT_PUBLIC_SOLANA_WS_ENDPOINT || "",
+    });
 
     const provider = new AnchorProvider(connection, null as any);
     const programs: Program<any>[] = [];
