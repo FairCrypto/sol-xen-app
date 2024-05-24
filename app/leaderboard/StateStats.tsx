@@ -85,65 +85,83 @@ export default function StateStats({
     const lastFive = stateHistory.slice(-8).slice(3);
     let nonZeroCount = 0;
     if (lastFive.length > 0) {
-      const avgHashRate =
-        lastFive.reduce((sum, fee) => {
-          if (fee.hashesDelta !== 0n) {
-            nonZeroCount++;
-            return BigInt(sum) + fee.hashesDelta;
-          }
-          return BigInt(sum);
-        }, 0n) /
-        BigInt(divisor()) /
-        BigInt(nonZeroCount);
-      return Intl.NumberFormat("en-US").format(Math.floor(Number(avgHashRate)));
+      try {
+        const avgHashRate =
+          lastFive.reduce((sum, fee) => {
+            if (fee.hashesDelta !== 0n) {
+              nonZeroCount++;
+              return BigInt(sum) + fee.hashesDelta;
+            }
+            return BigInt(sum);
+          }, 0n) /
+          BigInt(divisor()) /
+          BigInt(nonZeroCount);
+        return Intl.NumberFormat("en-US").format(
+          Math.floor(Number(avgHashRate)),
+        );
+      } catch (e) {
+        return stateHistory[0].hashesDelta / BigInt(divisor()) || "0";
+      }
     }
   };
 
   const avgPriorityFeeValue = () => {
     const lastFive = priorityFees.slice(-5);
     let nonZeroCount = 0;
-    const avgPriorityFee =
-      lastFive.reduce((sum, fee) => {
-        if (fee.avgPriorityFee !== 0) {
-          nonZeroCount++;
-          return sum + fee.avgPriorityFee;
-        }
-        return sum;
-      }, 0) / nonZeroCount;
-    return Intl.NumberFormat("en-US").format(Math.floor(avgPriorityFee || 0));
+    try {
+      const avgPriorityFee =
+        lastFive.reduce((sum, fee) => {
+          if (fee.avgPriorityFee !== 0) {
+            nonZeroCount++;
+            return sum + fee.avgPriorityFee;
+          }
+          return sum;
+        }, 0) / nonZeroCount;
+      return Intl.NumberFormat("en-US").format(Math.floor(avgPriorityFee || 0));
+    } catch (e) {
+      return priorityFees[0]?.avgPriorityFee || 0;
+    }
   };
 
   const maxPriorityFeeValue = () => {
-    const lastFive = priorityFees.slice(-5);
-    let nonZeroCount = 0;
-    const avgMaxPriorityFee =
-      lastFive.reduce((sum, fee) => {
-        if (fee.maxPriorityFee !== 0) {
-          nonZeroCount++;
-          return sum + fee.maxPriorityFee;
-        }
-        return sum;
-      }, 0) / nonZeroCount;
-    return Intl.NumberFormat("en-US").format(
-      Math.floor(avgMaxPriorityFee || 0),
-    );
+    try {
+      const lastFive = priorityFees.slice(-5);
+      let nonZeroCount = 0;
+      const avgMaxPriorityFee =
+        lastFive.reduce((sum, fee) => {
+          if (fee.maxPriorityFee !== 0) {
+            nonZeroCount++;
+            return sum + fee.maxPriorityFee;
+          }
+          return sum;
+        }, 0) / nonZeroCount;
+      return Intl.NumberFormat("en-US").format(
+        Math.floor(avgMaxPriorityFee || 0),
+      );
+    } catch (e) {
+      return priorityFees[0]?.maxPriorityFee || 0;
+    }
   };
 
   const minPriorityFeeValue = () => {
-    const lastFive = priorityFees.slice(-5);
-    let nonZeroCount = 0;
-    const avgMinPriorityFee =
-      lastFive.reduce((sum, fee) => {
-        if (fee.lowPriorityFee !== 0) {
-          nonZeroCount++;
-          return sum + fee.lowPriorityFee;
-        }
-        return sum;
-      }, 0) / nonZeroCount;
+    try {
+      const lastFive = priorityFees.slice(-5);
+      let nonZeroCount = 0;
+      const avgMinPriorityFee =
+        lastFive.reduce((sum, fee) => {
+          if (fee.lowPriorityFee !== 0) {
+            nonZeroCount++;
+            return sum + fee.lowPriorityFee;
+          }
+          return sum;
+        }, 0) / nonZeroCount;
 
-    return Intl.NumberFormat("en-US").format(
-      Math.floor(avgMinPriorityFee || 0),
-    );
+      return Intl.NumberFormat("en-US").format(
+        Math.floor(avgMinPriorityFee || 0),
+      );
+    } catch (e) {
+      return priorityFees[0]?.lowPriorityFee || 0;
+    }
   };
 
   useEffect(() => {
@@ -175,7 +193,7 @@ export default function StateStats({
     }
   }, [theme, chartUnit]);
 
-  const divisor = () => (chartUnit === "day" ? 60 * 60 : 60);
+  const divisor = (): number => (chartUnit === "day" ? 60 * 60 : 60);
   const units = chartUnit === "day" ? "hour" : "minute";
 
   return (
