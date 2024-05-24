@@ -1,4 +1,4 @@
-export const hashRateValue = (hashRate: number): string => {
+export const humanizeHashRate = (hashRate: number): string => {
   if (typeof hashRate !== "number" || isNaN(hashRate)) {
     return "";
   }

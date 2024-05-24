@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { endTime, startTime, unit } from "@/app/components/ChartUnitSelector";
 import { useChartSelector } from "@/app/hooks/ChartSelector";
-import { hashRateValue } from "@/app/utils";
+import { humanizeHashRate } from "@/app/utils";
 dayjs.extend(utc);
 
 export interface State {
@@ -81,7 +81,11 @@ export default function StateStats({
     return Intl.NumberFormat("en-US").format(state.lastAmpSlot);
   };
 
-  const hashRateValue = () => {
+  const hashRateValue = (): number => {
+    if (stateHistory.length < 5) {
+      return Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0;
+    }
+
     const lastFive = stateHistory.slice(-8).slice(3);
     let nonZeroCount = 0;
     if (lastFive.length > 0) {
@@ -96,13 +100,13 @@ export default function StateStats({
           }, 0n) /
           BigInt(divisor()) /
           BigInt(nonZeroCount);
-        return Intl.NumberFormat("en-US").format(
-          Math.floor(Number(avgHashRate)),
-        );
+        return Math.floor(Number(avgHashRate));
       } catch (e) {
-        return Number(stateHistory[0].hashesDelta / BigInt(divisor())) || "0";
+        return Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0;
       }
     }
+
+    return 0;
   };
 
   const avgPriorityFeeValue = () => {
@@ -316,7 +320,7 @@ export default function StateStats({
         setChartUnit={setChartUnit}
         detailedChartType={"line"}
       >
-        {hashRateValue()}
+        {humanizeHashRate(hashRateValue()).replace('.00', '')}
       </StateStat>
 
       <StateStat

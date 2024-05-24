@@ -4,7 +4,7 @@ import { fetchLeaderboardEntry, LeaderboardEntry } from "@/app/Api";
 import Link from "next/link";
 import { IoReturnUpBackSharp } from "react-icons/io5";
 import { Loader } from "@/app/components/Loader";
-import { hashRateValue } from "@/app/utils";
+import { humanizeHashRate } from "@/app/utils";
 
 export function AccountStats({
   accountData,
@@ -180,7 +180,7 @@ export function AccountStats({
                   <div className="hidden lg:block stat px-0 sm:px-4">
                     <div className="stat-title">Hash Rate</div>
                     <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
-                      {hashRateValue(accountData?.hashRate || 0)}
+                      {humanizeHashRate(accountData?.hashRate || 0)}
                     </div>
                   </div>
                   <div className="stat px-0 sm:px-4">
@@ -194,7 +194,7 @@ export function AccountStats({
                 <div className="stat px-0 sm:px-4">
                   <div className="stat-title">Hash Rate</div>
                   <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
-                    {hashRateValue(accountData?.hashRate || 0)}
+                    {humanizeHashRate(accountData?.hashRate || 0)}
                   </div>
                 </div>
               )}

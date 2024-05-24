@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { CiSearch } from "react-icons/ci";
 import { LeaderboardEntry } from "@/app/Api";
-import { hashRateValue } from "@/app/utils";
+import { humanizeHashRate } from "@/app/utils";
 
 interface LeadersTableProps {
   accountType: AccountType;
@@ -148,7 +148,7 @@ export function LeadersTable({
                           Hash Rate
                         </dt>
                         <dd className="text-gray-400 text-sm mt-1">
-                          {hashRateValue(hashRate)}
+                          {humanizeHashRate(hashRate)}
                         </dd>
                       </div>
                       {accountType == AccountType.Solana ? (
@@ -180,7 +180,7 @@ export function LeadersTable({
                   </td>
 
                   <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
-                    <span className="font-mono">{hashRateValue(hashRate)}</span>
+                    <span className="font-mono">{humanizeHashRate(hashRate)}</span>
                   </td>
                   {accountType == AccountType.Solana ? (
                     <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
