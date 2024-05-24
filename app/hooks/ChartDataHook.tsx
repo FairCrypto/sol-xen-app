@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { TimeChartEntry } from "@/app/components/BarChart";
-import { fetchHashEventStats } from "@/app/leaderboard/Api";
 
-export default function useChartData(): [
+export default function useChartData({
+  maxTimeSeconds,
+}: {
+  maxTimeSeconds: number;
+}): [
   TimeChartEntry[],
   (value: Map<number, number>) => void,
   (value: Map<number, number>) => void,
@@ -28,10 +31,12 @@ export default function useChartData(): [
     const newMappedChartData = new Map<number, number>(
       mappedChartDataRef.current,
     );
+
     newMappedChartData.set(
       new Date(date).getTime(),
       (newMappedChartData.get(date.getTime()) || 0) + value,
     );
+
     _setMappedChartData(newMappedChartData);
   }
 
@@ -42,7 +47,10 @@ export default function useChartData(): [
     truncatedDate.setSeconds(0);
 
     for (const [key, value] of mappedChartData.entries()) {
-      if (new Date(key).getTime() < truncatedDate.getTime() - 60 * 60 * 1000) {
+      if (
+        new Date(key).getTime() <
+        truncatedDate.getTime() - maxTimeSeconds * 1000
+      ) {
         continue;
       }
       newChartData.push({ x: new Date(key), y: value });
@@ -53,7 +61,7 @@ export default function useChartData(): [
   }
 
   function updateMappedChartData(mappedChartData: Map<number, number>) {
-    // console.log("Updating mapped chart data...", mappedChartData.size)
+    console.log("Updating mapped chart data...", mappedChartData.size);
     const currentTime = new Date();
     currentTime.setMilliseconds(0);
     currentTime.setSeconds(0);
@@ -66,10 +74,13 @@ export default function useChartData(): [
       ...mappedChartData,
     ]);
 
-    // Remove data older than 1 hour
+    // Remove old data
     for (const [key] of newMappedChartData.entries()) {
-      if (new Date(key).getTime() < currentTime.getTime() - 65 * 60 * 1000) {
-        // console.log("Removing old data...", new Date(key).toISOString());
+      if (
+        new Date(key).getTime() <
+        currentTime.getTime() - maxTimeSeconds * 1000
+      ) {
+        console.log("Removing old data...", new Date(key).toISOString());
         newMappedChartData.delete(key);
       }
     }
@@ -79,8 +90,13 @@ export default function useChartData(): [
   }
 
   function setMappedChartData(mappedHashesData: Map<number, number>) {
-    // console.log("Setting mapped chart data...", mappedHashesData.size);
+    console.log(
+      "Setting mapped chart data...",
+      mappedHashesData.size,
+      mappedHashesData,
+    );
     _setMappedChartData(mappedHashesData);
+    setChartData(getChartData(mappedChartDataRef.current));
   }
 
   // Update the chart data every 500ms

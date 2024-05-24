@@ -4,12 +4,12 @@ import { Background } from "@/app/leaderboard/Background";
 import { NavBar } from "@/app/components/NavBar";
 import React, { useState } from "react";
 import Footer from "@/app/components/Footer";
-import { LeaderboardEntry } from "@/app/leaderboard/LeadersTable";
 import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { AccountAssociations } from "@/app/leaderboard/[slug]/AccountAssociations";
 import { AccountCharts } from "@/app/leaderboard/[slug]/AccountCharts";
 import { AccountStats } from "@/app/leaderboard/[slug]/AccountStats";
+import { LeaderboardEntry } from "@/app/Api";
 
 export default function LeaderboardSlug({
   params,
@@ -23,14 +23,16 @@ export default function LeaderboardSlug({
     rank: 0,
     account: "",
     hashes: 0n,
-    superHashes: 0n,
+    superHashes: 0,
     points: 0n,
     solXen: 0n,
+    hashRate: 0,
   });
   const [accountAddress, setAccountAddress] = useState<string>(params.slug);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string>("");
   const [eventHashes, setEventHashes] = useState<EventHash[]>();
+
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
       return AccountType.Ethereum;
@@ -55,7 +57,7 @@ export default function LeaderboardSlug({
         if (account.toLowerCase() !== accountAddress.toLowerCase()) return;
 
         newAccountData.hashes += BigInt(eventHash.hashes);
-        newAccountData.superHashes += BigInt(eventHash.superhashes);
+        newAccountData.superHashes += eventHash.superhashes;
         if (eventHash.points) {
           const points = BigInt("0x" + eventHash.points.toString("hex"));
           if (accountType() == AccountType.Ethereum) {

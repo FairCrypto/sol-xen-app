@@ -3,6 +3,8 @@ import { State } from "@/app/leaderboard/StateStats";
 import { useRouter } from "next/navigation";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { CiSearch } from "react-icons/ci";
+import { LeaderboardEntry } from "@/app/Api";
+import { hashRateValue } from "@/app/utils";
 
 interface LeadersTableProps {
   accountType: AccountType;
@@ -10,15 +12,6 @@ interface LeadersTableProps {
   leaderboardData: LeaderboardEntry[];
   stateData?: State | LeaderboardEntry;
   hideSearch?: boolean;
-}
-
-export interface LeaderboardEntry {
-  rank: number;
-  account: string;
-  hashes: bigint;
-  superHashes: bigint;
-  points: bigint;
-  solXen: bigint;
 }
 
 export function LeadersTable({
@@ -101,6 +94,9 @@ export function LeadersTable({
             <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
               <span>Super Hashes</span>
             </th>
+            <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <span>Hash Rate</span>
+            </th>
             {accountType == AccountType.Solana ? (
               <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                 <span>solXEN</span>
@@ -110,7 +106,10 @@ export function LeadersTable({
         </thead>
         <tbody>
           {leaderboardData.map(
-            ({ rank, account, hashes, superHashes, solXen }, index) => {
+            (
+              { rank, account, hashes, superHashes, solXen, hashRate },
+              index,
+            ) => {
               return (
                 <tr
                   key={rank}
@@ -144,6 +143,14 @@ export function LeadersTable({
                           {Intl.NumberFormat("en-US").format(superHashes)}
                         </dd>
                       </div>
+                      <div className="flex justify-between">
+                        <dt className="text-gray-400 text-sm mt-1 font-mono">
+                          Hash Rate
+                        </dt>
+                        <dd className="text-gray-400 text-sm mt-1">
+                          {hashRateValue(hashRate)}
+                        </dd>
+                      </div>
                       {accountType == AccountType.Solana ? (
                         <div className="flex justify-between">
                           <dt className="text-gray-400 text-sm mt-1 font-medium">
@@ -170,6 +177,10 @@ export function LeadersTable({
                     <span className="font-mono">
                       {Intl.NumberFormat("en-US").format(superHashes)}
                     </span>
+                  </td>
+
+                  <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
+                    <span className="font-mono">{hashRateValue(hashRate)}</span>
                   </td>
                   {accountType == AccountType.Solana ? (
                     <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">

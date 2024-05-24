@@ -1,9 +1,17 @@
 import { Chart } from "react-chartjs-2";
 import useThemeColors from "@/app/hooks/ThemeColorHook";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import "chartjs-adapter-dayjs-4";
 import { ChartData, ChartOptions, LegendItem } from "chart.js";
 import { TimeChartEntry } from "@/app/components/BarChart";
+import { ChartUnit } from "@/app/Api";
+import { ChartUnitSelector } from "@/app/components/ChartUnitSelector";
+import { humanizeNumber } from "@/app/utils";
+
+export interface chartSet {
+  label: string;
+  data: TimeChartEntry[];
+}
 
 interface StateStatProps {
   name: string;
@@ -20,6 +28,10 @@ interface StateStatProps {
   fillDetailed?: boolean;
   setShowBackground?: (show: boolean) => void;
   yAxesTitle?: string;
+  chartUnit?: ChartUnit;
+  setChartUnit: (unit: ChartUnit) => void;
+  sets: chartSet[];
+  detailedChartType?: "bar" | "line";
 }
 
 export default function StateStat({
@@ -37,32 +49,38 @@ export default function StateStat({
   fillDetailed = true,
   setShowBackground = () => {},
   yAxesTitle = "",
+  chartUnit = "hour",
+  setChartUnit,
+  sets,
+  detailedChartType = "bar",
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
 
   const fillAlpha = (showDetails: boolean) => {
-    if (showDetails) {
-      return 10;
+    if (showDetails && detailedChartType === "line") {
+      return 5;
+    } else if (showDetails) {
+      return 40;
     }
     return 40;
   };
 
   const boarderAlpha = (showDetails: boolean) => {
     if (showDetails) {
-      return 100;
+      return 90;
     }
     return 60;
   };
 
   const chartData = (
     showDetails: boolean,
-  ): ChartData<"line", TimeChartEntry[]> => {
+  ): ChartData<any, TimeChartEntry[]> => {
     const data = {
       datasets: [
         {
-          label: stateHistoryTitle || title,
-          data: stateHistory,
+          label: sets[0].label || title,
+          data: sets[0].data,
           fill: showDetails ? fillDetailed : fill,
           borderColor: alphaColor(
             themeColors?.accent,
@@ -78,10 +96,10 @@ export default function StateStat({
       ],
     };
 
-    if (showDetails && stateHistory2.length > 0) {
+    if (showDetails && sets[1]?.label && sets[1]?.data.length > 0) {
       data.datasets.push({
-        label: stateHistory2Title,
-        data: stateHistory2,
+        label: sets[1].label,
+        data: sets[1].data,
         fill: showDetails ? fillDetailed : fill,
         borderColor: alphaColor(
           themeColors?.primary,
@@ -96,10 +114,10 @@ export default function StateStat({
       });
     }
 
-    if (showDetails && stateHistory3.length > 0) {
+    if (showDetails && sets[2]?.label && sets[2]?.data.length > 0) {
       data.datasets.push({
-        label: stateHistory3Title,
-        data: stateHistory3,
+        label: sets[2].label,
+        data: sets[2].data,
         fill: showDetails ? fillDetailed : fill,
         borderColor: alphaColor(
           themeColors?.secondary,
@@ -117,12 +135,12 @@ export default function StateStat({
     return data;
   };
 
-  const options = (showDetails: boolean): ChartOptions<"line"> => {
+  const options = (showDetails: boolean): ChartOptions<any> => {
     return {
       scales: {
         x: {
           display: showDetails,
-          type: "time",
+          type: "timeseries",
           grid: {
             display: false,
           },
@@ -131,6 +149,7 @@ export default function StateStat({
           },
         },
         y: {
+          // type: 'logarithmic',
           title: {
             text: yAxesTitle,
             display: showDetails,
@@ -142,6 +161,9 @@ export default function StateStat({
           },
           ticks: {
             color: themeColors?.["base-content"],
+            callback: function (value: number) {
+              return humanizeNumber(Number(value));
+            },
           },
         },
       },
@@ -158,7 +180,7 @@ export default function StateStat({
             color: themeColors?.["base-content"],
             padding: 24,
             font: {
-              size: 20,
+              size: 18,
             },
           },
           title: {
@@ -177,8 +199,18 @@ export default function StateStat({
       <dialog
         className={`modal ${showModal && "opacity-100 back backdrop-blur-sm modal-open"}`}
       >
-        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[900px]">
-          <Chart type="line" data={chartData(true)} options={options(true)} />
+        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[900px] pt-10 sm:pt-8">
+          <div className="absolute top-4 right-4">
+            <ChartUnitSelector
+              setChartUnit={setChartUnit}
+              chartUnit={chartUnit}
+            />
+          </div>
+          <Chart
+            type={detailedChartType}
+            data={chartData(true)}
+            options={options(true)}
+          />
         </div>
 
         <form method="dialog" className="modal-backdrop">
