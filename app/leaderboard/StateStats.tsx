@@ -232,7 +232,6 @@ export default function StateStats({
         name="hashes"
         title="Total Hashes"
         yAxesTitle={`Increase (per ${units})`}
-        stateHistoryTitle="Hashes"
         sets={[
           {
             label: "Hashes",
@@ -253,7 +252,6 @@ export default function StateStats({
         name="superHashes"
         title="Total Super Hashes"
         yAxesTitle={`Increase (per ${units})`}
-        stateHistoryTitle="Super Hashes Rate"
         sets={[
           {
             label: "Super Hashes",
@@ -337,7 +335,6 @@ export default function StateStats({
             })),
           },
         ]}
-        stateHistoryTitle="AMP Over Time"
         chartUnit={chartUnit}
         setChartUnit={setChartUnit}
       >

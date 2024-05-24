@@ -17,12 +17,6 @@ interface StateStatProps {
   name: string;
   title: string;
   children?: ReactNode;
-  stateHistory?: TimeChartEntry[];
-  stateHistory2?: TimeChartEntry[];
-  stateHistory3?: TimeChartEntry[];
-  stateHistoryTitle?: string;
-  stateHistory2Title?: string;
-  stateHistory3Title?: string;
   extraClassName?: string;
   fill?: boolean;
   fillDetailed?: boolean;
@@ -36,15 +30,8 @@ interface StateStatProps {
 }
 
 export default function StateStat({
-  name,
   title,
   children,
-  stateHistory = [],
-  stateHistory2 = [],
-  stateHistory3 = [],
-  stateHistoryTitle = "",
-  stateHistory2Title = "",
-  stateHistory3Title = "",
   extraClassName = "",
   fill = true,
   fillDetailed = true,
@@ -88,8 +75,8 @@ export default function StateStat({
     const data = {
       datasets: [
         {
-          label: sets[smallIndex].label || title,
-          data: sets[smallIndex].data,
+          label: sets[firstIndex()].label || title,
+          data: sets[firstIndex()].data,
           fill: showDetails ? fillDetailed : fill,
           borderColor: alphaColor(
             themeColors?.accent,
