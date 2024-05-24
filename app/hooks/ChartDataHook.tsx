@@ -61,7 +61,7 @@ export default function useChartData({
   }
 
   function updateMappedChartData(mappedChartData: Map<number, number>) {
-    console.log("Updating mapped chart data...", mappedChartData.size);
+    // console.log("Updating mapped chart data...", mappedChartData.size);
     const currentTime = new Date();
     currentTime.setMilliseconds(0);
     currentTime.setSeconds(0);
@@ -80,7 +80,7 @@ export default function useChartData({
         new Date(key).getTime() <
         currentTime.getTime() - maxTimeSeconds * 1000
       ) {
-        console.log("Removing old data...", new Date(key).toISOString());
+        // console.log("Removing old data...", new Date(key).toISOString());
         newMappedChartData.delete(key);
       }
     }
@@ -90,11 +90,11 @@ export default function useChartData({
   }
 
   function setMappedChartData(mappedHashesData: Map<number, number>) {
-    console.log(
-      "Setting mapped chart data...",
-      mappedHashesData.size,
-      mappedHashesData,
-    );
+    // console.log(
+    //   "Setting mapped chart data...",
+    //   mappedHashesData.size,
+    //   mappedHashesData,
+    // );
     _setMappedChartData(mappedHashesData);
     setChartData(getChartData(mappedChartDataRef.current));
   }
