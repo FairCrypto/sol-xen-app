@@ -100,7 +100,7 @@ export default function StateStats({
           Math.floor(Number(avgHashRate)),
         );
       } catch (e) {
-        return stateHistory[0].hashesDelta / BigInt(divisor()) || "0";
+        return Number(stateHistory[0].hashesDelta / BigInt(divisor())) || "0";
       }
     }
   };
