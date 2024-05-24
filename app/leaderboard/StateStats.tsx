@@ -374,6 +374,7 @@ export default function StateStats({
         ]}
         chartUnit={chartUnit}
         setChartUnit={setChartUnit}
+        smallIndex={1}
       >
         {avgPriorityFeeValue()}
       </StateStat>

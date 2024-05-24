@@ -32,6 +32,7 @@ interface StateStatProps {
   setChartUnit: (unit: ChartUnit) => void;
   sets: chartSet[];
   detailedChartType?: "bar" | "line";
+  smallIndex?: number;
 }
 
 export default function StateStat({
@@ -53,6 +54,7 @@ export default function StateStat({
   setChartUnit,
   sets,
   detailedChartType = "bar",
+  smallIndex = 0,
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
@@ -73,14 +75,21 @@ export default function StateStat({
     return 60;
   };
 
+  const firstIndex = () => {
+    if (showModal) {
+      return 0
+    }
+    return smallIndex;
+  }
+
   const chartData = (
     showDetails: boolean,
   ): ChartData<any, TimeChartEntry[]> => {
     const data = {
       datasets: [
         {
-          label: sets[0].label || title,
-          data: sets[0].data,
+          label: sets[smallIndex].label || title,
+          data: sets[smallIndex].data,
           fill: showDetails ? fillDetailed : fill,
           borderColor: alphaColor(
             themeColors?.accent,
