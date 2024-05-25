@@ -303,7 +303,7 @@ export default function StateStats({
       <StateStat
         setShowBackground={setShowBackground}
         name="hashRate"
-        title="Hash Rate"
+        title="Total Hash Rate"
         yAxesTitle="Rate (hashes/sec)"
         sets={[
           {
