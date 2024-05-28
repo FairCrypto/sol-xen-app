@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 interface CountDownProps {
+  months?: number;
   days?: number;
   hours?: number;
   minutes?: number;
@@ -8,6 +9,7 @@ interface CountDownProps {
 }
 
 export default function TimeTo({
+  months = 0,
   days = 0,
   hours = 0,
   minutes = 0,
@@ -23,6 +25,18 @@ export default function TimeTo({
         "Soon"
       ) : (
         <>
+          {months > 0 && (
+            <>
+              <span
+                style={{
+                  // @ts-ignore
+                  "--value": months,
+                }}
+              ></span>
+              m
+            </>
+          )}
+
           {days > 0 && (
             <>
               <span
@@ -47,7 +61,7 @@ export default function TimeTo({
             </>
           )}
 
-          {(hours > 0 || minutes > 0) && (
+          {!months && (hours > 0 || minutes > 0) && (
             <>
               <span
                 style={{

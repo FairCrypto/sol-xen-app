@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import TimeTo from "@/app/components/TimeTo";
+import utc from "dayjs/plugin/utc";
+import duration from "dayjs/plugin/duration";
+import dayjs from "dayjs";
+dayjs.extend(utc);
+dayjs.extend(duration);
 
 export default function CountDown({
   endDate,
@@ -11,6 +16,7 @@ export default function CountDown({
   showSeconds?: boolean;
 }) {
   const [time, setTime] = useState({
+    months: 0,
     days: 0,
     hours: 0,
     minutes: 0,
@@ -19,19 +25,20 @@ export default function CountDown({
 
   useEffect(() => {
     const run = () => {
-      const now = new Date().getTime();
-      const distance = endDate.getTime() - now;
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const now = dayjs();
+      const endDateDayjs = dayjs(endDate);
+      const diff = endDateDayjs.diff(now);
+
+      const months = dayjs.duration(diff).months();
+      const days = dayjs.duration(diff).days();
+      const hours = dayjs.duration(diff).hours();
+      const minutes = dayjs.duration(diff).minutes();
 
       let seconds = 0;
       if (showSeconds) {
-        seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        seconds = dayjs.duration(diff).seconds();
       }
-      setTime({ days, hours, minutes, seconds });
+      setTime({ months, days, hours, minutes, seconds });
     };
 
     run();
@@ -46,6 +53,7 @@ export default function CountDown({
 
   return (
     <TimeTo
+      months={time.months}
       days={time.days}
       hours={time.hours}
       minutes={time.minutes}

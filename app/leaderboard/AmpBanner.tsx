@@ -12,9 +12,6 @@ export default function AmpBanner({ isLoading, stateData }: AmpBannerProps) {
     return new Date(new Date().getTime() + stateData.avgAmpSecs * 1000);
   };
 
-  // 10am pst is the launch time on may 28th
-  const launchTime = new Date("2024-05-28T17:00:00Z");
-
   return (
     <div
       className={`bg-info/50 z-[1] text-info-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!isLoading && stateData.amp > 0 ? "fade-in" : ""}`}
