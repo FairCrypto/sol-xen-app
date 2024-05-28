@@ -7,8 +7,7 @@ import "react-medium-image-zoom/dist/styles.css";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
 import { useStatsData } from "@/app/hooks/StateDataHook";
-import React, { ReactNode } from "react";
-import AmpBanner from "@/app/leaderboard/AmpBanner";
+import { ReactNode } from "react";
 
 function Section({
   children,
@@ -66,7 +65,6 @@ export default function Home() {
   return (
     <main className="flex flex-col mx-0 min-h-screen">
       <NavBar />
-      <AmpBanner isLoading={false} stateData={stateData} />
 
       <div className="hero h-[500px] bg-base-200">
         <div className="hero-content text-center">
