@@ -64,10 +64,10 @@ export default function StateStat({
 
   const firstIndex = () => {
     if (showModal) {
-      return 0
+      return 0;
     }
     return smallIndex;
-  }
+  };
 
   const chartData = (
     showDetails: boolean,

@@ -12,7 +12,6 @@ export default function AmpBanner({ isLoading, stateData }: AmpBannerProps) {
     return new Date(new Date().getTime() + stateData.avgAmpSecs * 1000);
   };
 
-
   // 10am pst is the launch time on may 28th
   const launchTime = new Date("2024-05-28T17:00:00Z");
 
@@ -26,7 +25,7 @@ export default function AmpBanner({ isLoading, stateData }: AmpBannerProps) {
           <span className="font-thin">|</span>
         </div>
         <div className="mx-1">
-          <CountDown endDate={launchTime}/>
+          <CountDown endDate={launchTime} />
         </div>
       </div>
 

@@ -26,6 +26,26 @@ export function LeadersTable({
   const changeSearchBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
+  const [sortBy, setSortBy] = useState<
+    "rank" | "hashes" | "superHashes" | "hashRate" | "solXen"
+  >("rank");
+
+  const sortedData = (): LeaderboardEntry[] => {
+    return leaderboardData.sort((a, b) => {
+      switch (sortBy) {
+        case "rank":
+          return a.rank - b.rank;
+        case "hashes":
+          return Number(b.hashes) - Number(a.hashes);
+        case "superHashes":
+          return b.superHashes - a.superHashes;
+        case "hashRate":
+          return b.hashRate - a.hashRate;
+        case "solXen":
+          return Number(b.solXen) - Number(a.solXen);
+      }
+    });
+  };
 
   const percentOfState = (solXen: bigint): number => {
     // @ts-ignore
@@ -82,30 +102,55 @@ export function LeadersTable({
       >
         <thead>
           <tr>
-            <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10">
+            <th
+              className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+              onClick={() => {
+                setSortBy("rank");
+              }}
+            >
               <span>Rank</span>
             </th>
             <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
               <span>Account</span>
             </th>
-            <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+            <th
+              className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+              onClick={() => {
+                setSortBy("hashes");
+              }}
+            >
               <span>Hashes</span>
             </th>
-            <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+            <th
+              className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+              onClick={() => {
+                setSortBy("superHashes");
+              }}
+            >
               <span>Super Hashes</span>
             </th>
-            <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+            <th
+              className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+              onClick={() => {
+                setSortBy("hashRate");
+              }}
+            >
               <span>Hash Rate</span>
             </th>
             {accountType == AccountType.Solana ? (
-              <th className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+              <th
+                className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+                onClick={() => {
+                  setSortBy("solXen");
+                }}
+              >
                 <span>solXEN</span>
               </th>
             ) : null}
           </tr>
         </thead>
         <tbody>
-          {leaderboardData.map(
+          {sortedData().map(
             (
               { rank, account, hashes, superHashes, solXen, hashRate },
               index,
@@ -180,7 +225,9 @@ export function LeadersTable({
                   </td>
 
                   <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
-                    <span className="font-mono">{humanizeHashRate(hashRate)}</span>
+                    <span className="font-mono">
+                      {humanizeHashRate(hashRate)}
+                    </span>
                   </td>
                   {accountType == AccountType.Solana ? (
                     <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">

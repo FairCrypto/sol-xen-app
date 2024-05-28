@@ -83,7 +83,9 @@ export default function StateStats({
 
   const hashRateValue = (): number => {
     if (stateHistory.length < 5) {
-      return Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0;
+      return (
+        Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0
+      );
     }
 
     const lastFive = stateHistory.slice(-8).slice(3);
@@ -102,7 +104,9 @@ export default function StateStats({
           BigInt(nonZeroCount);
         return Math.floor(Number(avgHashRate));
       } catch (e) {
-        return Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0;
+        return (
+          Number(stateHistory[0]?.hashesDelta || 0n / BigInt(divisor())) || 0
+        );
       }
     }
 
@@ -318,7 +322,7 @@ export default function StateStats({
         setChartUnit={setChartUnit}
         detailedChartType={"line"}
       >
-        {humanizeHashRate(hashRateValue()).replace('.00', '')}
+        {humanizeHashRate(hashRateValue()).replace(".00", "")}
       </StateStat>
 
       <StateStat
