@@ -27,6 +27,8 @@ interface StateStatProps {
   sets: chartSet[];
   detailedChartType?: "bar" | "line";
   smallIndex?: number;
+  yScaleType?: "linear" | "logarithmic";
+  pointRadius?: number;
 }
 
 export default function StateStat({
@@ -42,6 +44,8 @@ export default function StateStat({
   sets,
   detailedChartType = "bar",
   smallIndex = 0,
+  yScaleType = "linear",
+  pointRadius = 2,
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
@@ -86,8 +90,8 @@ export default function StateStat({
             themeColors?.accent,
             fillAlpha(showDetails),
           ),
-          pointRadius: showDetails ? 2 : 0,
-          borderWidth: showDetails ? 2 : 0,
+          pointRadius: showDetails ? pointRadius : 0,
+          borderWidth: showDetails ? pointRadius : 0,
         },
       ],
     };
@@ -105,8 +109,8 @@ export default function StateStat({
           themeColors?.primary,
           fillAlpha(showDetails),
         ),
-        pointRadius: showDetails ? 2 : 0,
-        borderWidth: showDetails ? 2 : 0,
+        pointRadius: showDetails ? pointRadius : 0,
+        borderWidth: showDetails ? pointRadius : 0,
       });
     }
 
@@ -123,8 +127,8 @@ export default function StateStat({
           themeColors?.secondary,
           fillAlpha(showDetails),
         ),
-        pointRadius: showDetails ? 2 : 0,
-        borderWidth: showDetails ? 2 : 0,
+        pointRadius: showDetails ? pointRadius : 0,
+        borderWidth: showDetails ? pointRadius : 0,
       });
     }
 
@@ -133,10 +137,11 @@ export default function StateStat({
 
   const options = (showDetails: boolean): ChartOptions<any> => {
     return {
+      spanGaps: true,
       scales: {
         x: {
           display: showDetails,
-          type: "timeseries",
+          type: "time",
           grid: {
             display: false,
           },
@@ -145,7 +150,7 @@ export default function StateStat({
           },
         },
         y: {
-          // type: 'logarithmic',
+          type: yScaleType,
           title: {
             text: yAxesTitle,
             display: showDetails,
@@ -160,6 +165,7 @@ export default function StateStat({
             callback: function (value: number) {
               return humanizeNumber(Number(value));
             },
+            maxTicksLimit: 10,
           },
         },
       },

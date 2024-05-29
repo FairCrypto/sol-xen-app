@@ -369,13 +369,16 @@ export default function StateStats({
             label: `High | ${maxPriorityFeeValue()}`,
             data: priorityFees.map((entry) => ({
               x: new Date(entry.createdAt),
-              y: entry.highPriorityFee,
+              y: entry.maxPriorityFee,
             })),
           },
         ]}
         chartUnit={chartUnit}
         setChartUnit={setChartUnit}
         smallIndex={1}
+        detailedChartType={"line"}
+        yScaleType="logarithmic"
+
       >
         {avgPriorityFeeValue()}
       </StateStat>
