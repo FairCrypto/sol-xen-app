@@ -76,7 +76,7 @@ export default function Leaderboard() {
       <AmpBanner isLoading={isLoading} stateData={stateData} />
 
       <div
-        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 sm:shadow-lg opacity-90 fade-in-animation`}
+        className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 opacity-90 fade-in-animation sm:shadow-lg`}
       >
         <Loader isLoading={isStatsLoadingStats} />
 
@@ -100,21 +100,23 @@ export default function Leaderboard() {
       </div>
 
       {showBackground && (
-        <div
-          className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
-        >
-          <Loader isLoading={isLeaderBoardUpdating} />
-          <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
-            <LeadersTable
-              isLoading={isLeaderBoardUpdating}
-              leaderboardData={leaderboardData}
-              accountType={accountType}
-              stateData={stateData}
-            />
+        <>
+          <div
+            className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
+          >
+            <Loader isLoading={isLeaderBoardUpdating}/>
+            <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
+              <LeadersTable
+                isLoading={isLeaderBoardUpdating}
+                leaderboardData={leaderboardData}
+                accountType={accountType}
+                stateData={stateData}
+              />
+            </div>
           </div>
-        </div>
+          <Footer isLoading={isLoading}/>
+        </>
       )}
-      <Footer isLoading={isLoading} />
     </main>
   );
 }
