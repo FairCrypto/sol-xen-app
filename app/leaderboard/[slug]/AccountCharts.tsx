@@ -30,8 +30,6 @@ export function AccountCharts({
   const [chartUnit, setChartUnit] = useChartSelector();
   const [prevChartUnitStateHistory, setPrevChartUnitStateHistory] =
     useState<ChartUnit>();
-  const [prevChartUnitHashEvents, setPrevChartUnitHashEvents] =
-    useState<ChartUnit>();
 
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
@@ -40,8 +38,10 @@ export function AccountCharts({
     return AccountType.Solana;
   };
 
-  const maxTimeInSeconds = (): number => {
+  const maxTimeInSeconds = (chartUnit: ChartUnit): number => {
     switch (chartUnit) {
+      case "week":
+        return 60 * 60 * 24 * 7;
       case "hour":
         return 60 * 60;
     }
@@ -53,21 +53,24 @@ export function AccountCharts({
     setMappedHashesData,
     updateMappedHashesData,
     incrementsMappedHashesData,
-  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds() });
+    setMaxTimeSecondsHashes,
+  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds(chartUnit) });
 
   const [
     superHashes,
     setMappedSuperHashesData,
     updateMappedSuperHashesData,
     incrementsMappedSuperHashesData,
-  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds() });
+    setMaxTimeSecondsSuperHashes,
+  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds(chartUnit) });
 
   const [
     solXen,
     setMappedSolXenData,
     updateMappedSolXenData,
     incrementsMappedSolXenData,
-  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds() });
+    setMaxTimeSecondsSolXen,
+  ] = useChartData({ maxTimeSeconds: maxTimeInSeconds(chartUnit) });
 
   const primaryColor = alphaColor(themeColors?.primary, 60);
   const accentColor = alphaColor(themeColors?.accent, 60);
@@ -115,9 +118,6 @@ export function AccountCharts({
         setIsChartsLoading(true);
         setMappedHashesData(new Map());
         setMappedSuperHashesData(new Map());
-      }
-
-      if (prevChartUnitHashEvents && chartUnit != prevChartUnitHashEvents) {
         setMappedSolXenData(new Map());
       }
 
@@ -133,6 +133,7 @@ export function AccountCharts({
 
         const newHashes = new Map<number, number>();
         const newSuperHashes = new Map<number, number>();
+        const newSolXen = new Map<number, number>();
 
         for (const stat of accountStateDeltas) {
           const truncatedDate = new Date(stat.createdAt);
@@ -142,6 +143,13 @@ export function AccountCharts({
           if (numHashes >= 0)
             newHashes.set(truncatedDate.getTime(), Number(stat.hashesDelta));
           newSuperHashes.set(truncatedDate.getTime(), stat.superHashesDelta);
+
+          if (stat.solXenDelta != undefined) {
+            newSolXen.set(
+              truncatedDate.getTime(),
+              Number(stat.solXenDelta / 1_000_000_000n),
+            );
+          }
         }
 
         if (
@@ -150,56 +158,18 @@ export function AccountCharts({
         ) {
           setMappedHashesData(newHashes);
           setMappedSuperHashesData(newSuperHashes);
+          setMappedSolXenData(newSolXen);
           firstUpdateStateHistory.current = false;
         } else {
           // all subsequent fetches should update the mapped data
           // to avoid real-time updates.
           updateMappedHashesData(newHashes);
           updateMappedSuperHashesData(newSuperHashes);
+          updateMappedSolXenData(newSolXen);
         }
 
         setIsChartsLoading(false);
         setPrevChartUnitStateHistory(chartUnit);
-      });
-
-      fetchHashEventStats(
-        accountAddress,
-        startTime(chartUnit),
-        endTime(chartUnit),
-        unit(chartUnit),
-      ).then((hashEvents) => {
-        if (accountAddress.length == 0) {
-          return;
-        }
-
-        const newSolXen = new Map<number, number>();
-
-        for (const stat of hashEvents) {
-          const truncatedDate = new Date(stat.createdAt);
-          truncatedDate.setMilliseconds(0);
-          truncatedDate.setSeconds(0);
-          if (stat.solXen != undefined) {
-            newSolXen.set(
-              truncatedDate.getTime(),
-              Number(stat.solXen / 1_000_000_000n),
-            );
-          }
-        }
-
-        if (
-          firstUpdateStateHistory.current ||
-          chartUnit != prevChartUnitHashEvents
-        ) {
-          setMappedSolXenData(newSolXen);
-          firstUpdateHashEvents.current = false;
-        } else {
-          // all subsequent fetches should update the mapped data
-          // to avoid real-time updates.
-          updateMappedSolXenData(newSolXen);
-        }
-
-        setPrevChartUnitHashEvents(chartUnit);
-        setIsChartsLoading(false);
       });
     };
 
@@ -243,6 +213,12 @@ export function AccountCharts({
     }
   }, [eventHashes, accountAddress]);
 
+  useEffect(() => {
+    setMaxTimeSecondsHashes(maxTimeInSeconds(chartUnit));
+    setMaxTimeSecondsSuperHashes(maxTimeInSeconds(chartUnit));
+    setMaxTimeSecondsSolXen(maxTimeInSeconds(chartUnit));
+  }, [chartUnit]);
+
   return (
     <div
       className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
@@ -262,16 +238,16 @@ export function AccountCharts({
 
         <div className="grid grid-cols-1  gap-6">
           <div className="h-[200px] sm:h-[220px]">
-            <BarChart datasets={hashesDataset()} />
+            <BarChart datasets={hashesDataset()} chartUnit={chartUnit} />
           </div>
 
           <div className="h-[180px] sm:h-[220px]">
-            <BarChart datasets={superHashesDataset()} />
+            <BarChart datasets={superHashesDataset()} chartUnit={chartUnit} />
           </div>
 
           {accountType() == AccountType.Solana && (
             <div className="h-[200px] sm:h-[220px]">
-              <BarChart datasets={solXenDataset()} />
+              <BarChart datasets={solXenDataset()} chartUnit={chartUnit} />
             </div>
           )}
         </div>

@@ -5,7 +5,7 @@ import "chartjs-adapter-dayjs-4";
 import { ChartData, ChartOptions, LegendItem } from "chart.js";
 import { TimeChartEntry } from "@/app/components/BarChart";
 import { ChartUnit } from "@/app/Api";
-import { ChartUnitSelector } from "@/app/components/ChartUnitSelector";
+import { ChartUnitSelector, unit } from "@/app/components/ChartUnitSelector";
 import { humanizeNumber } from "@/app/utils";
 
 export interface chartSet {
@@ -91,7 +91,7 @@ export default function StateStat({
             fillAlpha(showDetails),
           ),
           pointRadius: showDetails ? pointRadius : 0,
-          borderWidth: showDetails ? pointRadius : 0,
+          borderWidth: showDetails ? 2 : 0,
         },
       ],
     };
@@ -110,7 +110,7 @@ export default function StateStat({
           fillAlpha(showDetails),
         ),
         pointRadius: showDetails ? pointRadius : 0,
-        borderWidth: showDetails ? pointRadius : 0,
+        borderWidth: showDetails ? 2 : 0,
       });
     }
 
@@ -128,7 +128,7 @@ export default function StateStat({
           fillAlpha(showDetails),
         ),
         pointRadius: showDetails ? pointRadius : 0,
-        borderWidth: showDetails ? pointRadius : 0,
+        borderWidth: showDetails ? 2 : 0,
       });
     }
 
@@ -141,12 +141,16 @@ export default function StateStat({
       scales: {
         x: {
           display: showDetails,
-          type: "time",
+          type: "timeseries",
           grid: {
             display: false,
           },
           ticks: {
             color: themeColors?.["base-content"],
+            maxTicksLimit: 10,
+          },
+          time: {
+            unit: unit(chartUnit),
           },
         },
         y: {
@@ -176,6 +180,23 @@ export default function StateStat({
       maintainAspectRatio: false,
       // aspectRatio: 1.5,
       plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              let label = context.dataset.label || "";
+
+              if (label && label.match(/\|/)) {
+                label = label.replace(/ \| \d+/, ": ");
+
+                if (context.parsed.y !== null) {
+                  label += Intl.NumberFormat("en-US").format(context.parsed.y);
+                }
+                return label;
+              }
+            },
+          },
+        },
+
         legend: {
           display: showDetails,
           labels: {

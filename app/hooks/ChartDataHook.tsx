@@ -10,14 +10,20 @@ export default function useChartData({
   (value: Map<number, number>) => void,
   (value: Map<number, number>) => void,
   (value: number) => void,
+  (value: number) => void,
 ] {
   const [mappedChartData, _setMappedChartData] = useState<Map<number, number>>(
     new Map(),
   );
   const [chartData, setChartData] = useState<TimeChartEntry[]>([]);
+  const [maxTimeSecondsState, setMaxTimeSecondsState] =
+    useState<number>(maxTimeSeconds);
 
   const mappedChartDataRef = useRef(mappedChartData);
   mappedChartDataRef.current = mappedChartData;
+
+  const maxTimeSecondsRef = useRef(maxTimeSeconds);
+  maxTimeSecondsRef.current = maxTimeSeconds;
 
   /**
    * Increments or sets the value of a specific date in the chart data
@@ -49,7 +55,7 @@ export default function useChartData({
     for (const [key, value] of mappedChartData.entries()) {
       if (
         new Date(key).getTime() <
-        truncatedDate.getTime() - maxTimeSeconds * 1000
+        truncatedDate.getTime() - maxTimeSecondsRef.current * 1000
       ) {
         continue;
       }
@@ -78,7 +84,7 @@ export default function useChartData({
     for (const [key] of newMappedChartData.entries()) {
       if (
         new Date(key).getTime() <
-        currentTime.getTime() - maxTimeSeconds * 1000
+        currentTime.getTime() - maxTimeSecondsRef.current * 1000
       ) {
         // console.log("Removing old data...", new Date(key).toISOString());
         newMappedChartData.delete(key);
@@ -112,5 +118,6 @@ export default function useChartData({
     setMappedChartData,
     updateMappedChartData,
     incrementsMappedChartData,
+    setMaxTimeSecondsState,
   ];
 }

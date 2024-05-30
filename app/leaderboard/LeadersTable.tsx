@@ -5,6 +5,10 @@ import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { CiSearch } from "react-icons/ci";
 import { LeaderboardEntry } from "@/app/Api";
 import { humanizeHashRate } from "@/app/utils";
+import {
+  LeaderBoardSort,
+  useLeaderboardSort,
+} from "@/app/hooks/LeaderBoardSortHook";
 
 interface LeadersTableProps {
   accountType: AccountType;
@@ -26,22 +30,20 @@ export function LeadersTable({
   const changeSearchBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
   };
-  const [sortBy, setSortBy] = useState<
-    "rank" | "hashes" | "superHashes" | "hashRate" | "solXen"
-  >("rank");
+  const [sortBy, setSortBy] = useLeaderboardSort();
 
   const sortedData = (): LeaderboardEntry[] => {
     return leaderboardData.sort((a, b) => {
       switch (sortBy) {
-        case "rank":
+        case LeaderBoardSort.Rank:
           return a.rank - b.rank;
-        case "hashes":
+        case LeaderBoardSort.Hashes:
           return Number(b.hashes) - Number(a.hashes);
-        case "superHashes":
+        case LeaderBoardSort.SuperHashes:
           return b.superHashes - a.superHashes;
-        case "hashRate":
+        case LeaderBoardSort.HashRate:
           return b.hashRate - a.hashRate;
-        case "solXen":
+        case LeaderBoardSort.SolXen:
           return Number(b.solXen) - Number(a.solXen);
       }
     });
@@ -105,7 +107,7 @@ export function LeadersTable({
             <th
               className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
-                setSortBy("rank");
+                setSortBy(LeaderBoardSort.Rank);
               }}
             >
               <span>Rank</span>
@@ -116,7 +118,7 @@ export function LeadersTable({
             <th
               className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
-                setSortBy("hashes");
+                setSortBy(LeaderBoardSort.Hashes);
               }}
             >
               <span>Hashes</span>
@@ -124,7 +126,7 @@ export function LeadersTable({
             <th
               className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
-                setSortBy("superHashes");
+                setSortBy(LeaderBoardSort.SuperHashes);
               }}
             >
               <span>Super Hashes</span>
@@ -132,7 +134,7 @@ export function LeadersTable({
             <th
               className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
-                setSortBy("hashRate");
+                setSortBy(LeaderBoardSort.HashRate);
               }}
             >
               <span>Hash Rate</span>
@@ -141,7 +143,7 @@ export function LeadersTable({
               <th
                 className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
                 onClick={() => {
-                  setSortBy("solXen");
+                  setSortBy(LeaderBoardSort.SolXen);
                 }}
               >
                 <span>solXEN</span>

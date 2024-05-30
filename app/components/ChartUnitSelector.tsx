@@ -5,6 +5,16 @@ dayjs.extend(utc);
 import { ChartUnitSelectorInterface } from "@/app/hooks/ChartSelector";
 
 export const startTime = (chartUnit: ChartUnit): Date => {
+  if (chartUnit === "week") {
+    return dayjs
+      .utc()
+      .subtract(1, "week")
+      .set("second", 0)
+      .set("millisecond", 0)
+      .set("minute", 0)
+      .set("hour", 0)
+      .toDate();
+  }
   if (chartUnit === "day") {
     return dayjs
       .utc()
@@ -32,10 +42,23 @@ export const endTime = (chartUnit: ChartUnit): Date => {
       .toDate();
   }
 
+  if (chartUnit === "week") {
+    return dayjs
+      .utc()
+      .set("second", 0)
+      .set("millisecond", 0)
+      .set("minute", 0)
+      .set("hour", 0)
+      .toDate();
+  }
+
   return dayjs.utc().set("second", 0).set("millisecond", 0).toDate();
 };
 
 export const unit = (chartUnit: ChartUnit): ChartUnit => {
+  if (chartUnit === "week") {
+    return "day";
+  }
   if (chartUnit === "day") {
     return "hour";
   }
@@ -48,13 +71,23 @@ export function ChartUnitSelector({
 }: ChartUnitSelectorInterface) {
   return (
     <div className="join lg:join-horizontal">
+      {/*<button*/}
+      {/*  className={`btn btn-sm join-item ${chartUnit == "week" && "btn-primary"}`}*/}
+      {/*  onClick={() => {*/}
+      {/*    setChartUnit("week");*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <span className={`hidden sm:inline`}>Week</span>*/}
+      {/*  <span className={`sm:hidden`}>1W</span>*/}
+      {/*</button>*/}
       <button
         className={`btn btn-sm join-item ${chartUnit == "day" && "btn-primary"}`}
         onClick={() => {
           setChartUnit("day");
         }}
       >
-        Day
+        <span className={`hidden sm:inline`}>Day</span>
+        <span className={`sm:hidden`}>1D</span>
       </button>
       <button
         className={`btn btn-sm join-item ${chartUnit == "hour" && "btn-primary"}`}
@@ -62,7 +95,8 @@ export function ChartUnitSelector({
           setChartUnit("hour");
         }}
       >
-        Hour
+        <span className={`hidden sm:inline`}>Hour</span>
+        <span className={`sm:hidden`}>1H</span>
       </button>
     </div>
   );

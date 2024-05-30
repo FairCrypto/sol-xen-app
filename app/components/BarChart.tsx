@@ -19,6 +19,9 @@ import { Bar } from "react-chartjs-2";
 import "chartjs-adapter-dayjs-4";
 import React, { useEffect } from "react";
 import { humanizeNumber } from "@/app/utils";
+import { unit } from "@/app/components/ChartUnitSelector";
+import { useChartSelector } from "@/app/hooks/ChartSelector";
+import { ChartUnit } from "@/app/Api";
 
 ChartJS.register(
   ArcElement,
@@ -40,9 +43,14 @@ export interface TimeChartEntry {
 interface BarChartProps {
   datasets: ChartDataset<"bar", TimeChartEntry[]>[];
   emptyDataLabel?: string;
+  chartUnit: ChartUnit;
 }
 
-export default function BarChart({ datasets, emptyDataLabel }: BarChartProps) {
+export default function BarChart({
+  datasets,
+  emptyDataLabel,
+  chartUnit,
+}: BarChartProps) {
   const plugins: Plugin<"bar">[] = [];
   if (emptyDataLabel) {
     plugins.push({
@@ -74,12 +82,12 @@ export default function BarChart({ datasets, emptyDataLabel }: BarChartProps) {
         type: "timeseries",
         // min: new Date(new Date().getTime() - 60 * 60 * 1000).toISOString(),
         ticks: {
-          // source: "auto",
-          // autoSkip: true,
-          // maxTicksLimit: 60,
+          source: "auto",
+          autoSkip: true,
+          maxTicksLimit: 15,
         },
         time: {
-          // unit: "auto",
+          unit: unit(chartUnit),
         },
       },
       y: {
@@ -91,6 +99,7 @@ export default function BarChart({ datasets, emptyDataLabel }: BarChartProps) {
           callback: function (value) {
             return humanizeNumber(Number(value));
           },
+          maxTicksLimit: 10,
         },
       },
     },

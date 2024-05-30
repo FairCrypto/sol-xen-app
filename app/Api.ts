@@ -6,6 +6,7 @@ export interface GlobalState {
   solXen: bigint;
   solXenDelta: bigint;
   hashes: number;
+  hashRate: number;
   hashesDelta: bigint;
   superHashes: number;
   superHashesDelta: number;
@@ -73,7 +74,7 @@ export interface SolXenPriorityFees {
   createdAt: Date;
 }
 
-export type ChartUnit = "minute" | "hour" | "day" | undefined;
+export type ChartUnit = "minute" | "hour" | "day" | "week" | undefined;
 
 export async function fetchLeaderboardData(
   accountType: AccountType,

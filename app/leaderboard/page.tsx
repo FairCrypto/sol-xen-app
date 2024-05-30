@@ -104,7 +104,7 @@ export default function Leaderboard() {
           <div
             className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
           >
-            <Loader isLoading={isLeaderBoardUpdating}/>
+            <Loader isLoading={isLeaderBoardUpdating} />
             <div className="card-body px-0 py-3 sm:px-5 sm:py-5 md:px-8 md:py-8">
               <LeadersTable
                 isLoading={isLeaderBoardUpdating}
@@ -114,7 +114,7 @@ export default function Leaderboard() {
               />
             </div>
           </div>
-          <Footer isLoading={isLoading}/>
+          <Footer isLoading={isLoading} />
         </>
       )}
     </main>
