@@ -341,7 +341,7 @@ export async function fetchStateHistory(
   return out;
 }
 
-export async function fetchPriorityFees(
+export async function fetchPriorityFeesHistory(
   from: Date,
   to: Date,
   unit: ChartUnit,
@@ -352,7 +352,19 @@ export async function fetchPriorityFees(
   to.setMilliseconds(0);
 
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/priority_fees?from=${from.toISOString()}&to=${to.toISOString()}&unit=${unit}`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/priority_fees/history?from=${from.toISOString()}&to=${to.toISOString()}&unit=${unit}`,
+  );
+
+  if (!data.ok) {
+    throw new Error("Error fetching priority fees");
+  }
+
+  return await data.json();
+}
+
+export async function fetchPriorityFees(): Promise<SolXenPriorityFees> {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/priority_fees`,
   );
 
   if (!data.ok) {

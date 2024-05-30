@@ -66,8 +66,8 @@ export default function StateStat({
     return 60;
   };
 
-  const firstIndex = () => {
-    if (showModal) {
+  const firstIndex = (showDetails: boolean) => {
+    if (showDetails) {
       return 0;
     }
     return smallIndex;
@@ -79,8 +79,8 @@ export default function StateStat({
     const data = {
       datasets: [
         {
-          label: sets[firstIndex()].label || title,
-          data: sets[firstIndex()].data,
+          label: sets[firstIndex(showDetails)].label || title,
+          data: sets[firstIndex(showDetails)].data,
           fill: showDetails ? fillDetailed : fill,
           borderColor: alphaColor(
             themeColors?.accent,
@@ -186,11 +186,12 @@ export default function StateStat({
               let label = context.dataset.label || "";
 
               if (label && label.match(/\|/)) {
-                label = label.replace(/ \| \d+/, ": ");
+                label = label.replace(/ \| [0-9,]+/, ": ");
 
                 if (context.parsed.y !== null) {
                   label += Intl.NumberFormat("en-US").format(context.parsed.y);
                 }
+
                 return label;
               }
             },

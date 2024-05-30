@@ -5,6 +5,7 @@ import StateStat from "@/app/leaderboard/StateStat";
 import {
   fetchHashEventStats,
   fetchPriorityFees,
+  fetchPriorityFeesHistory,
   fetchStateHistory,
   GlobalState,
   HashEventStat,
@@ -51,7 +52,10 @@ export default function StateStats({
   const { theme } = useContext(ThemeContext);
   const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
   const [hashEventStats, setHashEventStats] = useState<HashEventStat[]>([]);
-  const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees[]>([]);
+  const [priorityFeesHistory, setPriorityFeesHistory] = useState<
+    SolXenPriorityFees[]
+  >([]);
+  const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees>();
   const [chartUnit, setChartUnit] = useChartSelector();
 
   const totalSupplyValue = () => {
@@ -89,19 +93,19 @@ export default function StateStats({
 
   const avgPriorityFeeValue = () => {
     return Intl.NumberFormat("en-US").format(
-      Math.floor(state.avgPriorityFee || 0),
+      Math.floor(priorityFees?.avgPriorityFee || 0),
     );
   };
 
   const maxPriorityFeeValue = () => {
     return Intl.NumberFormat("en-US").format(
-      Math.floor(state.highPriorityFee || 0),
+      Math.floor(priorityFees?.highPriorityFee || 0),
     );
   };
 
   const minPriorityFeeValue = () => {
     return Intl.NumberFormat("en-US").format(
-      Math.floor(state.avgPriorityFee || 0),
+      Math.floor(priorityFees?.avgPriorityFee || 0),
     );
   };
 
@@ -124,13 +128,32 @@ export default function StateStats({
         setHashEventStats(data);
       });
 
-      fetchPriorityFees(
+      fetchPriorityFeesHistory(
         startTime(chartUnit),
         endTime(chartUnit),
         unit(chartUnit),
       ).then((data) => {
-        setPriorityFees(data);
+        setPriorityFeesHistory(data);
+        if (chartUnit === "hour") {
+          const last = data.at(-1);
+          if (last) {
+            setPriorityFees(last);
+          }
+        }
       });
+
+      if (chartUnit != "hour") {
+        fetchPriorityFeesHistory(
+          startTime("hour"),
+          endTime("hour"),
+          unit("hour"),
+        ).then((data) => {
+          const last = data.at(-1);
+          if (last) {
+            setPriorityFees(last);
+          }
+        });
+      }
     }
   }, [theme, chartUnit]);
 
@@ -253,7 +276,7 @@ export default function StateStats({
         chartUnit={chartUnit}
         setChartUnit={setChartUnit}
         detailedChartType={"line"}
-        pointRadius={0}
+        // pointRadius={0}
       >
         {hashRateValue()}
       </StateStat>
@@ -286,21 +309,21 @@ export default function StateStats({
         sets={[
           {
             label: `Low | ${minPriorityFeeValue()}`,
-            data: priorityFees.map((entry) => ({
+            data: priorityFeesHistory.map((entry) => ({
               x: new Date(entry.createdAt),
               y: entry.lowPriorityFee,
             })),
           },
           {
             label: `Avg | ${avgPriorityFeeValue()}`,
-            data: priorityFees.map((entry) => ({
+            data: priorityFeesHistory.map((entry) => ({
               x: new Date(entry.createdAt),
               y: entry.avgPriorityFee,
             })),
           },
           {
             label: `High | ${maxPriorityFeeValue()}`,
-            data: priorityFees.map((entry) => ({
+            data: priorityFeesHistory.map((entry) => ({
               x: new Date(entry.createdAt),
               y: entry.maxPriorityFee,
             })),
@@ -311,7 +334,7 @@ export default function StateStats({
         smallIndex={1}
         yScaleType="logarithmic"
       >
-        {state.avgPriorityFee}
+        {priorityFees?.avgPriorityFee}
       </StateStat>
     </div>
   );
