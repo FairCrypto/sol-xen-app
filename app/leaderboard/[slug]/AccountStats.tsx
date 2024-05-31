@@ -139,7 +139,7 @@ export function AccountStats({
           <span className="lg:self-end pb-1 mr-1 mt-1 lg:mt-0">
             {timeAgo(accountData?.lastActive || new Date()) && (
               <span>
-                Last Seen {timeAgo(accountData?.lastActive || new Date())}
+                Last seen {timeAgo(accountData?.lastActive || new Date())}
               </span>
             )}
           </span>
