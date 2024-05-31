@@ -2,7 +2,11 @@ import { ChartUnit } from "@/app/Api";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
-import { ChartUnitSelectorInterface } from "@/app/hooks/ChartSelector";
+
+export interface ChartUnitSelectorInterface {
+  setChartUnit: (unit: ChartUnit) => void;
+  chartUnit: ChartUnit;
+}
 
 export const startTime = (chartUnit: ChartUnit): Date => {
   if (chartUnit === "week") {

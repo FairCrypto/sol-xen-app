@@ -38,8 +38,8 @@ const status = (lastActive: Date): Status => {
   return Status.Offline;
 };
 
-const statusColor = (lastActive: Date) => {
-  if (status(lastActive) === Status.Online) {
+const statusColor = (lastActive?: Date) => {
+  if (!lastActive || status(lastActive) === Status.Online) {
     return `fill-success stroke-success`;
   }
 
@@ -50,7 +50,11 @@ const statusColor = (lastActive: Date) => {
   return `fill-error stroke-error`;
 };
 
-const statusBgColor = (lastActive: Date) => {
+const statusBgColor = (lastActive?: Date) => {
+  if (!lastActive) {
+    return `bg-success/10 xl:bg-transparent`;
+  }
+
   if (status(lastActive) === Status.Online) {
     return `bg-success/10 xl:bg-transparent`;
   }
@@ -62,8 +66,8 @@ const statusBgColor = (lastActive: Date) => {
   return `bg-error/10 xl:bg-transparent`;
 };
 
-const statusMessage = (lastActive: Date) => {
-  if (status(lastActive) === Status.Online) {
+const statusMessage = (lastActive?: Date) => {
+  if (!lastActive || status(lastActive) === Status.Online) {
     return "Online";
   }
 
@@ -92,7 +96,7 @@ export function LeadersTable({
     return leaderboardData.sort((a, b) => {
       switch (sortBy) {
         case LeaderBoardSort.Status:
-          return b.lastActive.getTime() - a.lastActive.getTime();
+          return (b.lastActive?.getTime() || 0) - (a.lastActive?.getTime() || 0);
         case LeaderBoardSort.Hashes:
           return Number(b.hashes) - Number(a.hashes);
         case LeaderBoardSort.SuperHashes:
