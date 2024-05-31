@@ -95,7 +95,7 @@ export function AccountStats({
     const now = new Date();
     const secondsPast = (now.getTime() - date.getTime()) / 1000;
 
-    if (secondsPast < 60) {
+    if (secondsPast < 180) {
       return ``;
     } else if (secondsPast < 3600) {
       return `${Math.floor(secondsPast / 60)} minutes ago`;
