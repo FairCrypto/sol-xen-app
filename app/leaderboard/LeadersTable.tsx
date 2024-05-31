@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { State } from "@/app/leaderboard/StateStats";
 import { useRouter } from "next/navigation";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
@@ -9,6 +9,7 @@ import {
   LeaderBoardSort,
   useLeaderboardSort,
 } from "@/app/hooks/LeaderBoardSortHook";
+import { ThemeContext } from "@/app/context/ThemeContext";
 
 interface LeadersTableProps {
   accountType: AccountType;
@@ -31,6 +32,7 @@ export function LeadersTable({
     setSearchInput(event.target.value);
   };
   const [sortBy, setSortBy] = useLeaderboardSort();
+  const { theme, isDark } = useContext(ThemeContext);
 
   const sortedData = (): LeaderboardEntry[] => {
     return leaderboardData.sort((a, b) => {
@@ -47,6 +49,24 @@ export function LeadersTable({
           return Number(b.solXen) - Number(a.solXen);
       }
     });
+  };
+
+  const rowColor = (hashRate: number, avgRecentHashRate: number) => {
+    let opacity;
+    if (isDark) {
+      opacity = "10";
+    } else {
+      opacity = "20";
+    }
+
+    if (hashRate > 0) {
+      return `bg-success/${opacity}`;
+    }
+    if (avgRecentHashRate) {
+      return `bg-warning/${opacity}`;
+    }
+
+    return `bg-error/${opacity}`;
   };
 
   const percentOfState = (solXen: bigint): number => {
@@ -100,7 +120,7 @@ export function LeadersTable({
       )}
 
       <table
-        className={`table table-fixed md:table-auto table-lg table-zebra opacity-0 ${!isLoading ? "fade-in" : ""}`}
+        className={`table table-fixed md:table-auto table-lg opacity-0 ${!isLoading ? "fade-in" : ""}`}
       >
         <thead>
           <tr>
@@ -154,13 +174,21 @@ export function LeadersTable({
         <tbody>
           {sortedData().map(
             (
-              { rank, account, hashes, superHashes, solXen, hashRate },
+              {
+                rank,
+                account,
+                hashes,
+                superHashes,
+                solXen,
+                hashRate,
+                isRecentlyActive,
+              },
               index,
             ) => {
               return (
                 <tr
                   key={rank}
-                  className={`cursor-pointer hover`}
+                  className={`cursor-pointer hover}`}
                   onClick={() => {
                     handleClickAccount(account);
                   }}

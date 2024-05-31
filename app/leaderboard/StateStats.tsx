@@ -3,12 +3,9 @@ import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
 import {
-  fetchHashEventStats,
-  fetchPriorityFees,
   fetchPriorityFeesHistory,
   fetchStateHistory,
   GlobalState,
-  HashEventStat,
   SolXenPriorityFees,
 } from "@/app/Api";
 import dayjs from "dayjs";
@@ -51,7 +48,6 @@ export default function StateStats({
 }) {
   const { theme } = useContext(ThemeContext);
   const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
-  const [hashEventStats, setHashEventStats] = useState<HashEventStat[]>([]);
   const [priorityFeesHistory, setPriorityFeesHistory] = useState<
     SolXenPriorityFees[]
   >([]);
@@ -119,15 +115,6 @@ export default function StateStats({
         setStateHistory(data);
       });
 
-      fetchHashEventStats(
-        undefined,
-        startTime(chartUnit),
-        endTime(chartUnit),
-        unit(chartUnit),
-      ).then((data) => {
-        setHashEventStats(data);
-      });
-
       fetchPriorityFeesHistory(
         startTime(chartUnit),
         endTime(chartUnit),
@@ -174,9 +161,9 @@ export default function StateStats({
         sets={[
           {
             label: "solXEN",
-            data: hashEventStats.map((entry) => ({
+            data: stateHistory.map((entry) => ({
               x: new Date(entry.createdAt),
-              y: Number(entry.solXen / 100_000_000n),
+              y: Number(entry.solXenDelta / 100_000_000n),
             })),
           },
         ]}
