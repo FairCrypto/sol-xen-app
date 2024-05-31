@@ -6,6 +6,7 @@ import { IoReturnUpBackSharp } from "react-icons/io5";
 import { Loader } from "@/app/components/Loader";
 import { humanizeHashRate } from "@/app/utils";
 import { useLeaderboardSort } from "@/app/hooks/LeaderBoardSortHook";
+import { useLeaderboardPage } from "@/app/hooks/LeaderBoardPageHook";
 
 export function AccountStats({
   accountData,
@@ -25,6 +26,7 @@ export function AccountStats({
   isLoading: boolean;
 }) {
   const [sortBy, setSortBy] = useLeaderboardSort();
+  const [page, setPage] = useLeaderboardPage();
 
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
@@ -121,7 +123,7 @@ export function AccountStats({
             {accountType()} Account
           </h1>
           <Link
-            href={`/leaderboard?account=${accountType().toLowerCase()}&sort=${sortBy}`}
+            href={`/leaderboard?account=${accountType().toLowerCase()}&sort=${sortBy}&page=${page}`}
             className="btn btn-sm btn-accent"
           >
             <IoReturnUpBackSharp size={20} />

@@ -1,14 +1,11 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useState } from "react";
 import { State } from "@/app/leaderboard/StateStats";
 import { useRouter } from "next/navigation";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { CiSearch } from "react-icons/ci";
 import { LeaderboardEntry } from "@/app/Api";
 import { humanizeHashRate } from "@/app/utils";
-import {
-  LeaderBoardSort,
-  useLeaderboardSort,
-} from "@/app/hooks/LeaderBoardSortHook";
+import { LeaderBoardSort } from "@/app/hooks/LeaderBoardSortHook";
 import { GoDotFill } from "react-icons/go";
 
 interface LeadersTableProps {
@@ -17,6 +14,11 @@ interface LeadersTableProps {
   leaderboardData: LeaderboardEntry[];
   stateData?: State | LeaderboardEntry;
   hideSearch?: boolean;
+  hidePagination?: boolean;
+  page: number;
+  setPage: (page: number) => void;
+  sortBy: LeaderBoardSort;
+  setSortBy: (sort: LeaderBoardSort) => void;
 }
 
 enum Status {
@@ -84,31 +86,15 @@ export function LeadersTable({
   leaderboardData,
   stateData,
   hideSearch,
+  page,
+  setPage,
+  sortBy,
+  setSortBy,
 }: LeadersTableProps) {
   const { push } = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
   const changeSearchBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
-  };
-  const [sortBy, setSortBy] = useLeaderboardSort();
-
-  const sortedData = (): LeaderboardEntry[] => {
-    return leaderboardData.sort((a, b) => {
-      switch (sortBy) {
-        case LeaderBoardSort.Status:
-          return (b.lastActive?.getTime() || 0) - (a.lastActive?.getTime() || 0);
-        case LeaderBoardSort.Hashes:
-          return Number(b.hashes) - Number(a.hashes);
-        case LeaderBoardSort.SuperHashes:
-          return b.superHashes - a.superHashes;
-        case LeaderBoardSort.HashRate:
-          return b.hashRate - a.hashRate;
-        case LeaderBoardSort.SolXen:
-          return Number(b.solXen) - Number(a.solXen);
-        default:
-          return a.rank - b.rank;
-      }
-    });
   };
 
   const percentOfState = (solXen: bigint): number => {
@@ -222,7 +208,7 @@ export function LeadersTable({
           </tr>
         </thead>
         <tbody>
-          {sortedData().map(
+          {leaderboardData.map(
             (
               {
                 rank,
@@ -336,6 +322,26 @@ export function LeadersTable({
           )}
         </tbody>
       </table>
+      {leaderboardData.length >= 100 || page > 1 ? (
+        <div className="join grid grid-cols-2">
+          <button
+            onClick={() => {
+              if (page > 1) setPage(page - 1);
+            }}
+            className="join-item btn"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => {
+              setPage(page + 1);
+            }}
+            className="join-item btn"
+          >
+            Next
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -9,6 +9,9 @@ import {
   LeaderboardEntry,
 } from "@/app/Api";
 import { Loader } from "@/app/components/Loader";
+import { useLeaderboardSort } from "@/app/hooks/LeaderBoardSortHook";
+import { useLeaderboardPage } from "@/app/hooks/LeaderBoardPageHook";
+import { order } from "@/app/hooks/LeaderboardDataHook";
 
 export function AccountAssociations({
   accountAddress,
@@ -24,6 +27,8 @@ export function AccountAssociations({
     Map<string, LeaderboardEntry>
   >(new Map());
   const [isAssociatedLoading, setIsAssociatedLoading] = useState(true);
+  const [sortBy, setSortBy] = useLeaderboardSort();
+  const [page, setPage] = useLeaderboardPage();
 
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
@@ -39,7 +44,13 @@ export function AccountAssociations({
 
   useEffect(() => {
     if (accountType() == AccountType.Ethereum) {
-      fetchAssociatedSolAccounts(accountAddress).then((data) => {
+      fetchAssociatedSolAccounts(
+        accountAddress,
+        100,
+        (page - 1) * 100,
+        sortBy,
+        order(sortBy),
+      ).then((data) => {
         const idxData = generateLeaderboardIndex(data);
         // console.log("Fetched associated sol accounts", data, idxData);
         setLeaderboardData(data);
@@ -101,6 +112,10 @@ export function AccountAssociations({
           isLoading={isAssociatedLoading}
           leaderboardData={leaderboardData}
           hideSearch={true}
+          page={page}
+          setPage={setPage}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
         />
       </div>
     </div>

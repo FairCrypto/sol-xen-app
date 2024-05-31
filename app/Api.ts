@@ -1,5 +1,6 @@
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import { State } from "@/app/leaderboard/StateStats";
+import { LeaderBoardSort } from "@/app/hooks/LeaderBoardSortHook";
 
 export interface GlobalState {
   points: bigint;
@@ -71,9 +72,13 @@ export type ChartUnit = "minute" | "hour" | "day" | "week" | undefined;
 
 export async function fetchLeaderboardData(
   accountType: AccountType,
+  limit = 100,
+  offset = 0,
+  sortBy: LeaderBoardSort = LeaderBoardSort.Rank,
+  order: "asc" | "desc" = "asc",
 ): Promise<LeaderboardEntry[]> {
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}&limit=500`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}&limit=${limit}&offset=${offset}&sort=${sortBy}&order=${order}`,
   );
 
   if (!data.ok) {
@@ -237,9 +242,13 @@ export async function fetchAssociatedEthAccounts(
 
 export async function fetchAssociatedSolAccounts(
   account: string,
+  limit: number,
+  offset: number,
+  sortBy: LeaderBoardSort,
+  order: "asc" | "desc",
 ): Promise<LeaderboardEntry[]> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/eth_accounts/${account}/sol_accounts`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/eth_accounts/${account}/sol_accounts?limit=${limit}&offset=${offset}&sort=${sortBy}&order=${order}`,
   );
 
   if (!response.ok) {

@@ -10,9 +10,8 @@ import { EventHash, useSolanaEvents } from "@/app/hooks/SolanaEventsHook";
 import { AccountType, useAccountType } from "@/app/hooks/AccountTypeHook";
 import { useLeaderboardData } from "@/app/hooks/LeaderboardDataHook";
 import { useStatsData } from "@/app/hooks/StateDataHook";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Loader } from "@/app/components/Loader";
-import { useSearchParams } from "next/navigation";
 
 export default function Leaderboard() {
   const [
@@ -21,6 +20,10 @@ export default function Leaderboard() {
     leaderboardIndex,
     isLeaderboardLoading,
     isLeaderBoardUpdating,
+    page,
+    setPage,
+    sortBy,
+    setSortBy,
   ] = useLeaderboardData();
   const accountType = useAccountType() as AccountType;
   const [stateData, setStateData, isStatsLoadingStats] = useStatsData();
@@ -111,6 +114,10 @@ export default function Leaderboard() {
                 leaderboardData={leaderboardData}
                 accountType={accountType}
                 stateData={stateData}
+                page={page}
+                setPage={setPage}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
               />
             </div>
           </div>

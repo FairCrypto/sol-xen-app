@@ -7,7 +7,7 @@ export enum LeaderBoardSort {
   SuperHashes = "superHashes",
   HashRate = "hashRate",
   SolXen = "solXen",
-  Status = "status",
+  Status = "lastActive",
 }
 
 export function useLeaderboardSort(): [
