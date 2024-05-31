@@ -5,6 +5,7 @@ import Link from "next/link";
 import { IoReturnUpBackSharp } from "react-icons/io5";
 import { Loader } from "@/app/components/Loader";
 import { humanizeHashRate } from "@/app/utils";
+import { useLeaderboardSort } from "@/app/hooks/LeaderBoardSortHook";
 
 export function AccountStats({
   accountData,
@@ -23,6 +24,8 @@ export function AccountStats({
   fetchError: string;
   isLoading: boolean;
 }) {
+  const [sortBy, setSortBy] = useLeaderboardSort();
+
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
       return AccountType.Ethereum;
@@ -82,9 +85,33 @@ export function AccountStats({
     return Intl.NumberFormat("en-US").format(accountData.rank);
   };
 
+  function timeAgo(date: Date): string {
+    if (!date) {
+      return "";
+    }
+
+    const now = new Date();
+    const secondsPast = (now.getTime() - date.getTime()) / 1000;
+
+    if (secondsPast < 60) {
+      return ``;
+    } else if (secondsPast < 3600) {
+      return `${Math.floor(secondsPast / 60)} minutes ago`;
+    } else if (secondsPast < 86400) {
+      return `${Math.floor(secondsPast / 3600)} hours ago`;
+    } else if (secondsPast < 2592000) {
+      if (Math.floor(secondsPast / 86400) == 1) return "1 day ago";
+      return `${Math.floor(secondsPast / 86400)} days ago`;
+    } else if (secondsPast < 31536000) {
+      return `${Math.floor(secondsPast / 2592000)} months ago`;
+    } else {
+      return `${Math.floor(secondsPast / 31536000)} years ago`;
+    }
+  }
+
   return (
     <div
-      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 shadow-lg drow-shadow-lg opacity-90 fade-in-animation`}
+      className={`card rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 mt-0 md:mt-5 sm:mb-8 shadow-lg drop-shadow-lg opacity-90 fade-in-animation`}
     >
       <Loader isLoading={isLoading} />
 
@@ -94,7 +121,7 @@ export function AccountStats({
             {accountType()} Account
           </h1>
           <Link
-            href={`/leaderboard?account=${accountType().toLowerCase()}`}
+            href={`/leaderboard?account=${accountType().toLowerCase()}&sort=${sortBy}`}
             className="btn btn-sm btn-accent"
           >
             <IoReturnUpBackSharp size={20} />
@@ -102,9 +129,19 @@ export function AccountStats({
           </Link>
         </div>
 
-        <h2 className="font-mono text-xs sm:text-2xl truncate">
-          {accountAddress}
-        </h2>
+        <div className="flex flex-col lg:flex-row align-middle mb-3">
+          <h2 className="flex self-start font-mono text-[.8rem] sm:text-2xl truncate mr-auto">
+            {accountAddress}
+          </h2>
+
+          <span className="lg:self-end pb-1 mr-1 mt-1 lg:mt-0">
+            {timeAgo(accountData?.lastActive || new Date()) && (
+              <span>
+                Last Seen {timeAgo(accountData?.lastActive || new Date())}
+              </span>
+            )}
+          </span>
+        </div>
 
         <div className={`opacity-0 ${!isLoading ? "fade-in-slow" : ""}`}>
           {fetchError && (

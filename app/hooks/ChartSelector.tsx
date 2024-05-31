@@ -1,32 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChartUnit } from "@/app/Api";
 
-export interface ChartUnitSelectorInterface {
-  setChartUnit: (unit: ChartUnit) => void;
-  chartUnit: ChartUnit;
-}
-
-export function useChartSelector(): [ChartUnit, (unit: ChartUnit) => void] {
+export function useChartSelector(): [
+  ChartUnit,
+  (unit: ChartUnit) => void,
+  (unit: ChartUnit) => void,
+] {
   const [chartUnit, setChartUnit] = useState<ChartUnit>();
 
+  function setAndStoreChartUnit(unit: ChartUnit) {
+    if (unit) {
+      setChartUnit(unit);
+      if (window?.localStorage) {
+        window.localStorage.setItem("chartUnit", unit);
+      }
+    }
+  }
+
+  const firstTime = useRef(true);
   useEffect(() => {
-    if (chartUnit === undefined) {
+    if (firstTime.current) {
+      firstTime.current = false;
       if (window?.localStorage) {
         const stored = window.localStorage.getItem("chartUnit");
         if (stored) {
           setChartUnit(stored as ChartUnit);
           return;
         }
-
-        window.localStorage.setItem("chartUnit", "hour");
-        setChartUnit("hour");
       }
-    } else {
-      if (window?.localStorage) {
-        window.localStorage.setItem("chartUnit", chartUnit);
-      }
+      setChartUnit("hour");
     }
   }, [chartUnit, setChartUnit]);
 
-  return [chartUnit, setChartUnit];
+  return [chartUnit, setAndStoreChartUnit, setChartUnit];
 }

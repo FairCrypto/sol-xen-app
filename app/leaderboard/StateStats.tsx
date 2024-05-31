@@ -52,7 +52,7 @@ export default function StateStats({
     SolXenPriorityFees[]
   >([]);
   const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees>();
-  const [chartUnit, setChartUnit] = useChartSelector();
+  const [chartUnit, setAndStoreChartUnit] = useChartSelector();
 
   const totalSupplyValue = () => {
     if (!state.solXen) {
@@ -168,7 +168,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
       >
         {totalSupplyValue()}
       </StateStat>
@@ -188,7 +188,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
       >
         {totalHashesValue()}
       </StateStat>
@@ -208,7 +208,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
       >
         {totalSuperHashesValue()}
       </StateStat>
@@ -261,7 +261,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
         detailedChartType={"line"}
         // pointRadius={0}
       >
@@ -283,7 +283,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
       >
         {ampValue()}
       </StateStat>
@@ -317,7 +317,7 @@ export default function StateStats({
           },
         ]}
         chartUnit={chartUnit}
-        setChartUnit={setChartUnit}
+        setChartUnit={setAndStoreChartUnit}
         smallIndex={1}
         yScaleType="logarithmic"
       >

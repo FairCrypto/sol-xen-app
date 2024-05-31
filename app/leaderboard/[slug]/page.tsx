@@ -10,6 +10,7 @@ import { AccountAssociations } from "@/app/leaderboard/[slug]/AccountAssociation
 import { AccountCharts } from "@/app/leaderboard/[slug]/AccountCharts";
 import { AccountStats } from "@/app/leaderboard/[slug]/AccountStats";
 import { LeaderboardEntry } from "@/app/Api";
+import { useLeaderboardSort } from "@/app/hooks/LeaderBoardSortHook";
 
 export default function LeaderboardSlug({
   params,
@@ -95,6 +96,7 @@ export default function LeaderboardSlug({
           <AccountCharts
             accountAddress={accountAddress}
             eventHashes={eventHashes}
+            accountData={accountData}
           />
 
           <AccountAssociations

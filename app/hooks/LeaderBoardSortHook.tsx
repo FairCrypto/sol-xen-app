@@ -7,6 +7,7 @@ export enum LeaderBoardSort {
   SuperHashes = "superHashes",
   HashRate = "hashRate",
   SolXen = "solXen",
+  Status = "status",
 }
 
 export function useLeaderboardSort(): [
@@ -33,6 +34,8 @@ export function useLeaderboardSort(): [
         return LeaderBoardSort.HashRate;
       case LeaderBoardSort.SolXen:
         return LeaderBoardSort.SolXen;
+      case LeaderBoardSort.Status:
+        return LeaderBoardSort.Status;
       default:
         return LeaderBoardSort.Rank;
     }

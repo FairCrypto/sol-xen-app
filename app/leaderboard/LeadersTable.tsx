@@ -9,7 +9,7 @@ import {
   LeaderBoardSort,
   useLeaderboardSort,
 } from "@/app/hooks/LeaderBoardSortHook";
-import { ThemeContext } from "@/app/context/ThemeContext";
+import { GoDotFill } from "react-icons/go";
 
 interface LeadersTableProps {
   accountType: AccountType;
@@ -18,6 +18,61 @@ interface LeadersTableProps {
   stateData?: State | LeaderboardEntry;
   hideSearch?: boolean;
 }
+
+enum Status {
+  Online = "Online",
+  Idle = "Idle",
+  Offline = "Offline",
+}
+
+const status = (lastActive: Date): Status => {
+  if (!lastActive) {
+    return Status.Online;
+  }
+  if (Date.now() - lastActive.getTime() < 60 * 60 * 1000) {
+    return Status.Online;
+  }
+  if (Date.now() - lastActive.getTime() < 12 * 60 * 60 * 1000) {
+    return Status.Idle;
+  }
+  return Status.Offline;
+};
+
+const statusColor = (lastActive: Date) => {
+  if (status(lastActive) === Status.Online) {
+    return `fill-success stroke-success`;
+  }
+
+  if (status(lastActive) === Status.Idle) {
+    return `fill-warning stroke-warning`;
+  }
+
+  return `fill-error stroke-error`;
+};
+
+const statusBgColor = (lastActive: Date) => {
+  if (status(lastActive) === Status.Online) {
+    return `bg-success/10 xl:bg-transparent`;
+  }
+
+  if (status(lastActive) === Status.Idle) {
+    return `bg-warning/10 xl:bg-transparent`;
+  }
+
+  return `bg-error/10 xl:bg-transparent`;
+};
+
+const statusMessage = (lastActive: Date) => {
+  if (status(lastActive) === Status.Online) {
+    return "Online";
+  }
+
+  if (status(lastActive) === Status.Idle) {
+    return "Idle for over 1 hour";
+  }
+
+  return "Offline for over 12 hours";
+};
 
 export function LeadersTable({
   accountType,
@@ -32,13 +87,12 @@ export function LeadersTable({
     setSearchInput(event.target.value);
   };
   const [sortBy, setSortBy] = useLeaderboardSort();
-  const { theme, isDark } = useContext(ThemeContext);
 
   const sortedData = (): LeaderboardEntry[] => {
     return leaderboardData.sort((a, b) => {
       switch (sortBy) {
-        case LeaderBoardSort.Rank:
-          return a.rank - b.rank;
+        case LeaderBoardSort.Status:
+          return b.lastActive.getTime() - a.lastActive.getTime();
         case LeaderBoardSort.Hashes:
           return Number(b.hashes) - Number(a.hashes);
         case LeaderBoardSort.SuperHashes:
@@ -47,26 +101,10 @@ export function LeadersTable({
           return b.hashRate - a.hashRate;
         case LeaderBoardSort.SolXen:
           return Number(b.solXen) - Number(a.solXen);
+        default:
+          return a.rank - b.rank;
       }
     });
-  };
-
-  const rowColor = (hashRate: number, avgRecentHashRate: number) => {
-    let opacity;
-    if (isDark) {
-      opacity = "10";
-    } else {
-      opacity = "20";
-    }
-
-    if (hashRate > 0) {
-      return `bg-success/${opacity}`;
-    }
-    if (avgRecentHashRate) {
-      return `bg-warning/${opacity}`;
-    }
-
-    return `bg-error/${opacity}`;
   };
 
   const percentOfState = (solXen: bigint): number => {
@@ -120,10 +158,18 @@ export function LeadersTable({
       )}
 
       <table
-        className={`table table-fixed md:table-auto table-lg opacity-0 ${!isLoading ? "fade-in" : ""}`}
+        className={`table table-fixed xl:table-zebra md:table-auto table-lg opacity-0 ${!isLoading ? "fade-in" : ""}`}
       >
         <thead>
           <tr>
+            <th
+              className="hidden xl:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
+              onClick={() => {
+                setSortBy(LeaderBoardSort.Status);
+              }}
+            >
+              <span>Status</span>
+            </th>
             <th
               className="border-b border-blue-gray-100 bg-blue-gray-50 p-2 w-10 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
@@ -181,18 +227,27 @@ export function LeadersTable({
                 superHashes,
                 solXen,
                 hashRate,
-                isRecentlyActive,
+                lastActive,
               },
               index,
             ) => {
               return (
                 <tr
                   key={rank}
-                  className={`cursor-pointer hover}`}
+                  className={`cursor-pointer hover ${statusBgColor(lastActive)}`}
                   onClick={() => {
                     handleClickAccount(account);
                   }}
                 >
+                  <td className="hidden xl:table-cell p-4 border-b border-blue-gray-50">
+                    <div
+                      className="tooltip tooltip-right"
+                      data-tip={statusMessage(lastActive)}
+                    >
+                      <GoDotFill className={statusColor(lastActive)} />
+                    </div>
+                  </td>
+
                   <td className="p-4 pr-0 border-b border-blue-gray-50">
                     <span color="blue-gray" className="font-bold">
                       {rank}

@@ -54,7 +54,7 @@ export interface LeaderboardEntry {
   points: bigint;
   solXen: bigint;
   hashRate: number;
-  isRecentlyActive: number;
+  lastActive?: Date;
 }
 
 export interface SolXenPriorityFees {
@@ -85,11 +85,13 @@ export async function fetchLeaderboardData(
     for (const entry of out) {
       entry.solXen = BigInt(entry.solXen);
       entry.hashes = BigInt(entry.hashes);
+      entry.lastActive = new Date(entry.lastActive);
     }
   } else {
     for (const entry of out) {
       entry.points = BigInt(entry.points);
       entry.hashes = BigInt(entry.hashes);
+      entry.lastActive = new Date(entry.lastActive);
     }
   }
 
@@ -153,6 +155,8 @@ export async function fetchLeaderboardEntry(
   if (out?.hashes != undefined) {
     out.hashes = BigInt(out.hashes);
   }
+
+  out.lastActive = new Date(out.lastActive);
   return out;
 }
 
@@ -225,6 +229,7 @@ export async function fetchAssociatedEthAccounts(
   for (const entry of out) {
     entry.points = BigInt(entry.points);
     entry.hashes = BigInt(entry.hashes);
+    entry.lastActive = new Date(entry.lastActive);
   }
 
   return out;
@@ -252,6 +257,7 @@ export async function fetchAssociatedSolAccounts(
       entry.solXen = BigInt(entry.solXen);
     }
     entry.hashes = BigInt(entry.hashes);
+    entry.lastActive = new Date(entry.lastActive);
   }
 
   return out;

@@ -20,7 +20,6 @@ import "chartjs-adapter-dayjs-4";
 import React, { useEffect } from "react";
 import { humanizeNumber } from "@/app/utils";
 import { unit } from "@/app/components/ChartUnitSelector";
-import { useChartSelector } from "@/app/hooks/ChartSelector";
 import { ChartUnit } from "@/app/Api";
 
 ChartJS.register(
@@ -79,7 +78,7 @@ export default function BarChart({
         },
         stacked: true,
 
-        type: "timeseries",
+        type: "time",
         // min: new Date(new Date().getTime() - 60 * 60 * 1000).toISOString(),
         ticks: {
           source: "auto",

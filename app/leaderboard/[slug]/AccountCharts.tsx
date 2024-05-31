@@ -3,7 +3,11 @@ import useThemeColors from "@/app/hooks/ThemeColorHook";
 import React, { useEffect, useRef, useState } from "react";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import useChartData from "@/app/hooks/ChartDataHook";
-import { ChartUnit, fetchAccountStateHistory } from "@/app/Api";
+import {
+  ChartUnit,
+  fetchAccountStateHistory,
+  LeaderboardEntry,
+} from "@/app/Api";
 import BarChart from "@/app/components/BarChart";
 import { Loader } from "@/app/components/Loader";
 import {
@@ -17,13 +21,15 @@ import { useChartSelector } from "@/app/hooks/ChartSelector";
 export function AccountCharts({
   accountAddress,
   eventHashes,
+  accountData,
 }: {
   accountAddress: string;
   eventHashes?: EventHash[];
+  accountData?: LeaderboardEntry | null;
 }) {
   const [themeColors, alphaColor] = useThemeColors();
   const [isChartsLoading, setIsChartsLoading] = useState(true);
-  const [chartUnit, setChartUnit] = useChartSelector();
+  const [chartUnit, setAndStoreChartUnit, setChartUnit] = useChartSelector();
   const [prevChartUnitStateHistory, setPrevChartUnitStateHistory] =
     useState<ChartUnit>();
 
@@ -101,6 +107,19 @@ export function AccountCharts({
       borderWidth: 1,
     },
   ];
+
+  const firstTime = useRef(true);
+  useEffect(() => {
+    if (
+      firstTime.current &&
+      accountData?.lastActive &&
+      new Date().getTime() - new Date(accountData.lastActive).getTime() >
+        3600000
+    ) {
+      firstTime.current = false;
+      setChartUnit("day");
+    }
+  }, [accountData]);
 
   const firstUpdateStateHistory = useRef(true);
   const firstUpdateHashEvents = useRef(true);
@@ -227,7 +246,7 @@ export function AccountCharts({
         <div className="card-title">
           <h2 className="mr-auto">Real Time Mining Stats</h2>
           <ChartUnitSelector
-            setChartUnit={setChartUnit}
+            setChartUnit={setAndStoreChartUnit}
             chartUnit={chartUnit}
           />
         </div>
