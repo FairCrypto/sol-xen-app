@@ -19,12 +19,6 @@ const config: Config = {
       primary: "bg-accent",
     }
   },
-  safelist: [
-    {
-      pattern: /^(bg-|border-|text-)/,
-      variants: ["hover", "active"],
-    },
-  ],
   plugins: [require('daisyui')],
   darkMode: 'media',
   daisyui: {

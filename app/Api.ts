@@ -54,7 +54,14 @@ export interface LeaderboardEntry {
   points: bigint;
   solXen: bigint;
   hashRate: number;
-  isRecentlyActive: number;
+}
+
+export interface HashEventStat {
+  createdAt: Date;
+  hashes: number;
+  superHashes: number;
+  solXen: bigint;
+  txs: number;
 }
 
 export interface SolXenPriorityFees {
@@ -91,6 +98,51 @@ export async function fetchLeaderboardData(
       entry.points = BigInt(entry.points);
       entry.hashes = BigInt(entry.hashes);
     }
+  }
+
+  return out;
+}
+
+export async function fetchHashEventStats(
+  account?: string,
+  from?: Date,
+  to?: Date,
+  unit?: ChartUnit,
+): Promise<HashEventStat[]> {
+  let params = "";
+  if (from && to) {
+    from.setSeconds(0);
+    from.setMilliseconds(0);
+    to.setSeconds(0);
+    to.setMilliseconds(0);
+
+    params = `?from=${from.toISOString()}&to=${to.toISOString()}&unit=${unit}`;
+  }
+
+  if (account) {
+    if (account.startsWith("0x") && account.length == 42) {
+      params = `${params}&ethAccount=${account}`;
+    } else {
+      params = `${params}&solAccount=${account}`;
+    }
+  }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/hash_event_stats${params}`,
+  );
+
+  if (!response.ok) {
+    const error = new Error();
+    error.message =
+      (await response.json())?.message ||
+      "Error fetching hash event stats entry";
+    error.cause = response.statusText;
+    throw error;
+  }
+
+  const out = await response.json();
+  for (const entry of out) {
+    entry.solXen = BigInt(entry.solXen);
   }
 
   return out;

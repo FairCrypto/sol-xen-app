@@ -3,7 +3,11 @@ import useThemeColors from "@/app/hooks/ThemeColorHook";
 import React, { useEffect, useRef, useState } from "react";
 import { AccountType } from "@/app/hooks/AccountTypeHook";
 import useChartData from "@/app/hooks/ChartDataHook";
-import { ChartUnit, fetchAccountStateHistory } from "@/app/Api";
+import {
+  ChartUnit,
+  fetchAccountStateHistory,
+  fetchHashEventStats,
+} from "@/app/Api";
 import BarChart from "@/app/components/BarChart";
 import { Loader } from "@/app/components/Loader";
 import {

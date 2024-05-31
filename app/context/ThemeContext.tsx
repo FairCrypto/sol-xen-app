@@ -4,31 +4,11 @@ import { createContext, useEffect, useState } from "react";
 interface ThemeContextType {
   theme?: string;
   changeTheme?: (nextTheme?: string) => void;
-  isDark?: boolean;
 }
 export const ThemeContext = createContext<ThemeContextType>({});
 
-const DARK_THEMES = {
-  dark: true,
-  synthwave: true,
-  forest: true,
-  aqua: true,
-  black: true,
-  luxury: true,
-  dracula: true,
-  business: true,
-  night: true,
-  coffee: true,
-  dim: true,
-  sunset: true,
-  halloween: true,
-};
-
-type ThemeKey = keyof typeof DARK_THEMES;
-
 export const ThemeProvider = ({ children }: any) => {
   const [theme, setTheme] = useState<string>("light");
-  const [isDark, setIsDark] = useState<boolean>(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -41,7 +21,6 @@ export const ThemeProvider = ({ children }: any) => {
     }
     setIsMounted(true);
     const storedTheme = localStorage.getItem("theme") || defaultTheme;
-    setIsDark(DARK_THEMES[storedTheme as ThemeKey] ?? false);
     setTheme(storedTheme);
   }, [theme]);
 
@@ -49,11 +28,10 @@ export const ThemeProvider = ({ children }: any) => {
 
   const changeTheme = (theme: any) => {
     setTheme(theme);
-    setIsDark(DARK_THEMES[theme as ThemeKey] ?? false);
     localStorage.setItem("theme", theme);
   };
   return (
-    <ThemeContext.Provider value={{ theme, changeTheme, isDark }}>
+    <ThemeContext.Provider value={{ theme, changeTheme }}>
       {children}
     </ThemeContext.Provider>
   );
