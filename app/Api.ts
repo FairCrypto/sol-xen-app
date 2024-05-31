@@ -73,7 +73,7 @@ export async function fetchLeaderboardData(
   accountType: AccountType,
 ): Promise<LeaderboardEntry[]> {
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}`,
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/leaderboard?account=${accountType}&limit=500`,
   );
 
   if (!data.ok) {

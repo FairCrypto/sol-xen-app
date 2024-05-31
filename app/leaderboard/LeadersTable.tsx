@@ -40,14 +40,14 @@ const status = (lastActive: Date): Status => {
 
 const statusColor = (lastActive?: Date) => {
   if (!lastActive || status(lastActive) === Status.Online) {
-    return `fill-success stroke-success`;
+    return `fill-success`;
   }
 
   if (status(lastActive) === Status.Idle) {
-    return `fill-warning stroke-warning`;
+    return `fill-warning`;
   }
 
-  return `fill-error stroke-error`;
+  return `fill-error`;
 };
 
 const statusBgColor = (lastActive?: Date) => {
