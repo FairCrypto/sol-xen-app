@@ -66,7 +66,7 @@ export function AccountAssociations({
         setIsAssociatedLoading(false);
       });
     }
-  }, [accountAddress]);
+  }, [accountAddress, page, sortBy]);
 
   useEffect(() => {
     if (eventHashes && eventHashes.length > 0) {

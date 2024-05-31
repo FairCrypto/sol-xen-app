@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export enum LeaderBoardSort {
@@ -15,7 +15,7 @@ export function useLeaderboardSort(): [
   (sort: LeaderBoardSort) => void,
 ] {
   const searchParams = useSearchParams();
-  const { replace } = useRouter();
+  const { push } = useRouter();
   const [sortBy, setSortBy] = useState<LeaderBoardSort>(
     getSortFromSearchParams(searchParams),
   );
@@ -44,7 +44,7 @@ export function useLeaderboardSort(): [
   function setSort(sort: LeaderBoardSort) {
     const url = new URL(window.location.href);
     url.searchParams.set("sort", sort);
-    replace(url.toString());
+    window.history.replaceState({}, "", url.toString());
   }
 
   useEffect(() => {
