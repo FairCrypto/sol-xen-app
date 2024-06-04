@@ -75,15 +75,15 @@ export function ChartUnitSelector({
 }: ChartUnitSelectorInterface) {
   return (
     <div className="join lg:join-horizontal">
-      {/*<button*/}
-      {/*  className={`btn btn-sm join-item ${chartUnit == "week" && "btn-primary"}`}*/}
-      {/*  onClick={() => {*/}
-      {/*    setChartUnit("week");*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <span className={`hidden sm:inline`}>Week</span>*/}
-      {/*  <span className={`sm:hidden`}>1W</span>*/}
-      {/*</button>*/}
+      <button
+        className={`btn btn-sm join-item ${chartUnit == "week" && "btn-primary"}`}
+        onClick={() => {
+          setChartUnit("week");
+        }}
+      >
+        <span className={`hidden sm:inline`}>Week</span>
+        <span className={`sm:hidden`}>1W</span>
+      </button>
       <button
         className={`btn btn-sm join-item ${chartUnit == "day" && "btn-primary"}`}
         onClick={() => {
