@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Connection } from "@solana/web3.js";
+import {ConfirmOptions, Connection} from "@solana/web3.js";
 import { AnchorProvider, BN, Program, web3 } from "@coral-xyz/anchor";
 import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 
@@ -51,7 +51,14 @@ export function useSolanaEvents({
       },
     );
 
-    const provider = new AnchorProvider(connection, null as any);
+    const anchorOptions = {
+      skipPreflight: false,
+      commitment: 'finalized',
+      preflightCommitment: 'finalized',
+      maxRetries: 10,
+    } as ConfirmOptions;
+
+    const provider = new AnchorProvider(connection, null as any, anchorOptions);
     const programs: Program<any>[] = [];
     const listeners: number[] = [];
 
