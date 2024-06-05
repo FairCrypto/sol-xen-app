@@ -108,16 +108,23 @@ export function AccountCharts({
     },
   ];
 
+  // if the user has been inactive for more than an hour, switch to daily charts
+  // if the user has been inactive for more than a day, switch to weekly charts
   const firstTime = useRef(true);
   useEffect(() => {
-    if (
-      firstTime.current &&
-      accountData?.lastActive &&
-      new Date().getTime() - new Date(accountData.lastActive).getTime() >
-        3600000
-    ) {
+    if (firstTime.current && accountData?.lastActive) {
       firstTime.current = false;
-      setChartUnit("day");
+      if (
+        new Date().getTime() - new Date(accountData.lastActive).getTime() >
+        86400000
+      ) {
+        setChartUnit("week");
+      } else if (
+        new Date().getTime() - new Date(accountData.lastActive).getTime() >
+        3600000
+      ) {
+        setChartUnit("day");
+      }
     }
   }, [accountData]);
 
