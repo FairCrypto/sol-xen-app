@@ -4,7 +4,7 @@ import { ConfirmOptions, Connection } from "@solana/web3.js";
 import { AnchorProvider, BN, Program, web3 } from "@coral-xyz/anchor";
 import * as idl from "@/app/leaderboard/target/idl/sol_xen.json";
 
-import { fetchStateData } from "@/app/Api";
+import { fetchProgramsData, fetchStateData } from "@/app/Api";
 
 interface SolanaEventsContextType {
   refreshRate: number;
@@ -35,8 +35,8 @@ export function useSolanaEvents({
   }
 
   useEffect(() => {
-    fetchStateData().then((state) => {
-      setProgramsIds(state.programs);
+    fetchProgramsData().then((programs) => {
+      setProgramsIds(programs);
     });
   }, []);
 

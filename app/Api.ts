@@ -336,3 +336,13 @@ export async function fetchPriorityFees(): Promise<SolXenPriorityFees> {
 
   return await data.json();
 }
+
+export async function fetchProgramsData(): Promise<string[]> {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/programs`);
+
+  if (!data.ok) {
+    throw new Error("Error fetching programs data");
+  }
+
+  return await data.json();
+}
