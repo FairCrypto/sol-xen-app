@@ -43,7 +43,6 @@ export default function StateStats({
 }) {
   const { theme } = useContext(ThemeContext);
   const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
-  const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees>();
   const [chartUnit, setAndStoreChartUnit] = useChartSelector();
 
   const totalSupplyValue = () => {
@@ -286,7 +285,7 @@ export default function StateStats({
         smallIndex={1}
         yScaleType="logarithmic"
       >
-        {state?.avgPriorityFee}
+        {avgPriorityFeeValue()}
       </StateStat>
     </div>
   );
