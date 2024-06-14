@@ -48,13 +48,10 @@ export default function StateStats({
 }) {
   const { theme } = useContext(ThemeContext);
   const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
-<<<<<<< HEAD
-=======
   const [priorityFeesHistory, setPriorityFeesHistory] = useState<
     SolXenPriorityFees[]
   >([]);
   const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees>();
->>>>>>> parent of efa81ed (grab priority fees from the global state)
   const [chartUnit, setAndStoreChartUnit] = useChartSelector();
 
   const totalSupplyValue = () => {
@@ -324,11 +321,7 @@ export default function StateStats({
         smallIndex={1}
         yScaleType="logarithmic"
       >
-<<<<<<< HEAD
         {avgPriorityFeeValue()}
-=======
-        {priorityFees?.avgPriorityFee}
->>>>>>> parent of efa81ed (grab priority fees from the global state)
       </StateStat>
     </div>
   );
