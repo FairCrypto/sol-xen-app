@@ -21,7 +21,6 @@ export interface GlobalState {
   createdAt: Date;
   avgPriorityFee: number;
   minPriorityFee: number;
-  lowPriorityFee: number;
   medianPriorityFee: number;
   maxPriorityFee: number;
   programs: string[];
