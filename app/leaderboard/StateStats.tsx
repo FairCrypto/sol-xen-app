@@ -323,7 +323,6 @@ export default function StateStats({
             })),
           },
         ]}
-        stacked={true}
         chartUnit={chartUnit}
         setChartUnit={setAndStoreChartUnit}
         smallIndex={1}
