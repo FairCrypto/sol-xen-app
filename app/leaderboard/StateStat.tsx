@@ -29,6 +29,8 @@ interface StateStatProps {
   smallIndex?: number;
   yScaleType?: "linear" | "logarithmic";
   pointRadius?: number;
+  stacked?: boolean;
+  suggestedMax?: number;
 }
 
 export default function StateStat({
@@ -46,6 +48,8 @@ export default function StateStat({
   smallIndex = 0,
   yScaleType = "linear",
   pointRadius = 2,
+  stacked = false,
+  suggestedMax,
 }: StateStatProps) {
   const [themeColors, alphaColor] = useThemeColors();
   const [showModal, setShowModal] = useState(false);
@@ -140,7 +144,7 @@ export default function StateStat({
       spanGaps: true,
       scales: {
         x: {
-          stacked: true,
+          stacked: stacked,
           display: showDetails,
           type: "timeseries",
           grid: {
@@ -155,8 +159,8 @@ export default function StateStat({
           },
         },
         y: {
-          suggestedMax: 100,
-          stacked: true,
+          suggestedMax: suggestedMax,
+          stacked: stacked,
           type: yScaleType,
           title: {
             text: yAxesTitle,
