@@ -3,6 +3,8 @@ import "chart.js/auto";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import StateStat from "@/app/leaderboard/StateStat";
 import {
+  BlockStats,
+  fetchBlockStatsHistory,
   fetchPriorityFeesHistory,
   fetchStateHistory,
   GlobalState,
@@ -53,6 +55,7 @@ export default function StateStats({
   >([]);
   const [priorityFees, setPriorityFees] = useState<SolXenPriorityFees>();
   const [chartUnit, setAndStoreChartUnit] = useChartSelector();
+  const [blockStatsHistory, setBlockStatsHistory] = useState<BlockStats[]>([]);
 
   const totalSupplyValue = () => {
     if (!state.solXen) {
@@ -105,6 +108,14 @@ export default function StateStats({
     );
   };
 
+  const lastSolXenCuValue = () =>
+    blockStatsHistory.at(-1)?.avgSolXenComputeUnitsPercent || 0;
+  const lastOtherCuValue = () =>
+    (blockStatsHistory.at(-1)?.avgComputeUnitsPercent || 0) -
+    lastSolXenCuValue();
+  const lastUnusedCuValue = () =>
+    100 - lastSolXenCuValue() - lastOtherCuValue();
+
   useEffect(() => {
     if (chartUnit) {
       fetchStateHistory(
@@ -113,6 +124,14 @@ export default function StateStats({
         unit(chartUnit),
       ).then((data) => {
         setStateHistory(data);
+      });
+
+      fetchBlockStatsHistory(
+        startTime(chartUnit),
+        endTime(chartUnit),
+        unit(chartUnit),
+      ).then((data) => {
+        setBlockStatsHistory(data);
       });
 
       fetchPriorityFeesHistory(
@@ -213,39 +232,6 @@ export default function StateStats({
         {totalSuperHashesValue()}
       </StateStat>
 
-      {/*<StateStat*/}
-      {/*  setShowBackground={setShowBackground}*/}
-      {/*  name="txs"*/}
-      {/*  title="Total TXs"*/}
-      {/*  stateHistoryTitle="TXs Rate"*/}
-      {/*  stateHistory={hashEventStats.map((entry) => ({*/}
-      {/*    x: new Date(entry.createdAt),*/}
-      {/*    y: entry.txs,*/}
-      {/*  }))}*/}
-      {/*>*/}
-      {/*  {txsValue()}*/}
-      {/*</StateStat>*/}
-
-      {/*<StateStat*/}
-      {/*  setShowBackground={setShowBackground}*/}
-      {/*  name="lastAmpSlot"*/}
-      {/*  title="Last AMP Slot"*/}
-      {/*  yAxesTitle="Slots"*/}
-      {/*  sets={[*/}
-      {/*    {*/}
-      {/*      label: "Last AMP Slot",*/}
-      {/*      data: stateHistory.map((entry) => ({*/}
-      {/*        x: new Date(entry.createdAt),*/}
-      {/*        y: Number(entry.lastAmpSlot),*/}
-      {/*      })),*/}
-      {/*    }*/}
-      {/*  ]}*/}
-      {/*  chartUnit={chartUnit}*/}
-      {/*  setChartUnit={setChartUnit}*/}
-      {/*>*/}
-      {/*  {lastAmpSlotValue()}*/}
-      {/*</StateStat>*/}
-
       <StateStat
         setShowBackground={setShowBackground}
         name="hashRate"
@@ -263,29 +249,48 @@ export default function StateStats({
         chartUnit={chartUnit}
         setChartUnit={setAndStoreChartUnit}
         detailedChartType={"line"}
-        // pointRadius={0}
       >
         {hashRateValue()}
       </StateStat>
 
       <StateStat
         setShowBackground={setShowBackground}
-        name="Amp"
-        title="AMP"
-        yAxesTitle="AMP"
+        name="Block Compute"
+        title="Block Compute"
+        yAxesTitle="Block CU Percenage (%)"
         sets={[
           {
-            label: "AMP",
-            data: stateHistory.map((entry) => ({
+            label: `solXEN | ${lastSolXenCuValue()}%`,
+            data: blockStatsHistory.map((entry) => ({
               x: new Date(entry.createdAt),
-              y: entry.amp,
+              y: entry.avgSolXenComputeUnitsPercent,
+            })),
+          },
+          {
+            label: `Other | ${lastOtherCuValue()}%`,
+            data: blockStatsHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y:
+                entry.avgComputeUnitsPercent -
+                entry.avgSolXenComputeUnitsPercent,
+            })),
+          },
+          {
+            label: `Unused | ${lastUnusedCuValue()}%`,
+            data: blockStatsHistory.map((entry) => ({
+              x: new Date(entry.createdAt),
+              y:
+                100 -
+                entry.avgSolXenComputeUnitsPercent -
+                (entry.avgComputeUnitsPercent -
+                  entry.avgSolXenComputeUnitsPercent),
             })),
           },
         ]}
         chartUnit={chartUnit}
         setChartUnit={setAndStoreChartUnit}
       >
-        {ampValue()}
+        {lastSolXenCuValue() + "%"}
       </StateStat>
 
       <StateStat

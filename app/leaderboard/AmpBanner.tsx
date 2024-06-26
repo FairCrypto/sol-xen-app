@@ -14,9 +14,17 @@ export default function AmpBanner({ isLoading, stateData }: AmpBannerProps) {
 
   return (
     <div
-      className={`bg-info/50 z-[1] text-info-content w-full grid grid-cols-2 sm:grid-cols-3 gap-2 h-[45px] md:h-[50px] opacity-0 ${!isLoading && stateData.amp > 0 ? "fade-in" : ""}`}
+      className={`bg-info/50 z-[1] text-info-content w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-2 h-[45px] md:h-[50px] opacity-0 ${!isLoading && stateData.amp > 0 ? "fade-in" : ""}`}
     >
       <div className="border-r place-items-center justify-center py-0 my-0 flex">
+        <div className="p-0">
+          AMP
+          <span className="font-thin"> |</span>
+        </div>
+        <div className="mx-1">{stateData.amp}</div>
+      </div>
+
+      <div className="border-r place-items-center justify-center py-0 my-0 hidden lg:flex ">
         <div className="p-0">
           Zero AMP <span className="hidden md:inline">ETA</span>{" "}
           <span className="font-thin">|</span>
@@ -38,14 +46,15 @@ export default function AmpBanner({ isLoading, stateData }: AmpBannerProps) {
 
       <div className="place-items-center justify-center py-0 hidden sm:flex">
         <div className="p-0">
-          <span className="hidden md:inline">Average</span> AMP Time{" "}
-          <span className="font-thin">|</span>
+          <span className="hidden xl:inline">Average </span>
+          <span className="hidden lg:inline">Avg </span>
+          AMP Time <span className="font-thin">|</span>
         </div>
         <div className="mx-1">
           <CountDown
             endDate={avgAmpSecsDate()}
             dontRun={true}
-            showSeconds={true}
+            showSeconds={false}
           />
         </div>
       </div>

@@ -136,10 +136,11 @@ export default function StateStat({
   };
 
   const options = (showDetails: boolean): ChartOptions<any> => {
-    return {
+    const cfg = {
       spanGaps: true,
       scales: {
         x: {
+          stacked: true,
           display: showDetails,
           type: "timeseries",
           grid: {
@@ -154,6 +155,8 @@ export default function StateStat({
           },
         },
         y: {
+          suggestedMax: 100,
+          stacked: true,
           type: yScaleType,
           title: {
             text: yAxesTitle,
@@ -216,6 +219,23 @@ export default function StateStat({
         duration: 0,
       },
     };
+
+    if (showDetails) {
+      // @ts-ignore
+      cfg["scales"]["xTopPadding"] = {
+        // Fake x-axis for padding
+        position: "top",
+        labels: [""],
+        grid: {
+          drawOnChartArea: false,
+          drawTicks: true,
+          ticksWidth: 0,
+          ticksLength: 0, // Increase ticksLength to increase the "padding"
+        },
+      };
+    }
+
+    return cfg;
   };
 
   return (

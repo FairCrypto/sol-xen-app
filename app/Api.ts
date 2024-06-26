@@ -68,6 +68,17 @@ export interface SolXenPriorityFees {
   createdAt: Date;
 }
 
+export interface BlockStats {
+  slot: number;
+  avgComputeUnits: number;
+  avgSolXenComputeUnits: number;
+  avgFee: number;
+  avgComputeUnitsPercent: number;
+  avgSolXenComputeUnitsPercent: number;
+  avgSolXenFee: number;
+  createdAt: Date;
+}
+
 export type ChartUnit = "minute" | "hour" | "day" | "week" | undefined;
 
 export async function fetchLeaderboardData(
@@ -342,6 +353,22 @@ export async function fetchProgramsData(): Promise<string[]> {
 
   if (!data.ok) {
     throw new Error("Error fetching programs data");
+  }
+
+  return await data.json();
+}
+
+export async function fetchBlockStatsHistory(
+  from: Date,
+  to: Date,
+  unit: ChartUnit,
+): Promise<BlockStats[]> {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/block_stats?from=${from.toISOString()}&to=${to.toISOString()}&unit=${unit}`,
+  );
+
+  if (!data.ok) {
+    throw new Error("Error fetching block stats data");
   }
 
   return await data.json();
