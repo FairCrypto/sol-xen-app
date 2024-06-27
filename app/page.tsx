@@ -8,6 +8,9 @@ import Footer from "@/app/components/Footer";
 import Image from "next/image";
 import { useStatsData } from "@/app/hooks/StateDataHook";
 import { ReactNode } from "react";
+import { MdLeaderboard } from "react-icons/md";
+import { SiGitbook } from "react-icons/si";
+import { TbBuildingCommunity } from "react-icons/tb";
 
 function Section({
   children,
@@ -79,14 +82,21 @@ export default function Home() {
               <br className="sm:hidden" /> mining on the Solana blockchain.
             </p>
             <Link href="./leaderboard">
-              <button className="btn btn-primary">Leaderboard</button>
+              <button className="btn btn-primary">
+                <MdLeaderboard />
+                Leaderboard
+              </button>
             </Link>
             <a href="https://docs.solxen.io/">
-              <button className="ml-2 btn btn-secondary">Gitbook</button>
+              <button className="ml-2 btn btn-secondary">
+                <SiGitbook />
+                Gitbook
+              </button>
             </a>
             <a href="https://t.me/+Z5kEez70pyQ5NTAz">
               <button className="ml-2 btn btn-accent">
-                Hashhead <div className="hidden sm:inline">Community</div>
+                <TbBuildingCommunity /> Hashhead{" "}
+                <div className="hidden sm:inline">Community</div>
               </button>
             </a>
           </div>
