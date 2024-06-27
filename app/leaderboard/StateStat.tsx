@@ -247,7 +247,7 @@ export default function StateStat({
       <dialog
         className={`modal ${showModal && "opacity-100 back backdrop-blur-sm modal-open"}`}
       >
-        <div className="modal-box max-w-screen-2xl h-[50vh] max-h-[900px] pt-10 sm:pt-8">
+        <div className="modal-box max-w-screen-2xl min-h-[300px] max-h-[500px] md:max-h-[700px] h-[80vh] pt-10 sm:pt-8 shadow-2xl drop-shadow-2xl">
           <div className="absolute top-4 right-4">
             <ChartUnitSelector
               setChartUnit={setChartUnit}
