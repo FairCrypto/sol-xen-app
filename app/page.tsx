@@ -83,19 +83,19 @@ export default function Home() {
             </p>
             <Link href="./leaderboard">
               <button className="btn btn-primary">
-                <MdLeaderboard />
+                <MdLeaderboard className="hidden sm:block" />
                 Leaderboard
               </button>
             </Link>
             <a href="https://docs.solxen.io/">
               <button className="ml-2 btn btn-secondary">
-                <SiGitbook />
+                <SiGitbook className="hidden sm:block" />
                 Gitbook
               </button>
             </a>
             <a href="https://t.me/+Z5kEez70pyQ5NTAz">
               <button className="ml-2 btn btn-accent">
-                <TbBuildingCommunity /> Hashhead{" "}
+                <TbBuildingCommunity className="hidden sm:block" /> Hashhead{" "}
                 <div className="hidden sm:inline">Community</div>
               </button>
             </a>
