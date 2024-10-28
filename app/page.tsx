@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import { MdLeaderboard } from "react-icons/md";
 import { SiGitbook } from "react-icons/si";
 import { TbBuildingCommunity } from "react-icons/tb";
+import { BiSolidPurchaseTag } from "react-icons/bi";
 
 function Section({
   children,
@@ -71,7 +72,7 @@ export default function Home() {
 
       <div className="hero h-[500px] bg-base-200">
         <div className="hero-content text-center">
-          <div className="mx-2  sm:mx-8max-w-[940px]">
+          <div className="mx-2 sm:mx-8max-w-[940px]">
             <h1 className="text-4xl sm:text-5xl font-bold">
               PROOF OF WORK MINING ON SOLANA
             </h1>
@@ -79,31 +80,36 @@ export default function Home() {
             <p className="mb-5 mx-auto max-w-lg">
               solXEN is a fairly distributed 1st principles community token
               earned through PoW
-              <br className="sm:hidden" /> mining on the Solana blockchain.
+              <br className="sm:hidden"/> mining on the Solana blockchain.
             </p>
-            <Link href="./leaderboard">
-              <button className="btn btn-primary">
-                <MdLeaderboard className="hidden sm:block" />
+
+              <Link href="./leaderboard" className="btn btn-primary">
+                <MdLeaderboard className="hidden sm:block"/>
                 Leaderboard
-              </button>
-            </Link>
-            <a href="https://docs.solxen.io/">
-              <button className="ml-2 btn btn-secondary">
-                <SiGitbook className="hidden sm:block" />
+              </Link>
+
+              <Link href="https://docs.solxen.io/"
+                    className="btn btn-secondary ml-2" target="_blank">
+                <SiGitbook className="hidden sm:block"/>
                 Gitbook
-              </button>
-            </a>
-            <a href="https://t.me/+Z5kEez70pyQ5NTAz">
-              <button className="ml-2 btn btn-accent">
-                <TbBuildingCommunity className="hidden sm:block" /> Hashhead{" "}
+              </Link>
+
+            <div className="mb-3 md:hidden"></div>
+              <Link href="https://t.me/+Z5kEez70pyQ5NTAz"
+                    className="btn btn-accent ml-2" target="_blank">
+                <TbBuildingCommunity className="hidden sm:block"/> Hashhead{" "}
                 <div className="hidden sm:inline">Community</div>
-              </button>
-            </a>
-          </div>
+              </Link>
+
+              <Link href="https://dexscreener.com/solana/5cyxp6xwlnzd7h2mclia6h69tiygjpthedaxjuvawime"
+                    className="btn btn-success ml-2" target="_blank">
+                <BiSolidPurchaseTag className="hidden sm:block"/> Buy solXEN
+              </Link>
+            </div>
         </div>
       </div>
 
-      <Section title="Total Supply" backgroundColor="bg-base-100">
+        <Section title="Total Supply" backgroundColor="bg-base-100">
         <div className="stats stats-vertical sm:stats-horizontal mx-auto">
           <div className="stat px-0 sm:px-4 md:px-8">
             <div className="stat-title">Hashes</div>
