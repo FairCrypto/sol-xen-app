@@ -43,10 +43,12 @@ export default function StateStats({
   state,
   isLoadingStats,
   setShowBackground,
+  finished
 }: {
   state: State;
   isLoadingStats: boolean;
   setShowBackground: (show: boolean) => void;
+  finished: boolean;
 }) {
   const { theme } = useContext(ThemeContext);
   const [stateHistory, setStateHistory] = useState<GlobalState[]>([]);
@@ -232,104 +234,106 @@ export default function StateStats({
         {totalSuperHashesValue()}
       </StateStat>
 
-      <StateStat
-        setShowBackground={setShowBackground}
-        name="hashRate"
-        title="Total Hash Rate"
-        yAxesTitle="Rate (hashes/sec)"
-        sets={[
-          {
-            label: "Hash Rate",
-            data: stateHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y: Number(entry.hashRate),
-            })),
-          },
-        ]}
-        chartUnit={chartUnit}
-        setChartUnit={setAndStoreChartUnit}
-        detailedChartType={"line"}
-      >
-        {hashRateValue()}
-      </StateStat>
+      { !finished && <>
+        <StateStat
+          setShowBackground={setShowBackground}
+          name="hashRate"
+          title="Total Hash Rate"
+          yAxesTitle="Rate (hashes/sec)"
+          sets={[
+            {
+              label: "Hash Rate",
+              data: stateHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y: Number(entry.hashRate),
+              })),
+            },
+          ]}
+          chartUnit={chartUnit}
+          setChartUnit={setAndStoreChartUnit}
+          detailedChartType={"line"}
+        >
+          {hashRateValue()}
+        </StateStat>
 
-      <StateStat
-        setShowBackground={setShowBackground}
-        name="Block Compute"
-        title="Block Compute"
-        yAxesTitle="Block CU Percenage (%)"
-        sets={[
-          {
-            label: `solXEN | ${lastSolXenCuValue()}%`,
-            data: blockStatsHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y: entry.avgSolXenComputeUnitsPercent,
-            })),
-          },
-          {
-            label: `Other | ${lastOtherCuValue()}%`,
-            data: blockStatsHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y:
-                entry.avgComputeUnitsPercent -
-                entry.avgSolXenComputeUnitsPercent,
-            })),
-          },
-          {
-            label: `Unused | ${lastUnusedCuValue()}%`,
-            data: blockStatsHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y:
-                100 -
-                entry.avgSolXenComputeUnitsPercent -
-                (entry.avgComputeUnitsPercent -
-                  entry.avgSolXenComputeUnitsPercent),
-            })),
-          },
-        ]}
-        stacked={true}
-        suggestedMax={100}
-        chartUnit={chartUnit}
-        setChartUnit={setAndStoreChartUnit}
-      >
-        {lastSolXenCuValue() + "%"}
-      </StateStat>
+        <StateStat
+          setShowBackground={setShowBackground}
+          name="Block Compute"
+          title="Block Compute"
+          yAxesTitle="Block CU Percenage (%)"
+          sets={[
+            {
+              label: `solXEN | ${lastSolXenCuValue()}%`,
+              data: blockStatsHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y: entry.avgSolXenComputeUnitsPercent,
+              })),
+            },
+            {
+              label: `Other | ${lastOtherCuValue()}%`,
+              data: blockStatsHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y:
+                  entry.avgComputeUnitsPercent -
+                  entry.avgSolXenComputeUnitsPercent,
+              })),
+            },
+            {
+              label: `Unused | ${lastUnusedCuValue()}%`,
+              data: blockStatsHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y:
+                  100 -
+                  entry.avgSolXenComputeUnitsPercent -
+                  (entry.avgComputeUnitsPercent -
+                    entry.avgSolXenComputeUnitsPercent),
+              })),
+            },
+          ]}
+          stacked={true}
+          suggestedMax={100}
+          chartUnit={chartUnit}
+          setChartUnit={setAndStoreChartUnit}
+        >
+          {lastSolXenCuValue() + "%"}
+        </StateStat>
 
-      <StateStat
-        setShowBackground={setShowBackground}
-        name="avgPriorityFee"
-        title="Avg Priority Fee"
-        yAxesTitle="Microlamports"
-        sets={[
-          {
-            label: `Low | ${minPriorityFeeValue()}`,
-            data: priorityFeesHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y: entry.lowPriorityFee,
-            })),
-          },
-          {
-            label: `Avg | ${avgPriorityFeeValue()}`,
-            data: priorityFeesHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y: entry.avgPriorityFee,
-            })),
-          },
-          {
-            label: `High | ${maxPriorityFeeValue()}`,
-            data: priorityFeesHistory.map((entry) => ({
-              x: new Date(entry.createdAt),
-              y: entry.maxPriorityFee,
-            })),
-          },
-        ]}
-        chartUnit={chartUnit}
-        setChartUnit={setAndStoreChartUnit}
-        smallIndex={1}
-        yScaleType="logarithmic"
-      >
-        {avgPriorityFeeValue()}
-      </StateStat>
+        <StateStat
+          setShowBackground={setShowBackground}
+          name="avgPriorityFee"
+          title="Avg Priority Fee"
+          yAxesTitle="Microlamports"
+          sets={[
+            {
+              label: `Low | ${minPriorityFeeValue()}`,
+              data: priorityFeesHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y: entry.lowPriorityFee,
+              })),
+            },
+            {
+              label: `Avg | ${avgPriorityFeeValue()}`,
+              data: priorityFeesHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y: entry.avgPriorityFee,
+              })),
+            },
+            {
+              label: `High | ${maxPriorityFeeValue()}`,
+              data: priorityFeesHistory.map((entry) => ({
+                x: new Date(entry.createdAt),
+                y: entry.maxPriorityFee,
+              })),
+            },
+          ]}
+          chartUnit={chartUnit}
+          setChartUnit={setAndStoreChartUnit}
+          smallIndex={1}
+          yScaleType="logarithmic"
+        >
+          {avgPriorityFeeValue()}
+        </StateStat>
+      </>}
     </div>
   );
 }

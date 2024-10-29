@@ -38,6 +38,10 @@ export default function Leaderboard() {
 
       // Calculate the new state based on the events in the buffer
       eventHashes.forEach((eventHash) => {
+        if (stateData.finished) {
+          return;
+        }
+
         const account =
           accountType == AccountType.Solana
             ? eventHash.user.toBase58()
@@ -76,7 +80,7 @@ export default function Leaderboard() {
     <main className="flex min-h-screen flex-col items-center">
       {showBackground && <Background isLoading={isLoading} />}
       <NavBar />
-      <AmpBanner isLoading={isLoading} stateData={stateData} />
+      { stateData.amp > 0 && !stateData.finished && <AmpBanner isLoading={isLoading} stateData={stateData} /> }
 
       <div
         className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 ${showBackground ? "opacity-90" : "opacity-100"} fade-in-animation sm:shadow-lg`}
@@ -98,6 +102,7 @@ export default function Leaderboard() {
             state={stateData}
             isLoadingStats={isStatsLoadingStats}
             setShowBackground={setShowBackground}
+            finished={stateData.finished}
           />
         </div>
       </div>
@@ -116,6 +121,7 @@ export default function Leaderboard() {
             setPage={setPage}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            finished={stateData.finished}
           />
         </div>
       </div>

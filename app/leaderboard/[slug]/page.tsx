@@ -10,7 +10,7 @@ import { AccountAssociations } from "@/app/leaderboard/[slug]/AccountAssociation
 import { AccountCharts } from "@/app/leaderboard/[slug]/AccountCharts";
 import { AccountStats } from "@/app/leaderboard/[slug]/AccountStats";
 import { LeaderboardEntry } from "@/app/Api";
-import { useLeaderboardSort } from "@/app/hooks/LeaderBoardSortHook";
+import {useStatsData} from "@/app/hooks/StateDataHook";
 
 export default function LeaderboardSlug({
   params,
@@ -33,6 +33,7 @@ export default function LeaderboardSlug({
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string>("");
   const [eventHashes, setEventHashes] = useState<EventHash[]>();
+  const [stateData] = useStatsData();
 
   const accountType = (): AccountType => {
     if (accountAddress.startsWith("0x") && accountAddress.length == 42) {
@@ -50,6 +51,10 @@ export default function LeaderboardSlug({
       const newEventHashes: EventHash[] = [];
 
       eventHashes.forEach((eventHash) => {
+        if (stateData.finished) {
+          return;
+        }
+
         const account =
           accountType() == AccountType.Solana
             ? eventHash.user.toBase58()
@@ -89,15 +94,17 @@ export default function LeaderboardSlug({
         setFetchError={setFetchError}
         fetchError={fetchError}
         isLoading={isLoading}
+        finished={stateData.finished}
       />
 
       {!fetchError && (
         <>
+          { !stateData.finished &&
           <AccountCharts
             accountAddress={accountAddress}
             eventHashes={eventHashes}
             accountData={accountData}
-          />
+          />}
 
           <AccountAssociations
             accountAddress={accountAddress}

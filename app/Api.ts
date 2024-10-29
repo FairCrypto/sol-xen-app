@@ -24,6 +24,8 @@ export interface GlobalState {
   medianPriorityFee: number;
   maxPriorityFee: number;
   programs: string[];
+  finished: boolean;
+  currentSlot: number;
 }
 
 export interface SolAccountState {
