@@ -89,7 +89,8 @@ export default function StateStats({
   };
 
   const hashRateValue = (): string => {
-    return humanizeHashRate(state.hashRate).replace(".00", "");
+    const hashRate = Math.max(state.hashRate || 0, 0);
+    return humanizeHashRate(hashRate).replace(".00", "");
   };
 
   const avgPriorityFeeValue = () => {
