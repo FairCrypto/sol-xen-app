@@ -76,7 +76,7 @@ export default function Leaderboard() {
     <main className="flex min-h-screen flex-col items-center">
       {showBackground && <Background isLoading={isLoading} />}
       <NavBar />
-      <AmpBanner isLoading={isLoading} stateData={stateData} />
+      { stateData.amp > 0 && <AmpBanner isLoading={isLoading} stateData={stateData} />}
 
       <div
         className={`card z-[2] rounded-none sm:rounded-xl w-full md:max-w-screen-xl bg-base-100 sm:mt-6 sm:mb-6 pt-4 sm:py-0 ${showBackground ? "opacity-90" : "opacity-100"} fade-in-animation sm:shadow-lg`}
