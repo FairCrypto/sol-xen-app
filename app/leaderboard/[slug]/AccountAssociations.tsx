@@ -16,11 +16,9 @@ import { order } from "@/app/hooks/LeaderboardDataHook";
 export function AccountAssociations({
   accountAddress,
   eventHashes,
-  finished,
 }: {
   accountAddress: string;
   eventHashes?: EventHash[];
-  finished: boolean;
 }) {
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>(
     [],
@@ -118,7 +116,6 @@ export function AccountAssociations({
           setPage={setPage}
           sortBy={sortBy}
           setSortBy={setSortBy}
-          finished={finished}
         />
       </div>
     </div>

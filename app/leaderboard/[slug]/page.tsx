@@ -109,7 +109,6 @@ export default function LeaderboardSlug({
           <AccountAssociations
             accountAddress={accountAddress}
             eventHashes={eventHashes}
-            finished={stateData.finished}
           />
         </>
       )}
