@@ -16,7 +16,6 @@ export function AccountStats({
   accountAddress,
   fetchError,
   isLoading,
-  finished,
 }: {
   accountData: LeaderboardEntry | null;
   setAccountData: (data: LeaderboardEntry) => void;
@@ -25,7 +24,6 @@ export function AccountStats({
   accountAddress: string;
   fetchError: string;
   isLoading: boolean;
-  finished: boolean;
 }) {
   const [sortBy, setSortBy] = useLeaderboardSort();
   const [page, setPage] = useLeaderboardPage();
@@ -216,16 +214,14 @@ export function AccountStats({
                 </div>
               </div>
 
-              { accountType() == AccountType.Solana ? (
+              {accountType() == AccountType.Solana ? (
                 <>
-                  { !finished &&
                   <div className="hidden lg:block stat px-0 sm:px-4">
                     <div className="stat-title">Hash Rate</div>
                     <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
                       {humanizeHashRate(accountData?.hashRate || 0)}
                     </div>
                   </div>
-                  }
                   <div className="stat px-0 sm:px-4">
                     <div className="stat-title">solXEN</div>
                     <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">
@@ -233,7 +229,7 @@ export function AccountStats({
                     </div>
                   </div>
                 </>
-              ) : !finished && (
+              ) : (
                 <div className="stat px-0 sm:px-4">
                   <div className="stat-title">Hash Rate</div>
                   <div className="stat-value text-secondary text-lg font-mono sm:text-3xl">

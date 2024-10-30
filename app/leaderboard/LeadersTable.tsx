@@ -19,7 +19,6 @@ interface LeadersTableProps {
   setPage: (page: number) => void;
   sortBy: LeaderBoardSort;
   setSortBy: (sort: LeaderBoardSort) => void;
-  finished: boolean;
 }
 
 enum Status {
@@ -53,11 +52,7 @@ const statusColor = (lastActive?: Date) => {
   return `fill-error`;
 };
 
-const statusBgColor = (lastActive?: Date, finished: boolean = false) => {
-  if (finished) {
-    return `bg-transparent`;
-  }
-
+const statusBgColor = (lastActive?: Date) => {
   if (!lastActive) {
     return `bg-success/10 xl:bg-transparent`;
   }
@@ -95,7 +90,6 @@ export function LeadersTable({
   setPage,
   sortBy,
   setSortBy,
-  finished
 }: LeadersTableProps) {
   const { push } = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
@@ -193,16 +187,14 @@ export function LeadersTable({
             >
               <span>Super Hashes</span>
             </th>
-
-            { !finished && <th
+            <th
               className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
               onClick={() => {
                 setSortBy(LeaderBoardSort.HashRate);
               }}
             >
               <span>Hash Rate</span>
-            </th>}
-
+            </th>
             {accountType == AccountType.Solana ? (
               <th
                 className="hidden lg:table-cell border-b border-blue-gray-100 bg-blue-gray-50 p-4 cursor-pointer hover:rounded-lg hover:shadow-inner hover:bg-base-200"
@@ -232,7 +224,7 @@ export function LeadersTable({
               return (
                 <tr
                   key={rank}
-                  className={`cursor-pointer hover ${statusBgColor(lastActive, finished)}`}
+                  className={`cursor-pointer hover ${statusBgColor(lastActive)}`}
                   onClick={() => {
                     handleClickAccount(account);
                   }}
@@ -271,7 +263,6 @@ export function LeadersTable({
                           {Intl.NumberFormat("en-US").format(superHashes)}
                         </dd>
                       </div>
-                      { !finished &&
                       <div className="flex justify-between">
                         <dt className="text-gray-400 text-sm mt-1 font-mono">
                           Hash Rate
@@ -279,7 +270,7 @@ export function LeadersTable({
                         <dd className="text-gray-400 text-sm mt-1">
                           {humanizeHashRate(hashRate)}
                         </dd>
-                      </div>}
+                      </div>
                       {accountType == AccountType.Solana ? (
                         <div className="flex justify-between">
                           <dt className="text-gray-400 text-sm mt-1 font-medium">
@@ -307,14 +298,12 @@ export function LeadersTable({
                       {Intl.NumberFormat("en-US").format(superHashes)}
                     </span>
                   </td>
-                  { !finished &&
 
-                    <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
+                  <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
                     <span className="font-mono">
                       {humanizeHashRate(hashRate)}
                     </span>
-                  </td>}
-
+                  </td>
                   {accountType == AccountType.Solana ? (
                     <td className="hidden lg:table-cell p-4 border-b border-blue-gray-50">
                       <span className="font-mono">
