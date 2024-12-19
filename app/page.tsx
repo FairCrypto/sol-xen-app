@@ -134,7 +134,33 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section title="How Does It Work?" backgroundColor="bg-base-200">
+      <Section title="solXEN occupied 30% of Solana's network capacity" backgroundColor="bg-base-200">
+        <article className="prose">
+          <p className="mb-4">
+            solXEN mining was limited to a predefined window of <code>30,024,000</code> blocks in 2024,
+            during which miners continuously utilized approximately <code>30%</code> of Solana's total network capacity.
+          </p>
+          <Zoom zoomImg={{src: "/solxenusage.jpeg"}}>
+            <Image
+              alt="A diagram of mining solXEN"
+              src="/solxenusage.jpeg"
+              width={880}
+              height={356}
+            ></Image>
+          </Zoom>
+          <p className="my-4">
+            X1 Labs Inc. is now developing the X1 Blockchain, a fork of the SVM codebase,
+            which will introduce&nbsp;
+            <Link href="https://dexscreener.com/solana/5cyxp6xwlnzd7h2mclia6h69tiygjpthedaxjuvawime"
+                  className="link" target="_blank">dynamic base fees
+            </Link>.
+            This change aims to make substantial occupation of a single program not
+            impossible but significantly more costly.
+          </p>
+        </article>
+      </Section>
+
+      <Section title="How Does It Work?" backgroundColor="bg-base-100">
         <article className="prose">
           <p className="mb-4">
             Mining for <code>420</code> hashes involves sending a transaction
@@ -160,7 +186,7 @@ export default function Home() {
         </article>
       </Section>
 
-      <Section title="Tokenomics" backgroundColor="bg-base-100">
+      <Section title="Tokenomics" backgroundColor="bg-base-200">
         <article className="prose">
           <h3 className="text-lg my-4 font-bold">solXEN</h3>
           <p className="mb-1">
