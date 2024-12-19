@@ -91,7 +91,7 @@ export default function Home() {
               <Link href="https://docs.solxen.io/"
                     className="btn btn-secondary ml-2" target="_blank">
                 <SiGitbook className="hidden sm:block"/>
-                Gitbook
+                Docs
               </Link>
 
             <div className="mb-3 md:hidden"></div>

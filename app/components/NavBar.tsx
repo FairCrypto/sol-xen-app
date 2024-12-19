@@ -49,7 +49,7 @@ export const NavBar = () => {
         <li>
           <Link href="https://docs.solxen.io/">
             <SiGitbook />
-            Gitbook
+            Docs
           </Link>
         </li>
         <li>
