@@ -150,7 +150,7 @@ export default function Home() {
           </Zoom>
           <p className="my-4">
             X1 Labs Inc. is now developing the X1 Blockchain, a fork of the SVM codebase,
-            which will introduce&nbsp;
+            which will introduce{" "}
             <Link href="https://dexscreener.com/solana/5cyxp6xwlnzd7h2mclia6h69tiygjpthedaxjuvawime"
                   className="link" target="_blank">dynamic base fees
             </Link>.
