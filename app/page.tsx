@@ -138,7 +138,7 @@ export default function Home() {
         <article className="prose">
           <p className="mb-4">
             solXEN mining was limited to a predefined window of <code>30,024,000</code> blocks in 2024,
-            during which miners continuously utilized approximately <code>30%</code> of Solana's total network capacity.
+            during which miners continuously utilized approximately <code>30%</code> of Solana&apos;s total network capacity.
           </p>
           <Zoom zoomImg={{src: "/solxenusage.jpeg"}}>
             <Image
